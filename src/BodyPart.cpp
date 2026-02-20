@@ -1,4 +1,4 @@
-#include "./includes/BodyPart.hpp"
+#include "../includes/BodyPart.hpp"
 
 BodyPart::BodyPart( )
 {
