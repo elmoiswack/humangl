@@ -79,3 +79,6 @@ void Shader::useProgram() {
 	glUseProgram(this->shaderProgram);
 }
 
+void Shader::setUniformMatrix4x4(const float *matrix, const char *name) {
+	glUniformMatrix4fv(glGetUniformLocation(this->shaderProgram, name), 1, GL_FALSE, matrix);
+}

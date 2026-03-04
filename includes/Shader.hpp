@@ -20,7 +20,7 @@ public:
 
 	char* readFromFile(const char* pathToFile);
 	void useProgram();
-	void setMatrix4v4(const char* name);
+	void setUniformMatrix4x4(const float *matrix, const char *name);
 
 };
 
