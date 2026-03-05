@@ -17,6 +17,9 @@ public:
 	void setX(float value);
 	void setY(float value);
 	void setZ(float value);
+
+	void rotateLeft();
+	void rotateRight();
 };
 
 #endif

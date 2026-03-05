@@ -19,7 +19,7 @@ public:
 	float* getModel();
 	float* getIdentity();
 
-	void getForward(float *forward, Camera& cam);
+	void getForward(float *forward);
 	void normalize(float v[3]);
 	void cross(float out[3], const float a[3], const float b[3]);
 	float dot(const float a[3], const float b[3]);

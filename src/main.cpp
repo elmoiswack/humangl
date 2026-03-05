@@ -6,6 +6,8 @@
 #include "../includes/Matrix.hpp"
 #include "../includes/Camera.hpp"
 #include "../includes/Vertex.hpp"
+#include "../includes/BodyParts.hpp"
+
 #include <iostream>
 #include <vector>
 
@@ -13,7 +15,24 @@ int SCREEN_WIDTH = 1920;
 int SCREEN_HEIGHT = 1080;
 bool RUNNING = true;
 
-void checkInput(SDL_Window* window, SDL_GLContext& openGLContext) {
+void inputSwitch(SDL_Keycode keyEvent, Camera& cam) {
+	switch (keyEvent)
+	{
+	case SDLK_LEFT:
+		cam.rotateLeft();
+		break ;
+	case SDLK_RIGHT:
+		cam.rotateRight();
+		break;
+	case SDLK_ESCAPE:
+		RUNNING = false;
+		break ;
+	default:
+		break;
+	}
+}
+
+void checkInput(Camera& cam) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
 
@@ -22,9 +41,8 @@ void checkInput(SDL_Window* window, SDL_GLContext& openGLContext) {
 			std::cout << "SDL_EVENT_QUIT EVENT" << std::endl;
 			RUNNING = false;
 		}
-		if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) {
-			std::cout << "ESCAPE EVENT" << std::endl;
-			RUNNING = false;
+		if (event.type == SDL_EVENT_KEY_DOWN) {
+			inputSwitch(event.key.key, cam);
     	}
 		if (state[SDL_SCANCODE_ESCAPE]) {
 			std::cout << "SDL_SCANCODE_ESCAPE EVENT" << std::endl;
@@ -81,16 +99,15 @@ int main(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 	Vertex vertex(SCREEN_WIDTH, SCREEN_HEIGHT);
-	float vertices[18];
-	std::vector<SingleVertex> head;
-	vertex.computeSizeToRectVertex(2.0f, 2.0f, 1.0f, vertices);
-	vertex.computeSizeToRectVertex(1.0f, 1.0f, 1.0f, head);
+	BodyParts body(vertex);
+	body.computeBody();
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, head.size() * sizeof(SingleVertex), head.data(), GL_DYNAMIC_DRAW);
+	std::cout << "combined size = " << body.getCombinedBody().size() << std::endl;
+	glBufferData(GL_ARRAY_BUFFER, body.getCombinedBody().size() * sizeof(SingleVertex), body.getCombinedBody().data(), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex), (void*)sizeof(SingleVertex));
 	glEnableVertexAttribArray(0);
-
+	
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -105,12 +122,18 @@ int main(void) {
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 
 	while (RUNNING) {
-		checkInput(window, openGLContext);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		checkInput(camera);
+		matrix.computeViewMatrix(camera);
+		shader.setUniformMatrix4x4(matrix.getView(), "view");
 
 		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawArrays(GL_TRIANGLES, 0, head.size());
-		SDL_GL_SwapWindow(window);
+		glDrawArrays(GL_TRIANGLES, 0, body.getCombinedBody().size());
+		if (!SDL_GL_SwapWindow(window)) {
+			std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+		};
 	}
 	
 	glDeleteVertexArrays(1, &VAO);

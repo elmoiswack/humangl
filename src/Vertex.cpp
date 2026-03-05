@@ -12,38 +12,6 @@ Vertex::~Vertex()
 {
 }
 
-void Vertex::computeSizeToRectVertex(float width, float height, float depth, float* result) {
-	if (width == 0.0f || height == 0.0f) {
-		float tmp[18] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0, 0.0f, 0.0f, 0.0f, 0.0f};
-		result = tmp;
-		return ;
-	}
-	
-	float halfW = width / 2;
-	float halfH = height / 2;
-	float halfD = depth / 2;
-
-	result[0] = halfW;
-	result[1] = halfH;
-	result[2] = 0.0f;
-	result[3] = -halfW;
-	result[4] = -halfH;
-	result[5] = 0.0f;
-	result[6] = halfW;
-	result[7] = -halfH;
-	result[8] = 0.0f;
-
-	result[9] = halfW;
-	result[10] = halfH;
-	result[11] = 0.0f;
-	result[12] = -halfW;
-	result[13] = -halfH;
-	result[14] = 0.0f;
-	result[15] = -halfW;
-	result[16] = halfH;
-	result[17] = 0.0f;
-}
-
 void Vertex::computeFacesForRectVertices(std::vector<SingleVertex>& input, std::vector<SingleVertex>& output) {
 
 	int standardOrder[72] = {
@@ -75,7 +43,7 @@ void Vertex::computeFacesForRectVertices(std::vector<SingleVertex>& input, std::
 		20, 20, 5,
 		21, 21, 5,
 		22, 22, 5,
-		23, 23, 5,
+		23, 23, 0,
 	};
 
 	for (int i = 0; i < 72; i++) {
@@ -85,41 +53,37 @@ void Vertex::computeFacesForRectVertices(std::vector<SingleVertex>& input, std::
 }
 
 void Vertex::computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex>& result) {
-	float halfW = width / 2;
-	float halfH = height / 2;
-	float halfD = depth / 2;
-
 	std::vector<SingleVertex> standardRect = {};
 
-	standardRect.push_back({-halfW, -halfH, halfD});
-	standardRect.push_back({halfW, -halfH, halfD});
-	standardRect.push_back({halfW, halfH, halfD});
-	standardRect.push_back({-halfW, halfH, halfD});
+	standardRect.push_back({-width, -height, depth});
+	standardRect.push_back({width, -height, depth});
+	standardRect.push_back({width, height, depth});
+	standardRect.push_back({-width, height, depth});
 
-	standardRect.push_back({halfW, -halfH, -halfD});
-	standardRect.push_back({-halfW, -halfH, -halfD});
-	standardRect.push_back({-halfW, halfH, -halfD});
-	standardRect.push_back({halfW, halfH, -halfD});
+	standardRect.push_back({width, -height, -depth});
+	standardRect.push_back({-width, -height, -depth});
+	standardRect.push_back({-width, height, -depth});
+	standardRect.push_back({width, height, -depth});
 
-	standardRect.push_back({-halfW, -halfH, -halfD});
-	standardRect.push_back({-halfW, -halfH, halfD});
-	standardRect.push_back({-halfW, halfH, halfD});
-	standardRect.push_back({-halfW, halfH, -halfD});
+	standardRect.push_back({-width, -height, -depth});
+	standardRect.push_back({-width, -height, depth});
+	standardRect.push_back({-width, height, depth});
+	standardRect.push_back({-width, height, -depth});
 
-	standardRect.push_back({halfW, -halfH, halfD});
-	standardRect.push_back({halfW, -halfH, -halfD});
-	standardRect.push_back({halfW, halfH, -halfD});
-	standardRect.push_back({halfW, halfH, halfD});
+	standardRect.push_back({width, -height, depth});
+	standardRect.push_back({width, -height, -depth});
+	standardRect.push_back({width, height, -depth});
+	standardRect.push_back({width, height, depth});
 
-	standardRect.push_back({-halfW, halfH, halfD});
-	standardRect.push_back({halfW, halfH, halfD});
-	standardRect.push_back({halfW, halfH, -halfD});
-	standardRect.push_back({-halfW, halfH, -halfD});
+	standardRect.push_back({-width, height, depth});
+	standardRect.push_back({width, height, depth});
+	standardRect.push_back({width, height, -depth});
+	standardRect.push_back({-width, height, -depth});
 
-	standardRect.push_back({-halfW, -halfH, -halfD});
-	standardRect.push_back({halfW, -halfH, -halfD});
-	standardRect.push_back({halfW, -halfH, halfD});
-	standardRect.push_back({-halfW, -halfH, halfD});
+	standardRect.push_back({-width, -height, -depth});
+	standardRect.push_back({width, -height, -depth});
+	standardRect.push_back({width, -height, depth});
+	standardRect.push_back({-width, -height, depth});
 
 	this->computeFacesForRectVertices(standardRect, result);
 }

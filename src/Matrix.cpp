@@ -37,7 +37,7 @@ float* Matrix::getIdentity() {
 	return this->identity;
 }
 
-void Matrix::getForward(float *forward, Camera& cam) {
+void Matrix::getForward(float *forward) {
     float yRad = -90.0f * (M_PI / 180.0f);
     float xRad = 0.0f * (M_PI / 180.0f);
 
@@ -48,7 +48,8 @@ void Matrix::getForward(float *forward, Camera& cam) {
 
 void Matrix::normalize(float v[3]) {
     float len = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-    if (len == 0.0f) return;
+    if (len == 0.0f) 
+        return;
     v[0] /= len;
     v[1] /= len;
     v[2] /= len;
@@ -69,8 +70,7 @@ void Matrix::computeViewMatrix(Camera& cam) {
     float up[3]  = { 0.0f, 1.0f, 0.0f };
 
     float forward[3];
-    this->getForward(forward, cam);
-
+    this->getForward(forward);
     this->normalize(forward);
 
     float s[3];
