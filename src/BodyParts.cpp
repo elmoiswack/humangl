@@ -28,12 +28,12 @@ BodyParts::BodyParts()
 	this->legRightHeight = .15f;
 	this->legRightDepth = .05f;
 
-	this->computeHead();
-	this->computeTorso();
-	this->computeLeftArm();
-	this->computeRightArm();
-	this->computeLeftLeg();
-	this->computeRightLeg();
+	this->computeSizeToRectVertex(this->headWidth, this->headHeight, this->headDepth, this->body[BodyPartsIndex::HEAD]);
+	this->computeSizeToRectVertex(this->torsoWidth, this->torsoHeight, this->torsoDepth, this->body[BodyPartsIndex::TORSO]);
+	this->computeSizeToRectVertex(this->armLeftWidth, this->armLeftHeight, this->armLeftDepth, this->body[BodyPartsIndex::LEFTARM]);
+	this->computeSizeToRectVertex(this->armRightWidth, this->armRightHeight, this->armRightDepth, this->body[BodyPartsIndex::RIGHTARM]);
+	this->computeSizeToRectVertex(this->legLeftWidth, this->legLeftHeight, this->legLeftDepth, this->body[BodyPartsIndex::LEFTLEG]);
+	this->computeSizeToRectVertex(this->legRightWidth, this->legRightHeight, this->legRightDepth, this->body[BodyPartsIndex::RIGHTLEG]);
 	
 	this->computingMax.resize(this->bodyPartSize);
 	this->combinedVertices.resize(this->bodyPartSize * this->body.size());
