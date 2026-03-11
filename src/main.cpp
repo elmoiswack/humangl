@@ -5,7 +5,6 @@
 #include "../includes/Shader.hpp"
 #include "../includes/Matrix.hpp"
 #include "../includes/Camera.hpp"
-#include "../includes/Vertex.hpp"
 #include "../includes/BodyParts.hpp"
 
 #include <iostream>
@@ -98,28 +97,39 @@ int main(void) {
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	Vertex vertex(SCREEN_WIDTH, SCREEN_HEIGHT);
-	BodyParts body(vertex);
+	BodyParts body;
 	body.computeBody();
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	std::cout << "combined size = " << body.getCombinedBody().size() << std::endl;
 	glBufferData(GL_ARRAY_BUFFER, body.getCombinedBody().size() * sizeof(SingleVertex), body.getCombinedBody().data(), GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex), (void*)sizeof(SingleVertex));
 	glEnableVertexAttribArray(0);
 	
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
-
 	Shader shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	Camera camera;
 	Matrix matrix(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+	float headColor[3] = {0.8f, 0.0f, 0.0f};
+	float torsoColor[3] = {1.f, 1.f, 1.f};
+	float armLeftColor[3] = {0.0f, 0.4f, 0.0f};
+	float armRightColor[3] = {0.0f, 0.4f, 0.0f};
+	float legLeftColor[3] = {0.8f, 0.0f, 0.8f};
+	float legRightColor[3] = {0.8f, 0.0f, 0.8f};
+	
 	shader.useProgram();
 	shader.setUniformMatrix4x4(matrix.getPerspective(), "perspective");
 	shader.setUniformMatrix4x4(matrix.getView(), "view");
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
+	shader.setUniformVec3(headColor, "headColor");
+	shader.setUniformVec3(torsoColor, "torsoColor");
+	shader.setUniformVec3(armLeftColor, "armLeftColor");
+	shader.setUniformVec3(armRightColor, "armRightColor");
+	shader.setUniformVec3(legLeftColor, "legLeftColor");
+	shader.setUniformVec3(legRightColor, "legRightColor");
+
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 
 	while (RUNNING) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

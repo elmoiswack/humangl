@@ -79,6 +79,10 @@ void Shader::useProgram() {
 	glUseProgram(this->shaderProgram);
 }
 
-void Shader::setUniformMatrix4x4(const float *matrix, const char *name) {
+void Shader::setUniformMatrix4x4(const float* matrix, const char* name) {
 	glUniformMatrix4fv(glGetUniformLocation(this->shaderProgram, name), 1, GL_FALSE, matrix);
+}
+
+void Shader::setUniformVec3(const float* vertex, const char* name) {
+    glUniform3f(glGetUniformLocation(this->shaderProgram, name), vertex[0], vertex[1], vertex[2]);
 }

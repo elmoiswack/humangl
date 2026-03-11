@@ -36,6 +36,10 @@ target_link_options(${PROJECT_NAME}
         -fsanitize=address
 )
 
+find_package(glfw3 REQUIRED)
+
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE SDL3::SDL3
+    PRIVATE
+        SDL3::SDL3
+        glfw
 )

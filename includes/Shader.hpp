@@ -21,10 +21,8 @@ public:
 	char* readFromFile(const char* pathToFile);
 	void useProgram();
 	void setUniformMatrix4x4(const float *matrix, const char *name);
-
+	void setUniformVec3(const float* vertex, const char* name);
+	
 };
-
-
-
 
 #endif

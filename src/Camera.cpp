@@ -7,7 +7,7 @@ Camera::Camera()
 {
 	this->x = 0.0f;
 	this->y = 0.0f;
-	this->z = 2.0f;
+	this->z = 3.0f;
 }
 
 Camera::~Camera()
@@ -15,8 +15,7 @@ Camera::~Camera()
 }
 
 void Camera::rotateLeft() {
-	this->setX(sin(SDL_GetTicks()) * 3.f);
-	this->setZ(cos(SDL_GetTicks()) * 3.f);
+
 }
 
 void Camera::rotateRight() {
