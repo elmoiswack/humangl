@@ -100,3 +100,34 @@ void Matrix::computeViewMatrix(Camera& cam) {
     this->view[14] =  dot(forward, eye);
     this->view[15] =  1.f;
 }
+
+void Matrix::setModelToIdentity() {
+    memcpy(this->model, this->identity, 16 * sizeof(float));
+}
+
+void Matrix::incrementAngle(float incrementValue) {
+    if (this->rotationAngle + incrementValue > 45.0f) {
+        this->rotationAngle = 0.0f;
+    }
+    else {
+        this->rotationAngle += incrementValue;
+    }
+}
+
+void Matrix::setRotationXMatrix() {
+    this->incrementAngle(0.01f);
+    memcpy(this->model, this->identity, 16 * sizeof(float));
+    this->model[0] = cosf(this->rotationAngle);
+    this->model[2] = sinf(this->rotationAngle);
+    this->model[8] = -sinf(this->rotationAngle);
+    this->model[10] = cosf(this->rotationAngle);
+}
+
+void Matrix::setRotationYMatrix() {
+    this->incrementAngle(0.01f);
+    memcpy(this->model, this->identity, 16 * sizeof(float));
+    this->model[5] = cosf(this->rotationAngle);
+    this->model[6] = -sinf(this->rotationAngle);
+    this->model[9] = sinf(this->rotationAngle);
+    this->model[10] = cosf(this->rotationAngle);
+}

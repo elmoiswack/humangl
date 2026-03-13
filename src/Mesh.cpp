@@ -14,6 +14,7 @@ Mesh::Mesh(std::vector<SingleVertex>& bodyPart, float* bodyColor)
 {
 	this->meshColor = bodyColor;
 	this->vertexCount = bodyPart.size();
+	
 	glGenVertexArrays(1, &this->VAO);
 	glGenBuffers(1, &this->VBO);
 

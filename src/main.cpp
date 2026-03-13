@@ -51,12 +51,23 @@ void checkInput(Camera& cam) {
     }
 }
 
-void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader) {
-	for (auto& mesh : meshes) {
-		glBindVertexArray(mesh.getVAO());
+void setModelForAnimation(Shader& shader, Matrix& matrix, std::size_t i) {
+	if (i == static_cast<std::size_t>(BodyPartsIndex::LEFTARM)) {
+		matrix.setRotationYMatrix();
+		shader.setUniformMatrix4x4(matrix.getModel(), "model");
+	} else {
+		matrix.setModelToIdentity();
+		shader.setUniformMatrix4x4(matrix.getModel(), "model");
+	}
+}
+
+void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader, Matrix& matrix) {
+	for (std::size_t i = 0; i < meshes.size(); i++) {
+		setModelForAnimation(shader, matrix, i);
+		shader.setUniformVec3(meshes[i].getColor(), "color");
+		glBindVertexArray(meshes[i].getVAO());
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		shader.setUniformVec3(mesh.getColor(), "color");
-		glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
+		glDrawArrays(GL_TRIANGLES, 0, meshes[i].getVertexCount());
 		glBindVertexArray(0);
 	}
 }
@@ -136,7 +147,7 @@ int main(void) {
 		matrix.computeViewMatrix(camera);
 		shader.setUniformMatrix4x4(matrix.getView(), "view");
 		
-		drawPartsOnScreen(meshes, shader);
+		drawPartsOnScreen(meshes, shader, matrix);
 
 		if (!SDL_GL_SwapWindow(window)) {
 			std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
@@ -146,7 +157,6 @@ int main(void) {
 	for (auto& mesh: meshes) {
 		mesh.deleteMesh();
 	}
-
 	SDL_GL_DestroyContext(openGLContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

@@ -10,6 +10,9 @@ private:
 	float view[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	float model[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 	float identity[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+
+	float rotationAngle;
+
 public:
 	Matrix(const unsigned int screenWidth, const unsigned int screenHeight, Camera& cam);
 	~Matrix();
@@ -24,6 +27,11 @@ public:
 	void cross(float out[3], const float a[3], const float b[3]);
 	float dot(const float a[3], const float b[3]);
 	void computeViewMatrix(Camera& cam);
+
+	void setModelToIdentity();
+	void incrementAngle(float incrementValue);
+	void setRotationXMatrix();
+	void setRotationYMatrix();
 };
 
 #endif

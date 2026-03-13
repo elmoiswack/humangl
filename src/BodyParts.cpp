@@ -120,19 +120,19 @@ void BodyParts::computeBody() {
 
         this->body[BodyPartsIndex::LEFTARM][i].x = -(this->body[BodyPartsIndex::LEFTARM][i].x - (-this->torsoWidth + -this->armLeftWidth));
         this->body[BodyPartsIndex::LEFTARM][i].y += (this->torsoHeight - this->armLeftHeight);
-        this->body[BodyPartsIndex::LEFTARM][i].z -= (this->torsoDepth - this->armLeftDepth);
+        this->body[BodyPartsIndex::LEFTARM][i].z -= ((this->torsoDepth / 2) - this->armLeftDepth);
 
         this->body[BodyPartsIndex::RIGHTARM][i].x = (this->body[BodyPartsIndex::RIGHTARM][i].x + (this->torsoWidth + this->armRightWidth));
         this->body[BodyPartsIndex::RIGHTARM][i].y += (this->torsoHeight - this->armRightHeight);
-        this->body[BodyPartsIndex::RIGHTARM][i].z -= (this->torsoDepth - this->armRightDepth);
+        this->body[BodyPartsIndex::RIGHTARM][i].z -= ((this->torsoDepth / 2) - this->armRightDepth);
 
         this->body[BodyPartsIndex::LEFTLEG][i].y = -(this->body[BodyPartsIndex::LEFTLEG][i].y - (-this->torsoHeight + -this->legLeftHeight));
         this->body[BodyPartsIndex::LEFTLEG][i].x += -this->torsoWidth + this->legLeftWidth;
-        this->body[BodyPartsIndex::LEFTLEG][i].z -= (this->torsoDepth - this->legLeftDepth);
+        this->body[BodyPartsIndex::LEFTLEG][i].z -= ((this->torsoDepth / 2) - this->legLeftDepth);
 
         this->body[BodyPartsIndex::RIGHTLEG][i].y = -(this->body[BodyPartsIndex::RIGHTLEG][i].y - (-this->torsoHeight + -this->legRightHeight));
         this->body[BodyPartsIndex::RIGHTLEG][i].x += this->torsoWidth - this->legRightWidth;
-        this->body[BodyPartsIndex::RIGHTLEG][i].z -= (this->torsoDepth - this->legRightDepth);
+        this->body[BodyPartsIndex::RIGHTLEG][i].z -= ((this->torsoDepth / 2) - this->legRightDepth);
     }
 }
 

@@ -4,14 +4,11 @@
 #include <vector>
 #include <algorithm>
 
-
 struct SingleVertex {
 	float x;
 	float y;
 	float z;
 };
-
-
 
 enum BodyPartsIndex {
 	HEAD,
