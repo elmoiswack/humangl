@@ -7,6 +7,7 @@ BodyParts::BodyParts()
 	this->headWidth = .1f;
 	this->headHeight = .1f;
 	this->headDepth = .1f;
+	
 
 	this->torsoWidth = .15f;
 	this->torsoHeight = .25f;
@@ -34,9 +35,7 @@ BodyParts::BodyParts()
 	this->computeSizeToRectVertex(this->armRightWidth, this->armRightHeight, this->armRightDepth, this->body[BodyPartsIndex::RIGHTARM]);
 	this->computeSizeToRectVertex(this->legLeftWidth, this->legLeftHeight, this->legLeftDepth, this->body[BodyPartsIndex::LEFTLEG]);
 	this->computeSizeToRectVertex(this->legRightWidth, this->legRightHeight, this->legRightDepth, this->body[BodyPartsIndex::RIGHTLEG]);
-	
-	this->computingMax.resize(this->bodyPartSize);
-	this->combinedVertices.resize(this->bodyPartSize * this->body.size());
+	this->computeBody();
 }
 
 BodyParts::~BodyParts() {}
@@ -77,7 +76,6 @@ void BodyParts::computeFacesForRectVertices(std::vector<SingleVertex>& input, st
 	for (int i = 0; i < 72; i++) {
 		output.push_back(input[standardOrder[i]]);
 	}
-
 }
 
 void BodyParts::computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex>& result) {
@@ -136,21 +134,11 @@ void BodyParts::computeBody() {
         this->body[BodyPartsIndex::RIGHTLEG][i].x += this->torsoWidth - this->legRightWidth;
         this->body[BodyPartsIndex::RIGHTLEG][i].z -= (this->torsoDepth - this->legRightDepth);
     }
-
-	std::size_t index = 0;
-
-	for (std::size_t y = 0; y < this->body.size(); y++) {
-		for (std::size_t x = 0; x < this->bodyPartSize; x++) {
-			this->combinedVertices[index] = this->body[y][x];
-			index++;
-		}
-	}
 }
 
-std::vector<SingleVertex>& BodyParts::getCombinedBody() {
-	return this->combinedVertices;
+std::vector<std::vector<SingleVertex>>& BodyParts::getBody() {
+	return this->body;
 }
-
 
 ///////////////////HEAD///////////////////////
 void BodyParts::computeHead() {

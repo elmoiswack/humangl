@@ -6,9 +6,10 @@
 #include "../includes/Matrix.hpp"
 #include "../includes/Camera.hpp"
 #include "../includes/BodyParts.hpp"
-
+#include "../includes/Mesh.hpp"
 #include <iostream>
 #include <vector>
+#include <array>
 
 int SCREEN_WIDTH = 1920;
 int SCREEN_HEIGHT = 1080;
@@ -50,6 +51,16 @@ void checkInput(Camera& cam) {
     }
 }
 
+void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader) {
+	for (auto& mesh : meshes) {
+		glBindVertexArray(mesh.getVAO());
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		shader.setUniformVec3(mesh.getColor(), "color");
+		glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
+		glBindVertexArray(0);
+	}
+}
+
 int main(void) {
 	
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -84,47 +95,34 @@ int main(void) {
 		SDL_GL_DestroyContext(openGLContext);
 		SDL_DestroyWindow(window);
 		SDL_Quit();
-		exit(0);			
+		exit(0);
 	}
 	SDL_GL_MakeCurrent(window, openGLContext);
 	SDL_GL_SetSwapInterval(1);
 
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	GLuint VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
 	BodyParts body;
-	body.computeBody();
+	std::vector<Mesh> meshes;
+	std::vector<std::array<float, 3>> colors = {
+		{0.8f, 0.0f, 0.0f}, 
+		{1.f, 1.f, 1.f}, 
+		{0.0f, 0.4f, 0.0f},
+		{0.0f, 0.4f, 0.0f}, 
+		{0.8f, 0.0f, 0.8f}, 
+		{0.8f, 0.0f, 0.8f}  
+	};
+	auto bodyParts = body.getBody();
+	for (size_t i = 0; i < bodyParts.size(); ++i) {
+		meshes.emplace_back(Mesh(bodyParts[i], colors[i].data()));
+	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, body.getCombinedBody().size() * sizeof(SingleVertex), body.getCombinedBody().data(), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex), (void*)sizeof(SingleVertex));
-	glEnableVertexAttribArray(0);
-	
 	Shader shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	Camera camera;
 	Matrix matrix(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
-	float headColor[3] = {0.8f, 0.0f, 0.0f};
-	float torsoColor[3] = {1.f, 1.f, 1.f};
-	float armLeftColor[3] = {0.0f, 0.4f, 0.0f};
-	float armRightColor[3] = {0.0f, 0.4f, 0.0f};
-	float legLeftColor[3] = {0.8f, 0.0f, 0.8f};
-	float legRightColor[3] = {0.8f, 0.0f, 0.8f};
 	
 	shader.useProgram();
 	shader.setUniformMatrix4x4(matrix.getPerspective(), "perspective");
 	shader.setUniformMatrix4x4(matrix.getView(), "view");
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
-	shader.setUniformVec3(headColor, "headColor");
-	shader.setUniformVec3(torsoColor, "torsoColor");
-	shader.setUniformVec3(armLeftColor, "armLeftColor");
-	shader.setUniformVec3(armRightColor, "armRightColor");
-	shader.setUniformVec3(legLeftColor, "legLeftColor");
-	shader.setUniformVec3(legRightColor, "legRightColor");
 
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -137,17 +135,18 @@ int main(void) {
 		checkInput(camera);
 		matrix.computeViewMatrix(camera);
 		shader.setUniformMatrix4x4(matrix.getView(), "view");
+		
+		drawPartsOnScreen(meshes, shader);
 
-		glBindVertexArray(VAO);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawArrays(GL_TRIANGLES, 0, body.getCombinedBody().size());
 		if (!SDL_GL_SwapWindow(window)) {
 			std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
 		};
 	}
 	
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	for (auto& mesh: meshes) {
+		mesh.deleteMesh();
+	}
+
 	SDL_GL_DestroyContext(openGLContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

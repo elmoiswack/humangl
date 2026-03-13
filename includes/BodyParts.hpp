@@ -4,11 +4,14 @@
 #include <vector>
 #include <algorithm>
 
+
 struct SingleVertex {
 	float x;
 	float y;
 	float z;
 };
+
+
 
 enum BodyPartsIndex {
 	HEAD,
@@ -23,9 +26,6 @@ class BodyParts
 {
 private:
 	std::vector<std::vector<SingleVertex>> body;
-	std::vector<SingleVertex> combinedVertices;
-	std::vector<float> computingMax;
-
 	int bodyPartSize = 72;
 	
 	float headWidth;
@@ -60,7 +60,7 @@ public:
 	void computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex>& result);
 	
 	void computeBody();
-	std::vector<SingleVertex>& getCombinedBody();
+	std::vector<std::vector<SingleVertex>>& getBody();
 
 	void computeHead();
 	void setHeadWith(float value);
@@ -81,7 +81,7 @@ public:
 	void setRightArmWidth(float value);
 	void setRightArmHeight(float value);
 	void setRightArmDepth(float value);
-
+	
 	void computeLeftLeg();
 	void setLeftLegWidth(float value);
 	void setLeftLegHeight(float value);
@@ -91,7 +91,6 @@ public:
 	void setRightLegWidth(float value);
 	void setRightLegHeight(float value);
 	void setRightLegDepth(float value);
-	
 };
 
 #endif
