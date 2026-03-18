@@ -11,8 +11,6 @@ private:
 	float model[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 	float identity[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
-	float rotationAngle;
-
 public:
 	Matrix(const unsigned int screenWidth, const unsigned int screenHeight, Camera& cam);
 	~Matrix();
@@ -29,9 +27,8 @@ public:
 	void computeViewMatrix(Camera& cam);
 
 	void setModelToIdentity();
-	void incrementAngle(float incrementValue);
-	void setRotationXMatrix();
-	void setRotationYMatrix();
+	void setRotationXMatrix(float& angle);
+	void setRotationYMatrix(float& angle);
 };
 
 #endif

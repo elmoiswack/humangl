@@ -1,21 +1,23 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_video.h>
 #include <SDL3/SDL_render.h>
+
 #include "../includes/glad/glad.h"
 #include "../includes/Shader.hpp"
 #include "../includes/Matrix.hpp"
 #include "../includes/Camera.hpp"
 #include "../includes/BodyParts.hpp"
 #include "../includes/Mesh.hpp"
+#include "../includes/Animation.hpp"
+
 #include <iostream>
 #include <vector>
 #include <array>
 
 int SCREEN_WIDTH = 1920;
 int SCREEN_HEIGHT = 1080;
-bool RUNNING = true;
 
-void inputSwitch(SDL_Keycode keyEvent, Camera& cam) {
+void inputSwitch(SDL_Keycode keyEvent, Camera& cam, bool& running) {
 	switch (keyEvent)
 	{
 	case SDLK_LEFT:
@@ -25,45 +27,39 @@ void inputSwitch(SDL_Keycode keyEvent, Camera& cam) {
 		cam.rotateRight();
 		break;
 	case SDLK_ESCAPE:
-		RUNNING = false;
+		running = false;
 		break ;
 	default:
 		break;
 	}
 }
 
-void checkInput(Camera& cam) {
+void checkInput(Camera& cam, bool& running) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
 
 	while (SDL_PollEvent(&event)) {
 		if( event.type == SDL_EVENT_QUIT ) {
 			std::cout << "SDL_EVENT_QUIT EVENT" << std::endl;
-			RUNNING = false;
+			running = false;
 		}
 		if (event.type == SDL_EVENT_KEY_DOWN) {
-			inputSwitch(event.key.key, cam);
+			inputSwitch(event.key.key, cam, running);
     	}
 		if (state[SDL_SCANCODE_ESCAPE]) {
 			std::cout << "SDL_SCANCODE_ESCAPE EVENT" << std::endl;
-			RUNNING = false;
+			running = false;
 		}
     }
 }
 
-void setModelForAnimation(Shader& shader, Matrix& matrix, std::size_t i) {
-	if (i == static_cast<std::size_t>(BodyPartsIndex::LEFTARM)) {
-		matrix.setRotationYMatrix();
-		shader.setUniformMatrix4x4(matrix.getModel(), "model");
-	} else {
-		matrix.setModelToIdentity();
-		shader.setUniformMatrix4x4(matrix.getModel(), "model");
-	}
+void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, std::size_t i) {
+	animations.walkingAnimation(shader, matrix, i);
 }
 
-void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader, Matrix& matrix) {
+void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader, Matrix& matrix, Animation& animations) {
 	for (std::size_t i = 0; i < meshes.size(); i++) {
-		setModelForAnimation(shader, matrix, i);
+		setModelForAnimation(animations, shader, matrix, i);
 		shader.setUniformVec3(meshes[i].getColor(), "color");
 		glBindVertexArray(meshes[i].getVAO());
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -129,7 +125,8 @@ int main(void) {
 	Shader shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 	Camera camera;
 	Matrix matrix(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
-	
+	Animation animations;
+
 	shader.useProgram();
 	shader.setUniformMatrix4x4(matrix.getPerspective(), "perspective");
 	shader.setUniformMatrix4x4(matrix.getView(), "view");
@@ -140,17 +137,20 @@ int main(void) {
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 
-	while (RUNNING) {
+	bool running = true;
+
+	while (running) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		checkInput(camera);
+		checkInput(camera, running);
 		matrix.computeViewMatrix(camera);
 		shader.setUniformMatrix4x4(matrix.getView(), "view");
 		
-		drawPartsOnScreen(meshes, shader, matrix);
+		drawPartsOnScreen(meshes, shader, matrix, animations);
 
 		if (!SDL_GL_SwapWindow(window)) {
 			std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+			break ;
 		};
 	}
 	
