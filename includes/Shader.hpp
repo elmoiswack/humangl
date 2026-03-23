@@ -22,7 +22,9 @@ public:
 	void useProgram();
 	void setUniformMatrix4x4(const float *matrix, const char *name);
 	void setUniformVec3(const float* vertex, const char* name);
-	
+	void setUniform1i(const int value, const char* name);
+
+	int getUniform1i(const char* name);
 };
 
 #endif

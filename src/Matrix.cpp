@@ -37,6 +37,10 @@ float* Matrix::getIdentity() {
 	return this->identity;
 }
 
+float* Matrix::getPivot() {
+    return this->pivot;
+}
+
 void Matrix::getForward(float *forward) {
     float yRad = -90.0f * (M_PI / 180.0f);
     float xRad = 0.0f * (M_PI / 180.0f);
@@ -119,4 +123,11 @@ void Matrix::setRotationYMatrix(float& angle) {
     this->model[6] = -sinf(angle);
     this->model[9] = sinf(angle);
     this->model[10] = cosf(angle);
+}
+
+void Matrix::setPivotMatrix(float x, float y, float z) {
+    memcpy(this->pivot, this->identity, 16 * sizeof(float));
+    this->pivot[12] = x;
+    this->pivot[13] = y;
+    this->pivot[14] = z;
 }

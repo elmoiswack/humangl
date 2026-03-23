@@ -10,6 +10,7 @@ private:
 	float view[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	float model[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 	float identity[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+	float pivot[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
 public:
 	Matrix(const unsigned int screenWidth, const unsigned int screenHeight, Camera& cam);
@@ -19,6 +20,7 @@ public:
 	float* getView();
 	float* getModel();
 	float* getIdentity();
+	float* getPivot();
 
 	void getForward(float *forward);
 	void normalize(float v[3]);
@@ -29,6 +31,8 @@ public:
 	void setModelToIdentity();
 	void setRotationXMatrix(float& angle);
 	void setRotationYMatrix(float& angle);
+
+	void setPivotMatrix(float x, float y, float z);
 };
 
 #endif

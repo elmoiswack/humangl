@@ -7,7 +7,6 @@ BodyParts::BodyParts()
 	this->headWidth = .1f;
 	this->headHeight = .1f;
 	this->headDepth = .1f;
-	
 
 	this->torsoWidth = .15f;
 	this->torsoHeight = .25f;
@@ -35,7 +34,11 @@ BodyParts::BodyParts()
 	this->computeSizeToRectVertex(this->armRightWidth, this->armRightHeight, this->armRightDepth, this->body[BodyPartsIndex::RIGHTARM]);
 	this->computeSizeToRectVertex(this->legLeftWidth, this->legLeftHeight, this->legLeftDepth, this->body[BodyPartsIndex::LEFTLEG]);
 	this->computeSizeToRectVertex(this->legRightWidth, this->legRightHeight, this->legRightDepth, this->body[BodyPartsIndex::RIGHTLEG]);
+
 	this->computeBody();
+
+	this->computePivotPoint(this->rightArmPivotPoint, this->body[BodyPartsIndex::RIGHTARM]);
+	this->computePivotPoint(this->leftArmPivotPoint, this->body[BodyPartsIndex::LEFTARM]);
 }
 
 BodyParts::~BodyParts() {}
@@ -112,6 +115,34 @@ void BodyParts::computeSizeToRectVertex(float width, float height, float depth, 
 	standardRect.push_back({-width, -height, depth});
 
 	this->computeFacesForRectVertices(standardRect, result);
+}
+
+void BodyParts::computePivotPoint(SingleVertex& point, std::vector<SingleVertex>& array) {
+	float maxY = std::max_element(
+		array.begin(),
+		array.end(),
+		[](const SingleVertex& a, const SingleVertex& b) {
+			return a.y < b.y;
+    	}
+	)->y;
+
+	float sumX = 0.0f;
+	float sumZ = 0.0f;
+	int count = 0;
+
+	for (const auto& v : array)
+	{
+		if (v.y == maxY)
+		{
+			sumX += v.x;
+			sumZ += v.z;
+			count++;
+		}
+	}
+
+	point.x = sumX / count;
+	point.y = maxY;
+	point.z = sumZ / count;
 }
 
 void BodyParts::computeBody() {
@@ -203,6 +234,10 @@ void BodyParts::setLeftArmDepth(float value) {
 	this->computeLeftArm();
 }
 
+SingleVertex& BodyParts::getLeftArmPivot() {
+	return this->leftArmPivotPoint;
+}
+
 ///////////////////RIGHT ARM///////////////////
 void BodyParts::computeRightArm() {
 	this->computeSizeToRectVertex(this->armRightWidth, this->armRightHeight, this->armRightDepth, this->body[BodyPartsIndex::RIGHTARM]);
@@ -222,6 +257,10 @@ void BodyParts::setRightArmHeight(float value) {
 void BodyParts::setRightArmDepth(float value) {
 	this->armRightDepth = value;
 	this->computeRightArm();
+}
+
+SingleVertex& BodyParts::getRightArmPivot() {
+	return this->rightArmPivotPoint;
 }
 
 ///////////////////LEFT LEG////////////////////
@@ -245,6 +284,10 @@ void BodyParts::setLeftLegDepth(float value) {
 	this->computeLeftLeg();
 }
 
+SingleVertex& BodyParts::getLeftLegPivot() {
+	return this->leftLegPivotPoint;
+}
+
 ///////////////////RIGHT LEG///////////////////
 void BodyParts::computeRightLeg() {
 	this->computeSizeToRectVertex(this->legRightWidth, this->legRightHeight, this->legRightDepth, this->body[BodyPartsIndex::RIGHTLEG]);
@@ -264,5 +307,9 @@ void BodyParts::setRightLegHeight(float value) {
 void BodyParts::setRightLegDepth(float value) {
 	this->legRightDepth = value;
 	this->computeRightLeg();
+}
+
+SingleVertex& BodyParts::getRightLegPivot() {
+	return this->rightLegPivotPoint;
 }
 

@@ -86,3 +86,14 @@ void Shader::setUniformMatrix4x4(const float* matrix, const char* name) {
 void Shader::setUniformVec3(const float* vertex, const char* name) {
     glUniform3f(glGetUniformLocation(this->shaderProgram, name), vertex[0], vertex[1], vertex[2]);
 }
+
+void Shader::setUniform1i(const int value, const char* name) {
+    glUniform1i(glGetUniformLocation(this->shaderProgram, name), value);
+}
+
+int Shader::getUniform1i(const char* name) {
+    GLint value;
+    glGetUniformiv(this->shaderProgram, glGetUniformLocation(this->shaderProgram, name), &value);
+    return value;
+}
+

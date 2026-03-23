@@ -3,6 +3,7 @@
 
 #include "Shader.hpp"
 #include "Matrix.hpp"
+#include "BodyParts.hpp"
 
 class Animation
 {
@@ -16,6 +17,12 @@ private:
 	float rightArmRotationAngle;
 	bool rightArmRotationForward;
 
+	float leftLegRotationAngle;
+	bool leftLegRotationForward;
+
+	float rightLegRotationAngle;
+	bool rightLegRotationForward;
+
 
 public:
 	Animation();
@@ -24,10 +31,12 @@ public:
 	void incrementAngle(float& angle, bool& forward);
 	void decrementAngle(float& angle, bool& forward);
 
-	void walkingAnimation(Shader& shader, Matrix& matrix, std::size_t i);
+	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 
 	void leftArmRotation();
 	void rightArmRotation();
+	void leftLegRotation();
+	void rightLegRotation();
 
 	void startCycle();
 	void cycleIsFinished();

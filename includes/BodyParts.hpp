@@ -49,6 +49,12 @@ private:
 	float legRightHeight;
 	float legRightDepth;
 
+	SingleVertex rightArmPivotPoint;
+	SingleVertex leftArmPivotPoint;
+	SingleVertex leftLegPivotPoint;
+	SingleVertex rightLegPivotPoint;
+
+
 public:
 	BodyParts();
 	~BodyParts();
@@ -56,6 +62,7 @@ public:
 	void computeFacesForRectVertices(std::vector<SingleVertex>& input, std::vector<SingleVertex>& output);
 	void computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex>& result);
 	
+	void computePivotPoint(SingleVertex& point, std::vector<SingleVertex>& array);
 	void computeBody();
 	std::vector<std::vector<SingleVertex>>& getBody();
 
@@ -73,21 +80,26 @@ public:
 	void setLeftArmWidth(float value);
 	void setLeftArmHeight(float value);
 	void setLeftArmDepth(float value);
+	SingleVertex& getLeftArmPivot();
 
 	void computeRightArm();
 	void setRightArmWidth(float value);
 	void setRightArmHeight(float value);
 	void setRightArmDepth(float value);
+	SingleVertex& getRightArmPivot();
+
 	
 	void computeLeftLeg();
 	void setLeftLegWidth(float value);
 	void setLeftLegHeight(float value);
 	void setLeftLegDepth(float value);
+	SingleVertex& getLeftLegPivot();
 
 	void computeRightLeg();
 	void setRightLegWidth(float value);
 	void setRightLegHeight(float value);
 	void setRightLegDepth(float value);
+	SingleVertex& getRightLegPivot();
 };
 
 #endif

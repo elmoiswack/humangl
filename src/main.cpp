@@ -14,10 +14,10 @@
 #include <vector>
 #include <array>
 
-int SCREEN_WIDTH = 1920;
-int SCREEN_HEIGHT = 1080;
+int SCREEN_WIDTH = 900;
+int SCREEN_HEIGHT = 700;
 
-void inputSwitch(SDL_Keycode keyEvent, Camera& cam, bool& running) {
+void inputSwitch(SDL_Keycode keyEvent, Animation& animations, Shader& shader, Camera& cam, bool& running) {
 	switch (keyEvent)
 	{
 	case SDLK_LEFT:
@@ -25,6 +25,10 @@ void inputSwitch(SDL_Keycode keyEvent, Camera& cam, bool& running) {
 		break ;
 	case SDLK_RIGHT:
 		cam.rotateRight();
+		break;
+	case SDLK_W:
+		shader.setUniform1i(1, "walkingAnimation");
+		animations.startCycle();
 		break;
 	case SDLK_ESCAPE:
 		running = false;
@@ -34,7 +38,7 @@ void inputSwitch(SDL_Keycode keyEvent, Camera& cam, bool& running) {
 	}
 }
 
-void checkInput(Camera& cam, bool& running) {
+void checkInput(Animation& animations, Shader& shader, Matrix& matrix, Camera& cam, bool& running) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
 
@@ -44,8 +48,15 @@ void checkInput(Camera& cam, bool& running) {
 			running = false;
 		}
 		if (event.type == SDL_EVENT_KEY_DOWN) {
-			inputSwitch(event.key.key, cam, running);
+			inputSwitch(event.key.key, animations, shader, cam, running);
     	}
+		else {
+			if (animations.getDoneWithCycle() == true) {
+				matrix.setModelToIdentity();
+				shader.setUniformMatrix4x4(matrix.getModel(), "model");
+				shader.setUniform1i(0, "walkingAnimation");
+			}
+		}
 		if (state[SDL_SCANCODE_ESCAPE]) {
 			std::cout << "SDL_SCANCODE_ESCAPE EVENT" << std::endl;
 			running = false;
@@ -53,13 +64,14 @@ void checkInput(Camera& cam, bool& running) {
     }
 }
 
-void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, std::size_t i) {
-	animations.walkingAnimation(shader, matrix, i);
+void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
+	if (shader.getUniform1i("walkingAnimation") == 1)
+		animations.walkingAnimation(shader, matrix, body, i);
 }
 
-void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader, Matrix& matrix, Animation& animations) {
+void drawPartsOnScreen(std::vector<Mesh>& meshes, Shader& shader, Matrix& matrix, BodyParts& body, Animation& animations) {
 	for (std::size_t i = 0; i < meshes.size(); i++) {
-		setModelForAnimation(animations, shader, matrix, i);
+		setModelForAnimation(animations, shader, matrix, body, i);
 		shader.setUniformVec3(meshes[i].getColor(), "color");
 		glBindVertexArray(meshes[i].getVAO());
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -142,11 +154,11 @@ int main(void) {
 	while (running) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		checkInput(camera, running);
+		checkInput(animations, shader, matrix, camera, running);
 		matrix.computeViewMatrix(camera);
 		shader.setUniformMatrix4x4(matrix.getView(), "view");
 		
-		drawPartsOnScreen(meshes, shader, matrix, animations);
+		drawPartsOnScreen(meshes, shader, matrix, body, animations);
 
 		if (!SDL_GL_SwapWindow(window)) {
 			std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
