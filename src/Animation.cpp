@@ -5,17 +5,29 @@ Animation::Animation()
 	this->rotationSpeed = 0.02f;
 	this->doneWithCycle = true;
 
-	this->leftArmRotationAngle = 0.0f;
-	this->leftArmRotationForward = true;
+	this->leftArmUpRotationAngle = 0.0f;
+	this->leftArmUpRotationForward = true;
 
-	this->rightArmRotationAngle = 0.0f;
-	this->rightArmRotationForward = false;
+	this->leftArmLowRotationAngle = 0.0f;
+	this->leftArmLowRotationForward = true;
 
-	this->leftLegRotationAngle = 0.0f;
-	this->leftLegRotationForward = false;
+	this->rightArmUpRotationAngle = 0.0f;
+	this->rightArmUpRotationForward = false;
 
-	this->rightLegRotationAngle = 0.0f;
-	this->rightLegRotationForward = true;
+	this->rightArmLowRotationAngle = 0.0f;
+	this->rightArmLowRotationForward = false;
+
+	this->leftLegUpRotationAngle = 0.0f;
+	this->leftLegUpRotationForward = true;
+
+	this->leftLegLowRotationAngle = 0.0f;
+	this->leftLegLowRotationForward = true;
+
+	this->rightLegUpRotationAngle = 0.0f;
+	this->rightLegUpRotationForward = false;
+
+	this->rightLegLowRotationAngle = 0.0f;
+	this->rightLegLowRotationForward = false;
 }
 
 Animation::~Animation()
@@ -40,77 +52,148 @@ void Animation::decrementAngle(float& angle, bool& forward) {
     }
 }
 
-void Animation::leftArmRotation() {
-	if (this->leftArmRotationForward)
-		this->incrementAngle(this->leftArmRotationAngle, this->leftArmRotationForward);
+void Animation::leftArmUpRotation() {
+	if (this->leftArmUpRotationForward)
+		this->incrementAngle(this->leftArmUpRotationAngle, this->leftArmUpRotationForward);
 	else
-		this->decrementAngle(this->leftArmRotationAngle, this->leftArmRotationForward);
+		this->decrementAngle(this->leftArmUpRotationAngle, this->leftArmUpRotationForward);
 }
 
-void Animation::rightArmRotation() {
-	if (this->rightArmRotationForward)
-		this->incrementAngle(this->rightArmRotationAngle, this->rightArmRotationForward);
+void Animation::leftArmLowRotation() {
+	if (this->leftArmLowRotationForward)
+		this->incrementAngle(this->leftArmLowRotationAngle, this->leftArmLowRotationForward);
 	else
-		this->decrementAngle(this->rightArmRotationAngle, this->rightArmRotationForward);
+		this->decrementAngle(this->leftArmLowRotationAngle, this->leftArmLowRotationForward);
 }
 
-void Animation::leftLegRotation() {
-	if (this->leftLegRotationForward)
-		this->incrementAngle(this->leftLegRotationAngle, this->leftLegRotationForward);
+void Animation::rightArmUpRotation() {
+	if (this->rightArmUpRotationForward)
+		this->incrementAngle(this->rightArmUpRotationAngle, this->rightArmUpRotationForward);
 	else
-		this->decrementAngle(this->leftLegRotationAngle, this->leftLegRotationForward);
+		this->decrementAngle(this->rightArmUpRotationAngle, this->rightArmUpRotationForward);
 }
 
-void Animation::rightLegRotation() {
-	if (this->rightLegRotationForward)
-		this->incrementAngle(this->rightLegRotationAngle, this->rightLegRotationForward);
+void Animation::rightArmLowRotation() {
+	if (this->rightArmLowRotationForward)
+		this->incrementAngle(this->rightArmLowRotationAngle, this->rightArmLowRotationForward);
 	else
-		this->decrementAngle(this->rightLegRotationAngle, this->rightLegRotationForward);
+		this->decrementAngle(this->rightArmLowRotationAngle, this->rightArmLowRotationForward);
+}
+
+void Animation::leftLegUpRotation() {
+	if (this->leftLegUpRotationForward)
+		this->incrementAngle(this->leftLegUpRotationAngle, this->leftLegUpRotationForward);
+	else
+		this->decrementAngle(this->leftLegUpRotationAngle, this->leftLegUpRotationForward);
+}
+
+void Animation::leftLegLowRotation() {
+	if (this->leftLegLowRotationForward)
+		this->incrementAngle(this->leftLegLowRotationAngle, this->leftLegLowRotationForward);
+	else
+		this->decrementAngle(this->leftLegLowRotationAngle, this->leftLegLowRotationForward);
+}
+
+void Animation::rightLegUpRotation() {
+	if (this->rightLegUpRotationForward)
+		this->incrementAngle(this->rightLegUpRotationAngle, this->rightLegUpRotationForward);
+	else
+		this->decrementAngle(this->rightLegUpRotationAngle, this->rightLegUpRotationForward);
+}
+
+void Animation::rightLegLowRotation() {
+	if (this->rightLegLowRotationForward)
+		this->incrementAngle(this->rightLegLowRotationAngle, this->rightLegLowRotationForward);
+	else
+		this->decrementAngle(this->rightLegLowRotationAngle, this->rightLegLowRotationForward);
 }
 
 void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	auto& pivotLeftArm = body.getLeftArmPivot();
-	auto& pivotRightArm = body.getRightArmPivot();
-	auto& pivotLeftLeg = body.getLeftLegPivot();
-	auto& pivotRightLeg = body.getRightLegPivot();
+	auto& pivotLeftUpArm = body.getLeftUpArmPivot();
+	auto& pivotLeftLowArm = body.getLeftLowArmPivot();
+
+	auto& pivotRightUpArm = body.getRightUpArmPivot();
+	auto& pivotRightLowArm = body.getRightLowArmPivot();
+
+	auto& pivotLeftUpLeg = body.getLeftUpLegPivot();
+	auto& pivotLeftLowLeg = body.getLeftLowLegPivot();
+
+	auto& pivotRightUpLeg = body.getRightUpLegPivot();
+	auto& pivotRightLowLeg = body.getRightLowLegPivot();
 	
 	switch (i)
 	{
-	case BodyPartsIndex::LEFTARM:
-		this->leftArmRotation();
-		matrix.setRotationYMatrix(this->leftArmRotationAngle);
-		matrix.setPivotMatrix(pivotLeftArm.x, pivotLeftArm.y, pivotLeftArm.z);
+	case BodyPartsIndex::LEFTUPARM:
+		this->leftArmUpRotation();
+		matrix.setRotationYMatrix(this->leftArmUpRotationAngle);
+		matrix.setPivotMatrix(pivotLeftUpArm.x, pivotLeftUpArm.y, pivotLeftUpArm.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftArm.x, -pivotLeftArm.y, -pivotLeftArm.z);
+		matrix.setPivotMatrix(-pivotLeftUpArm.x, -pivotLeftUpArm.y, -pivotLeftUpArm.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		break;
+
+	case BodyPartsIndex::LEFTLOWARM:
+		this->leftArmLowRotation();
+		matrix.setRotationYMatrix(this->leftArmLowRotationAngle);
+		matrix.setPivotMatrix(pivotLeftLowArm.x, pivotLeftLowArm.y, pivotLeftLowArm.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+		matrix.setPivotMatrix(-pivotLeftLowArm.x, -pivotLeftLowArm.y, -pivotLeftLowArm.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
 		break;
 	
-	case BodyPartsIndex::RIGHTARM:
-		this->rightArmRotation();
-		matrix.setRotationYMatrix(this->rightArmRotationAngle);
-		matrix.setPivotMatrix(pivotRightArm.x, pivotRightArm.y, pivotRightArm.z);
+	case BodyPartsIndex::RIGHTUPARM:
+		this->rightArmUpRotation();
+		matrix.setRotationYMatrix(this->rightArmUpRotationAngle);
+		matrix.setPivotMatrix(pivotRightUpArm.x, pivotRightUpArm.y, pivotRightUpArm.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightArm.x, -pivotRightArm.y, -pivotRightArm.z);
+		matrix.setPivotMatrix(-pivotRightUpArm.x, -pivotRightUpArm.y, -pivotRightUpArm.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		break; 
+
+	case BodyPartsIndex::RIGHTLOWARM:
+		this->rightArmLowRotation();
+		matrix.setRotationYMatrix(this->rightArmLowRotationAngle);
+		matrix.setPivotMatrix(pivotRightLowArm.x, pivotRightLowArm.y, pivotRightLowArm.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+		matrix.setPivotMatrix(-pivotRightLowArm.x, -pivotRightLowArm.y, -pivotRightLowArm.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
 		break; 
 	
-	case BodyPartsIndex::LEFTLEG:
-		this->leftLegRotation();
-		matrix.setRotationYMatrix(this->leftLegRotationAngle);
-		matrix.setPivotMatrix(pivotLeftLeg.x, pivotLeftLeg.y, pivotLeftLeg.z);
+	case BodyPartsIndex::LEFTUPLEG:
+		this->leftLegUpRotation();
+		matrix.setRotationYMatrix(this->leftLegUpRotationAngle);
+		matrix.setPivotMatrix(pivotLeftUpLeg.x, pivotLeftUpLeg.y, pivotLeftUpLeg.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftLeg.x, -pivotLeftLeg.y, -pivotLeftLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break; 
-	
-	case BodyPartsIndex::RIGHTLEG:
-		this->rightLegRotation();
-		matrix.setRotationYMatrix(this->rightLegRotationAngle);
-		matrix.setPivotMatrix(pivotRightLeg.x, pivotRightLeg.y, pivotRightLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightLeg.x, -pivotRightLeg.y, -pivotRightLeg.z);
+		matrix.setPivotMatrix(-pivotLeftUpLeg.x, -pivotLeftUpLeg.y, -pivotLeftUpLeg.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
 		break;
+
+	case BodyPartsIndex::LEFTLOWLEG:
+		this->leftLegLowRotation();
+		matrix.setRotationYMatrix(this->leftLegLowRotationAngle);
+		matrix.setPivotMatrix(pivotLeftLowLeg.x, pivotLeftLowLeg.y, pivotLeftLowLeg.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+		matrix.setPivotMatrix(-pivotLeftLowLeg.x, -pivotLeftLowLeg.y, -pivotLeftLowLeg.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		break;
+	
+	case BodyPartsIndex::RIGHTUPLEG:
+		this->rightLegUpRotation();
+		matrix.setRotationYMatrix(this->rightLegUpRotationAngle);
+		matrix.setPivotMatrix(pivotRightUpLeg.x, pivotRightUpLeg.y, pivotRightUpLeg.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+		matrix.setPivotMatrix(-pivotRightUpLeg.x, -pivotRightUpLeg.y, -pivotRightUpLeg.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		break; 
+
+	case BodyPartsIndex::RIGHTLOWLEG:
+		this->rightLegLowRotation();
+		matrix.setRotationYMatrix(this->rightLegLowRotationAngle);
+		matrix.setPivotMatrix(pivotRightLowLeg.x, pivotRightLowLeg.y, pivotRightLowLeg.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+		matrix.setPivotMatrix(-pivotRightLowLeg.x, -pivotRightLowLeg.y, -pivotRightLowLeg.z);
+		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		break; 
 
 	default:
 		matrix.setModelToIdentity();
@@ -119,10 +202,6 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 		break;
 	}
 	
-	std::cout << this->leftArmRotationAngle << std::endl;
-	if (this->leftArmRotationAngle == 0.0f)
-		std::cout << "AHWDWADASFEA" << std::endl;
-
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 }
 

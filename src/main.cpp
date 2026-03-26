@@ -125,9 +125,13 @@ int main(void) {
 		{0.8f, 0.0f, 0.0f}, 
 		{1.f, 1.f, 1.f}, 
 		{0.0f, 0.4f, 0.0f},
-		{0.0f, 0.4f, 0.0f}, 
+		{1.0f, .0f, .0f},
+		{0.0f, 0.4f, 0.0f},
+		{1.0f, .0f, .0f},
 		{0.8f, 0.0f, 0.8f}, 
-		{0.8f, 0.0f, 0.8f}  
+		{0.0f, 0.8f, 0.0f}, 
+		{0.8f, 0.0f, 0.8f},
+		{0.0f, 0.8f, 0.0f}, 
 	};
 	auto bodyParts = body.getBody();
 	for (size_t i = 0; i < bodyParts.size(); ++i) {

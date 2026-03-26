@@ -13,10 +13,14 @@ struct SingleVertex {
 enum BodyPartsIndex {
 	HEAD,
 	TORSO,
-	LEFTARM,
-	RIGHTARM,
-	LEFTLEG,
-	RIGHTLEG,
+	LEFTUPARM,
+	LEFTLOWARM,
+	RIGHTUPARM,
+	RIGHTLOWARM,
+	LEFTUPLEG,
+	LEFTLOWLEG,
+	RIGHTUPLEG,
+	RIGHTLOWLEG,
 };
 
 class BodyParts
@@ -33,27 +37,49 @@ private:
 	float torsoHeight;
 	float torsoDepth;
 
-	float armLeftWidth;
-	float armLeftHeight;
-	float armLeftDepth;
+	float armLeftUpWidth;
+	float armLeftUpHeight;
+	float armLeftUpDepth;
 
-	float armRightWidth;
-	float armRightHeight;
-	float armRightDepth;
+	float armLeftLowWidth;
+	float armLeftLowHeight;
+	float armLeftLowDepth;
 
-	float legLeftWidth;
-	float legLeftHeight;
-	float legLeftDepth;
+	float armRightUpWidth;
+	float armRightUpHeight;
+	float armRightUpDepth;
 
-	float legRightWidth;
-	float legRightHeight;
-	float legRightDepth;
+	float armRightLowWidth;
+	float armRightLowHeight;
+	float armRightLowDepth;
 
-	SingleVertex rightArmPivotPoint;
-	SingleVertex leftArmPivotPoint;
-	SingleVertex leftLegPivotPoint;
-	SingleVertex rightLegPivotPoint;
+	float legLeftUpWidth;
+	float legLeftUpHeight;
+	float legLeftUpDepth;
 
+	float legLeftLowWidth;
+	float legLeftLowHeight;
+	float legLeftLowDepth;
+
+	float legRightUpWidth;
+	float legRightUpHeight;
+	float legRightUpDepth;
+
+	float legRightLowWidth;
+	float legRightLowHeight;
+	float legRightLowDepth;
+
+	SingleVertex armLeftUpPivotPoint;
+	SingleVertex armLeftLowPivotPoint;
+
+	SingleVertex armRightUpPivotPoint;
+	SingleVertex armRightLowPivotPoint;
+
+	SingleVertex legLeftUpPivotPoint;
+	SingleVertex legLeftLowPivotPoint;
+
+	SingleVertex legRightUpPivotPoint;
+	SingleVertex legRightLowPivotPoint;
 
 public:
 	BodyParts();
@@ -65,41 +91,19 @@ public:
 	void computePivotPoint(SingleVertex& point, std::vector<SingleVertex>& array);
 	void computeBody();
 	std::vector<std::vector<SingleVertex>>& getBody();
-
-	void computeHead();
-	void setHeadWith(float value);
-	void setHeadHeight(float value);
-	void setHeadDepth(float value);
-
-	void computeTorso();
-	void setTorsoWidth(float value);
-	void setTorsoHeight(float value);
-	void setTorsoDepth(float value);
 	
-	void computeLeftArm();
-	void setLeftArmWidth(float value);
-	void setLeftArmHeight(float value);
-	void setLeftArmDepth(float value);
-	SingleVertex& getLeftArmPivot();
+	SingleVertex& getLeftUpArmPivot();
+	SingleVertex& getLeftLowArmPivot();
 
-	void computeRightArm();
-	void setRightArmWidth(float value);
-	void setRightArmHeight(float value);
-	void setRightArmDepth(float value);
-	SingleVertex& getRightArmPivot();
+	SingleVertex& getRightUpArmPivot();
+	SingleVertex& getRightLowArmPivot();
 
-	
-	void computeLeftLeg();
-	void setLeftLegWidth(float value);
-	void setLeftLegHeight(float value);
-	void setLeftLegDepth(float value);
-	SingleVertex& getLeftLegPivot();
+	SingleVertex& getLeftUpLegPivot();
+	SingleVertex& getLeftLowLegPivot();
 
-	void computeRightLeg();
-	void setRightLegWidth(float value);
-	void setRightLegHeight(float value);
-	void setRightLegDepth(float value);
-	SingleVertex& getRightLegPivot();
+	SingleVertex& getRightUpLegPivot();
+	SingleVertex& getRightLowLegPivot();
+
 };
 
 #endif

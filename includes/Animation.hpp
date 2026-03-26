@@ -11,17 +11,29 @@ private:
 	float rotationSpeed;
 	bool doneWithCycle;
 
-	float leftArmRotationAngle;
-	bool leftArmRotationForward;
+	float leftArmUpRotationAngle;
+	bool leftArmUpRotationForward;
 
-	float rightArmRotationAngle;
-	bool rightArmRotationForward;
+	float leftArmLowRotationAngle;
+	bool leftArmLowRotationForward;
 
-	float leftLegRotationAngle;
-	bool leftLegRotationForward;
+	float rightArmUpRotationAngle;
+	bool rightArmUpRotationForward;
 
-	float rightLegRotationAngle;
-	bool rightLegRotationForward;
+	float rightArmLowRotationAngle;
+	bool rightArmLowRotationForward;
+
+	float leftLegUpRotationAngle;
+	bool leftLegUpRotationForward;
+
+	float leftLegLowRotationAngle;
+	bool leftLegLowRotationForward;
+
+	float rightLegUpRotationAngle;
+	bool rightLegUpRotationForward;
+
+	float rightLegLowRotationAngle;
+	bool rightLegLowRotationForward;
 
 
 public:
@@ -33,10 +45,17 @@ public:
 
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 
-	void leftArmRotation();
-	void rightArmRotation();
-	void leftLegRotation();
-	void rightLegRotation();
+	void leftArmUpRotation();
+	void leftArmLowRotation();
+
+	void rightArmUpRotation();
+	void rightArmLowRotation();
+	
+	void leftLegUpRotation();
+	void leftLegLowRotation();
+
+	void rightLegUpRotation();
+	void rightLegLowRotation();
 
 	void startCycle();
 	void cycleIsFinished();
