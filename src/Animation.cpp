@@ -2,7 +2,7 @@
 
 Animation::Animation()
 {
-	this->rotationSpeed = 0.02f;
+	this->rotationSpeed = 0.05f;
 	this->doneWithCycle = true;
 
 	this->leftArmUpRotationAngle = 0.0f;
@@ -30,13 +30,11 @@ Animation::Animation()
 	this->rightLegLowRotationForward = false;
 }
 
-Animation::~Animation()
-{
-}
+Animation::~Animation() {}
 
 void Animation::incrementAngle(float& angle, bool& forward) {
-    if (angle + this->rotationSpeed > .45f) {
-        angle = 0.44f;
+    if (angle + this->rotationSpeed >= .45f) {
+        angle = 0.45f;
 		forward = !forward;
     } else {
         angle += this->rotationSpeed;
@@ -44,12 +42,33 @@ void Animation::incrementAngle(float& angle, bool& forward) {
 }
 
 void Animation::decrementAngle(float& angle, bool& forward) {
-    if (angle - this->rotationSpeed < -.45f) {
-        angle = -0.44f;
+	if (angle - this->rotationSpeed <= -.45f) {
+		angle = -0.45f;
 		forward = !forward;
     } else {
-        angle -= this->rotationSpeed;
+		angle -= this->rotationSpeed;
     }
+}
+
+float Animation::roundTo2Decimals(float& angle) {
+	float var = angle;
+	float value = (int)(var * 100 + .5);
+    return (float)value / 100;	
+}
+
+bool Animation::checkIfPartsFinished() {
+	if ((this->roundTo2Decimals(this->leftArmUpRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->leftArmLowRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->rightArmUpRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->rightArmLowRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->leftLegUpRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->leftLegLowRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->rightLegUpRotationAngle) != 0.00) || \
+		(this->roundTo2Decimals(this->rightLegLowRotationAngle) != 0.00) \
+	) {
+		return false;
+	}
+	return true;
 }
 
 void Animation::leftArmUpRotation() {
@@ -120,7 +139,7 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 
 	auto& pivotRightUpLeg = body.getRightUpLegPivot();
 	auto& pivotRightLowLeg = body.getRightLowLegPivot();
-	
+
 	switch (i)
 	{
 	case BodyPartsIndex::LEFTUPARM:
@@ -193,7 +212,7 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
 		matrix.setPivotMatrix(-pivotRightLowLeg.x, -pivotRightLowLeg.y, -pivotRightLowLeg.z);
 		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break; 
+		break;
 
 	default:
 		matrix.setModelToIdentity();
@@ -202,6 +221,15 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 		break;
 	}
 	
+	
+	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) &&(checkIfPartsFinished() == true)) {
+		this->doneWithCycle = true;
+		matrix.setModelToIdentity();
+		shader.setUniformMatrix4x4(matrix.getModel(), "model");
+		shader.setUniform1i(0, "walkingAnimation");
+		return ;
+	}
+
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 }
 

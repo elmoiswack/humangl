@@ -43,6 +43,9 @@ public:
 	void incrementAngle(float& angle, bool& forward);
 	void decrementAngle(float& angle, bool& forward);
 
+	float roundTo2Decimals(float& angle);
+	bool checkIfPartsFinished();
+
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 
 	void leftArmUpRotation();
