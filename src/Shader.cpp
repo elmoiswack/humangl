@@ -1,6 +1,12 @@
 #include "../includes/Shader.hpp"
 #include <cstring>
 
+Shader::Shader() {
+    this->shaderProgram = 0;
+    this->vertexShaderSource = nullptr;
+    this->fragmentShaderSource = nullptr;
+}
+
 Shader::Shader(const char* pathToVertex, const char* pathToFragment)
 {
     const GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -45,8 +51,37 @@ Shader::Shader(const char* pathToVertex, const char* pathToFragment)
     glDeleteShader(fragmentShader);
 }
 
+Shader::Shader(Shader&& other) noexcept
+    : shaderProgram(other.shaderProgram),
+      vertexShaderSource(other.vertexShaderSource),
+      fragmentShaderSource(other.fragmentShaderSource)
+{
+    other.shaderProgram = 0;
+    other.vertexShaderSource = nullptr;
+    other.fragmentShaderSource = nullptr;
+}
+
+Shader& Shader::operator=(Shader&& other) noexcept
+{
+    if (this != &other) {
+        glDeleteProgram(this->shaderProgram);
+        delete[] this->vertexShaderSource;
+        delete[] this->fragmentShaderSource;
+
+        this->shaderProgram = other.shaderProgram;
+        this->vertexShaderSource = other.vertexShaderSource;
+        this->fragmentShaderSource = other.fragmentShaderSource;
+
+        other.shaderProgram = 0;
+        other.vertexShaderSource = nullptr;
+        other.fragmentShaderSource = nullptr;
+    }
+    return *this;
+}
+
 Shader::~Shader()
 {
+    glDeleteProgram(this->shaderProgram);
 	delete[] this->vertexShaderSource;
 	delete[] this->fragmentShaderSource;
 }

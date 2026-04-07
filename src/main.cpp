@@ -7,27 +7,26 @@
 #include "../includes/Animation.hpp"
 #include "../includes/Window.hpp"
 
-#include <iostream>
-#include <vector>
-#include <array>
-
 int MAIN_SCREEN_WIDTH = 1900;
 int MAIN_SCREEN_HEIGHT = 1080;
 int SETTINGS_SCREEN_WIDTH = 700;
 int SETTINGS_SCREEN_HEIGHT = 500;
 
-void inputSwitchMainWindow(SDL_Keycode keyEvent, Animation& animations, Shader& shader, Camera& cam, bool& running) {
+void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& running) {
 	switch (keyEvent)
 	{
 	case SDLK_LEFT:
-		cam.rotateLeft();
+		mainWindow.getCamera().rotateLeft();
 		break ;
 	case SDLK_RIGHT:
-		cam.rotateRight();
+		mainWindow.getCamera().rotateRight();
 		break;
 	case SDLK_W:
-		shader.setUniform1i(1, "walkingAnimation");
-		animations.startCycle();
+		if (mainWindow.getShader().getUniform1i("walkingAnimation") != 1) {
+			mainWindow.getShader().setUniform1i(1, "walkingAnimation");
+			mainWindow.getAnimations().startCycle();
+			std::cout << "start animation" << std::endl;
+		}
 		break;
 	case SDLK_ESCAPE:
 		running = false;
@@ -37,7 +36,7 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Animation& animations, Shader& 
 	}
 }
 
-void checkInput(Window& mainWindow, Window& settingsWindow, Animation& animations, Shader& shader, Matrix& matrix, Camera& cam, bool& running) {
+void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
 
@@ -51,21 +50,29 @@ void checkInput(Window& mainWindow, Window& settingsWindow, Animation& animation
 			running = false;
 		}
 		if (event.window.windowID == mainWindow.getWindowId() && event.type == SDL_EVENT_KEY_DOWN) {
-			inputSwitchMainWindow(event.key.key, animations, shader, cam, running);
+			inputSwitchMainWindow(event.key.key, mainWindow, running);
     	}
     }
 }
 
 void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
 	if (shader.getUniform1i("walkingAnimation") == 1)
+	{
+		std::cout << "do animation" << std::endl;
 		animations.walkingAnimation(shader, matrix, body, i);
+	}
 }
 
-void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, std::vector<Mesh>& meshes, Shader& shader, Matrix& matrix, BodyParts& body, Animation& animations) {
-	for (std::size_t i = 0; i < meshes.size(); i++) {
-		setModelForAnimation(animations, shader, matrix, body, i);
-		mainWindow.drawMeshOnWindow(meshes[i], shader);
+void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow) {
+	mainWindow.makeCurrent();
+	auto& mainWindowMeshes = mainWindow.getMeshes();
+	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
+		setModelForAnimation(mainWindow.getAnimations(), mainWindow.getShader(), mainWindow.getMatrix(), mainWindow.getBody(), i);
+		mainWindow.drawMeshOnWindow(i);
 	}
+
+	settingsWindow.makeCurrent();
+	//draw settings on screen
 }
 
 int main(void) {
@@ -83,66 +90,46 @@ int main(void) {
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-		Window mainWindow("humanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT);
-		Window settingsWindow("Settings", SETTINGS_SCREEN_WIDTH, SETTINGS_SCREEN_HEIGHT);
+		Window mainWindow("humanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, "shaders/MainWVertex.glsl", "shaders/MainWFragment.glsl");
+		Window settingsWindow("Settings", SETTINGS_SCREEN_WIDTH, SETTINGS_SCREEN_HEIGHT, "shaders/SettingsWVertex.glsl", "shaders/SettingsWFragment.glsl");
 		
+		std::cout << "MAIN" << std::endl;
 		mainWindow.makeCurrent();
-
-		BodyParts body;
-		std::vector<Mesh> meshes;
-		std::vector<std::array<float, 3>> colors = {
-			{0.8f, 0.0f, 0.0f}, 
-			{1.f, 1.f, 1.f}, 
-			{0.0f, 0.4f, 0.0f},
-			{1.0f, .0f, .0f},
-			{0.0f, 0.4f, 0.0f},
-			{1.0f, .0f, .0f},
-			{0.8f, 0.0f, 0.8f}, 
-			{0.0f, 0.8f, 0.0f}, 
-			{0.8f, 0.0f, 0.8f},
-			{0.0f, 0.8f, 0.0f}, 
-		};
-		auto bodyParts = body.getBody();
-		for (size_t i = 0; i < bodyParts.size(); ++i) {
-			meshes.emplace_back(Mesh(bodyParts[i], colors[i].data()));
-		}
-
-		Shader shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-		Camera camera;
-		Matrix matrix(MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, camera);
-		Animation animations;
-
-		shader.useProgram();
-		shader.setUniformMatrix4x4(matrix.getPerspective(), "perspective");
-		shader.setUniformMatrix4x4(matrix.getView(), "view");
-		shader.setUniformMatrix4x4(matrix.getModel(), "model");
+		std::cout << "Settings" << std::endl;
+		settingsWindow.makeCurrent();
+		std::cout << "main" << std::endl;
+		mainWindow.makeCurrent();
 
 		bool running = true;
 
 		while (running) {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			mainWindow.clearScreen();
+			settingsWindow.clearScreen();
 
-			checkInput(mainWindow, settingsWindow, animations, shader, matrix, camera, running);
-			matrix.computeViewMatrix(camera);
-			shader.setUniformMatrix4x4(matrix.getView(), "view");
-			
-			drawPartsOnScreen(mainWindow, settingsWindow, meshes, shader, matrix, body, animations);
+			checkInput(mainWindow, settingsWindow, running);
 
-			if ((!SDL_GL_SwapWindow(SDL_GL_GetCurrentWindow()))) {
+			mainWindow.computeView();
+			drawPartsOnScreen(mainWindow, settingsWindow);
+
+			mainWindow.makeCurrent();
+			if ((!SDL_GL_SwapWindow(mainWindow.getWindow()))) {
+				std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+				break ;
+			};
+
+			settingsWindow.makeCurrent();
+			if ((!SDL_GL_SwapWindow(settingsWindow.getWindow()))) {
 				std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
 				break ;
 			};
 		}
-		
-		for (auto& mesh: meshes) {
-			mesh.deleteMesh();
-		}
+
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
+	glfwTerminate();
 	SDL_Quit();
 	return 0;
 }

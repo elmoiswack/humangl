@@ -15,7 +15,11 @@ private:
 	char* fragmentShaderSource;
 	
 public:
+	Shader();
 	Shader(const char* pathToVertex, const char* pathToFragment);
+	
+	Shader(Shader&& other) noexcept;
+	Shader& operator=(Shader&& other) noexcept;
 	~Shader();
 
 	char* readFromFile(const char* pathToFile);

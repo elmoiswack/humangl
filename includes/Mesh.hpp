@@ -10,7 +10,7 @@ private:
 	GLuint VBO;
 	GLuint VAO;
 	std::size_t vertexCount;
-	float* meshColor;
+	float meshColor[3] = {0.0f, 0.0f, 0.0f};
 
 public:
 	Mesh();

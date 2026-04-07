@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-Matrix::Matrix(const unsigned int screenWidth, const unsigned int screenHeight, Camera& cam)
+Matrix::Matrix() {}
+
+Matrix::Matrix(const unsigned int screenWidth, const unsigned int screenHeight)
 {
 	float f = 1.0f / tan((45.0 * (M_PI / 180.0f)) / 2.0f);
 	float aspectRatio = float(screenWidth) / float(screenHeight);
@@ -15,8 +17,6 @@ Matrix::Matrix(const unsigned int screenWidth, const unsigned int screenHeight, 
 	this->perspective[10] = (zFar + zNear) / (zNear - zFar);
 	this->perspective[11] = -1.0f;
 	this->perspective[14] = (2 * zFar * zNear) / (zNear - zFar);
-
-	this->computeViewMatrix(cam);
 }
 
 Matrix::~Matrix() {}

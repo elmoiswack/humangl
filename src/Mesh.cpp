@@ -12,7 +12,9 @@ Mesh::Mesh() {
 
 Mesh::Mesh(std::vector<SingleVertex>& bodyPart, float* bodyColor)
 {
-	this->meshColor = bodyColor;
+	this->meshColor[0] = bodyColor[0];
+	this->meshColor[1] = bodyColor[1];
+	this->meshColor[2] = bodyColor[2];
 	this->vertexCount = bodyPart.size();
 	
 	glGenVertexArrays(1, &this->VAO);
@@ -26,7 +28,9 @@ Mesh::Mesh(std::vector<SingleVertex>& bodyPart, float* bodyColor)
 	glEnableVertexAttribArray(0);
 }
 
-Mesh::~Mesh() {}
+Mesh::~Mesh() {
+	// this->deleteMesh(); //need to fix
+}
 
 std::size_t& Mesh::getVertexCount() {
 	return this->vertexCount;
@@ -41,7 +45,9 @@ float* Mesh::getColor() {
 }
 
 void Mesh::updateColor(float* newColor) {
-	this->meshColor = newColor;
+	this->meshColor[0] = newColor[0];
+	this->meshColor[1] = newColor[1];
+	this->meshColor[2] = newColor[2];
 }
 
 void Mesh::updateVBO(std::vector<SingleVertex>& bodyPart) {

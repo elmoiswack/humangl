@@ -13,7 +13,8 @@ private:
 	float pivot[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
 public:
-	Matrix(const unsigned int screenWidth, const unsigned int screenHeight, Camera& cam);
+	Matrix();
+	Matrix(const unsigned int screenWidth, const unsigned int screenHeight);
 	~Matrix();
 
 	float* getPerspective();

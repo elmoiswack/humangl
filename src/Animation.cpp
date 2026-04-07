@@ -222,14 +222,15 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 	}
 	
 	
-	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) &&(checkIfPartsFinished() == true)) {
+	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) && (checkIfPartsFinished() == true)) {
+		std::cout << "FINISHED" << std::endl;
 		this->doneWithCycle = true;
 		matrix.setModelToIdentity();
 		shader.setUniformMatrix4x4(matrix.getModel(), "model");
 		shader.setUniform1i(0, "walkingAnimation");
 		return ;
 	}
-
+	std::cout << "SEtting model matrix" << std::endl;
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 }
 
