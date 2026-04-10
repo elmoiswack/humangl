@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-struct SingleVertex {
+struct SingleVertex3D {
 	float x;
 	float y;
 	float z;
@@ -26,7 +26,7 @@ enum BodyPartsIndex {
 class BodyParts
 {
 private:
-	std::vector<std::vector<SingleVertex>> body;
+	std::vector<std::vector<SingleVertex3D>> body;
 	int bodyPartSize = 72;
 	
 	float headWidth;
@@ -69,40 +69,40 @@ private:
 	float legRightLowHeight;
 	float legRightLowDepth;
 
-	SingleVertex armLeftUpPivotPoint;
-	SingleVertex armLeftLowPivotPoint;
+	SingleVertex3D armLeftUpPivotPoint;
+	SingleVertex3D armLeftLowPivotPoint;
 
-	SingleVertex armRightUpPivotPoint;
-	SingleVertex armRightLowPivotPoint;
+	SingleVertex3D armRightUpPivotPoint;
+	SingleVertex3D armRightLowPivotPoint;
 
-	SingleVertex legLeftUpPivotPoint;
-	SingleVertex legLeftLowPivotPoint;
+	SingleVertex3D legLeftUpPivotPoint;
+	SingleVertex3D legLeftLowPivotPoint;
 
-	SingleVertex legRightUpPivotPoint;
-	SingleVertex legRightLowPivotPoint;
+	SingleVertex3D legRightUpPivotPoint;
+	SingleVertex3D legRightLowPivotPoint;
 
 public:
 	BodyParts();
 	~BodyParts();
 	
-	void computeFacesForRectVertices(std::vector<SingleVertex>& input, std::vector<SingleVertex>& output);
-	void computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex>& result);
+	void computeFacesForRectVertices(std::vector<SingleVertex3D>& input, std::vector<SingleVertex3D>& output);
+	void computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex3D>& result);
 	
-	void computePivotPoint(SingleVertex& point, std::vector<SingleVertex>& array);
+	void computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& array);
 	void computeBody();
-	std::vector<std::vector<SingleVertex>>& getBody();
+	std::vector<std::vector<SingleVertex3D>>& getBody();
 	
-	SingleVertex& getLeftUpArmPivot();
-	SingleVertex& getLeftLowArmPivot();
+	SingleVertex3D& getLeftUpArmPivot();
+	SingleVertex3D& getLeftLowArmPivot();
 
-	SingleVertex& getRightUpArmPivot();
-	SingleVertex& getRightLowArmPivot();
+	SingleVertex3D& getRightUpArmPivot();
+	SingleVertex3D& getRightLowArmPivot();
 
-	SingleVertex& getLeftUpLegPivot();
-	SingleVertex& getLeftLowLegPivot();
+	SingleVertex3D& getLeftUpLegPivot();
+	SingleVertex3D& getLeftLowLegPivot();
 
-	SingleVertex& getRightUpLegPivot();
-	SingleVertex& getRightLowLegPivot();
+	SingleVertex3D& getRightUpLegPivot();
+	SingleVertex3D& getRightLowLegPivot();
 
 };
 

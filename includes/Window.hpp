@@ -17,6 +17,23 @@
 #include "Animation.hpp"
 #include "BodyParts.hpp"
 
+#define GLT_IMPLEMENTATION
+#include "../includes/gltext.h"
+
+struct SettingsText {
+	GLTtext* name = nullptr;
+	GLTtext* body = nullptr;
+	GLTtext* color = nullptr;
+	GLTtext* head = nullptr;
+	GLTtext* torso = nullptr;
+	GLTtext* right = nullptr;
+	GLTtext* left = nullptr;
+	GLTtext* upperArm = nullptr;
+	GLTtext* lowerArm = nullptr;
+	GLTtext* upperLeg = nullptr;
+	GLTtext* lowerLeg = nullptr;
+};
+
 class Window
 {
 private:
@@ -25,16 +42,20 @@ private:
 	int width;
 	int heigth;
 
-	BodyParts body;
 	std::vector<Mesh> meshes;
 	Shader shader;
 	Camera camera;
 	Matrix matrix;
 	Animation animations;
+	SettingsText settingsTexts;
+
 public:
+	Window(const char* name, int width, int height, const char* pathVertexShader, const char* pathFragmentShader, BodyParts& body);
 	Window(const char* name, int width, int height, const char* pathVertexShader, const char* pathFragmentShader);
-	Window(const char* name, int width, int height, bool withBody);
 	~Window();
+
+	void initWindow(const char* name, int width, int height);
+	void initShader(const char* pathVertexShader, const char* pathFragmentShader);
 
 	void makeCurrent();
 
@@ -46,12 +67,13 @@ public:
 
 	void computeView();
 
-	BodyParts& getBody();
 	std::vector<Mesh>& getMeshes();
 	Shader& getShader();
 	Camera& getCamera();
 	Matrix& getMatrix();
 	Animation& getAnimations();
+
+	void drawSettingsText();
 
 	class FailedWindowCreation : public std::exception {
 	public:

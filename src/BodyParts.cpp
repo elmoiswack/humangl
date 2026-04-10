@@ -68,7 +68,7 @@ BodyParts::BodyParts()
 
 BodyParts::~BodyParts() {}
 
-void BodyParts::computeFacesForRectVertices(std::vector<SingleVertex>& input, std::vector<SingleVertex>& output) {
+void BodyParts::computeFacesForRectVertices(std::vector<SingleVertex3D>& input, std::vector<SingleVertex3D>& output) {
 	const int standardOrder[72] = {
 		0, 0, 0,
 		1, 1, 0,
@@ -106,8 +106,8 @@ void BodyParts::computeFacesForRectVertices(std::vector<SingleVertex>& input, st
 	}
 }
 
-void BodyParts::computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex>& result) {
-	std::vector<SingleVertex> standardRect = {};
+void BodyParts::computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex3D>& result) {
+	std::vector<SingleVertex3D> standardRect = {};
 
 	standardRect.push_back({-width, -height, depth});
 	standardRect.push_back({width, -height, depth});
@@ -142,11 +142,11 @@ void BodyParts::computeSizeToRectVertex(float width, float height, float depth, 
 	this->computeFacesForRectVertices(standardRect, result);
 }
 
-void BodyParts::computePivotPoint(SingleVertex& point, std::vector<SingleVertex>& array) {
+void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& array) {
 	float maxY = std::max_element(
 		array.begin(),
 		array.end(),
-		[](const SingleVertex& a, const SingleVertex& b) {
+		[](const SingleVertex3D& a, const SingleVertex3D& b) {
 			return a.y < b.y;
     	}
 	)->y;
@@ -208,38 +208,38 @@ void BodyParts::computeBody() {
     }
 }
 
-std::vector<std::vector<SingleVertex>>& BodyParts::getBody() {
+std::vector<std::vector<SingleVertex3D>>& BodyParts::getBody() {
 	return this->body;
 }
 
-SingleVertex& BodyParts::getLeftUpArmPivot() {
+SingleVertex3D& BodyParts::getLeftUpArmPivot() {
 	return this->armLeftUpPivotPoint;
 }
 
-SingleVertex& BodyParts::getLeftLowArmPivot() {
+SingleVertex3D& BodyParts::getLeftLowArmPivot() {
 	return this->armLeftLowPivotPoint;
 }
 
-SingleVertex& BodyParts::getRightUpArmPivot() {
+SingleVertex3D& BodyParts::getRightUpArmPivot() {
 	return this->armRightUpPivotPoint;
 }
 
-SingleVertex& BodyParts::getRightLowArmPivot() {
+SingleVertex3D& BodyParts::getRightLowArmPivot() {
 	return this->armRightLowPivotPoint;
 }
 
-SingleVertex& BodyParts::getLeftUpLegPivot() {
+SingleVertex3D& BodyParts::getLeftUpLegPivot() {
 	return this->legLeftUpPivotPoint;
 }
 
-SingleVertex& BodyParts::getLeftLowLegPivot() {
+SingleVertex3D& BodyParts::getLeftLowLegPivot() {
 	return this->legLeftLowPivotPoint;
 }
 
-SingleVertex& BodyParts::getRightUpLegPivot() {
+SingleVertex3D& BodyParts::getRightUpLegPivot() {
 	return this->legRightUpPivotPoint;
 }
 
-SingleVertex& BodyParts::getRightLowLegPivot() {
+SingleVertex3D& BodyParts::getRightLowLegPivot() {
 	return this->legRightLowPivotPoint;
 }

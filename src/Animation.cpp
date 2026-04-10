@@ -2,8 +2,8 @@
 
 Animation::Animation()
 {
+	this->currentAnimation = AnimationTypes::IDLE;
 	this->rotationSpeed = 0.05f;
-	this->doneWithCycle = true;
 
 	this->leftArmUpRotationAngle = 0.0f;
 	this->leftArmUpRotationForward = true;
@@ -222,26 +222,25 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 	}
 	
 	
-	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) && (checkIfPartsFinished() == true)) {
-		std::cout << "FINISHED" << std::endl;
-		this->doneWithCycle = true;
+	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) && (this->checkIfPartsFinished() == true)) {
+		this->currentAnimation = AnimationTypes::IDLE;
 		matrix.setModelToIdentity();
 		shader.setUniformMatrix4x4(matrix.getModel(), "model");
 		shader.setUniform1i(0, "walkingAnimation");
 		return ;
 	}
-	std::cout << "SEtting model matrix" << std::endl;
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 }
 
-void Animation::startCycle() {
-	this->doneWithCycle = false;
+bool Animation::isAnimationFinished() {
+	return (this->currentAnimation == AnimationTypes::IDLE ? true : false);
+}
+	
+void Animation::startAnimation(AnimationTypes whichAnimation) {
+	this->currentAnimation = whichAnimation;
 }
 
-void Animation::cycleIsFinished() {
-	this->doneWithCycle = true;
+AnimationTypes Animation::getCurrentAnimation() {
+	return this->currentAnimation;
 }
 
-bool Animation::getDoneWithCycle() {
-	return this->doneWithCycle;
-}

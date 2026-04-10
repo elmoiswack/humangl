@@ -5,11 +5,17 @@
 #include "Matrix.hpp"
 #include "BodyParts.hpp"
 
+enum AnimationTypes {
+	IDLE,
+	WALKING,
+	JUMP,
+};
+
 class Animation
 {
 private:
+	AnimationTypes currentAnimation;
 	float rotationSpeed;
-	bool doneWithCycle;
 
 	float leftArmUpRotationAngle;
 	bool leftArmUpRotationForward;
@@ -60,9 +66,9 @@ public:
 	void rightLegUpRotation();
 	void rightLegLowRotation();
 
-	void startCycle();
-	void cycleIsFinished();
-	bool getDoneWithCycle();
+	bool isAnimationFinished();
+	void startAnimation(AnimationTypes whichAnimation);
+	AnimationTypes getCurrentAnimation();
 };
 
 #endif

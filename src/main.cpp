@@ -1,16 +1,10 @@
-#include "../includes/glad/glad.h"
-#include "../includes/Shader.hpp"
-#include "../includes/Matrix.hpp"
-#include "../includes/Camera.hpp"
-#include "../includes/BodyParts.hpp"
-#include "../includes/Mesh.hpp"
-#include "../includes/Animation.hpp"
 #include "../includes/Window.hpp"
+
 
 int MAIN_SCREEN_WIDTH = 1900;
 int MAIN_SCREEN_HEIGHT = 1080;
-int SETTINGS_SCREEN_WIDTH = 700;
-int SETTINGS_SCREEN_HEIGHT = 500;
+int SETTINGS_SCREEN_WIDTH = 800;
+int SETTINGS_SCREEN_HEIGHT = 950;
 
 void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& running) {
 	switch (keyEvent)
@@ -22,10 +16,10 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 		mainWindow.getCamera().rotateRight();
 		break;
 	case SDLK_W:
-		if (mainWindow.getShader().getUniform1i("walkingAnimation") != 1) {
+		if (mainWindow.getAnimations().isAnimationFinished() == true) {
+			mainWindow.makeCurrent();
 			mainWindow.getShader().setUniform1i(1, "walkingAnimation");
-			mainWindow.getAnimations().startCycle();
-			std::cout << "start animation" << std::endl;
+			mainWindow.getAnimations().startAnimation(AnimationTypes::WALKING);
 		}
 		break;
 	case SDLK_ESCAPE:
@@ -41,7 +35,7 @@ void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 	const bool* state = SDL_GetKeyboardState(nullptr);
 
 	while (SDL_PollEvent(&event)) {
-		if( event.type == SDL_EVENT_QUIT ) {
+		if(event.type == SDL_EVENT_QUIT) {
 			std::cout << "SDL_EVENT_QUIT EVENT" << std::endl;
 			running = false;
 		}
@@ -56,23 +50,22 @@ void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 }
 
 void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	if (shader.getUniform1i("walkingAnimation") == 1)
+	if (animations.getCurrentAnimation() == AnimationTypes::WALKING)
 	{
-		std::cout << "do animation" << std::endl;
 		animations.walkingAnimation(shader, matrix, body, i);
 	}
 }
 
-void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow) {
+void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& body) {
 	mainWindow.makeCurrent();
 	auto& mainWindowMeshes = mainWindow.getMeshes();
 	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
-		setModelForAnimation(mainWindow.getAnimations(), mainWindow.getShader(), mainWindow.getMatrix(), mainWindow.getBody(), i);
+		setModelForAnimation(mainWindow.getAnimations(), mainWindow.getShader(), mainWindow.getMatrix(), body, i);
 		mainWindow.drawMeshOnWindow(i);
 	}
 
 	settingsWindow.makeCurrent();
-	//draw settings on screen
+	settingsWindow.drawSettingsText();
 }
 
 int main(void) {
@@ -90,15 +83,9 @@ int main(void) {
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-		Window mainWindow("humanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, "shaders/MainWVertex.glsl", "shaders/MainWFragment.glsl");
+		BodyParts body;
+		Window mainWindow("humanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, "shaders/MainWVertex.glsl", "shaders/MainWFragment.glsl", body);
 		Window settingsWindow("Settings", SETTINGS_SCREEN_WIDTH, SETTINGS_SCREEN_HEIGHT, "shaders/SettingsWVertex.glsl", "shaders/SettingsWFragment.glsl");
-		
-		std::cout << "MAIN" << std::endl;
-		mainWindow.makeCurrent();
-		std::cout << "Settings" << std::endl;
-		settingsWindow.makeCurrent();
-		std::cout << "main" << std::endl;
-		mainWindow.makeCurrent();
 
 		bool running = true;
 
@@ -109,7 +96,7 @@ int main(void) {
 			checkInput(mainWindow, settingsWindow, running);
 
 			mainWindow.computeView();
-			drawPartsOnScreen(mainWindow, settingsWindow);
+			drawPartsOnScreen(mainWindow, settingsWindow, body);
 
 			mainWindow.makeCurrent();
 			if ((!SDL_GL_SwapWindow(mainWindow.getWindow()))) {
@@ -123,13 +110,11 @@ int main(void) {
 				break ;
 			};
 		}
-
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
-	glfwTerminate();
 	SDL_Quit();
 	return 0;
 }

@@ -14,14 +14,14 @@ private:
 
 public:
 	Mesh();
-	Mesh(std::vector<SingleVertex>& bodyPart, float* bodyColor);
+	Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor);
 	~Mesh();
 
 	std::size_t& getVertexCount();
 	GLuint& getVAO();
 	float* getColor();
 	void updateColor(float* newColor);
-	void updateVBO(std::vector<SingleVertex>& bodyPart);
+	void updateVBO(std::vector<SingleVertex3D>& bodyPart);
 
 	void deleteMesh();
 };
