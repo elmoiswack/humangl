@@ -2,6 +2,7 @@
 # define MESH_HPP
 
 #include "BodyParts.hpp"
+#include "Button.hpp"
 #include "glad/glad.h"
 
 class Mesh
@@ -15,6 +16,7 @@ private:
 public:
 	Mesh();
 	Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor);
+	Mesh(std::vector<SingleVertex3D>& button);
 	~Mesh();
 
 	std::size_t& getVertexCount();

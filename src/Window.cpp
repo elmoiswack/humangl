@@ -38,39 +38,19 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	this->initWindow(name, width, height);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	this->meshes = {};
-	this->initShader(pathVertexShader, pathFragmentShader);
-
-	if (!gltInit())
-	{
+	if (!gltInit()) {
 		fprintf(stderr, "Failed to initialize glText\n");
 		SDL_GL_DestroyContext(this->openGLContext);
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
 	}
-
-	this->settingsTexts.name = gltCreateText();
-	gltSetText(this->settingsTexts.name, "Settings");
-	this->settingsTexts.body = gltCreateText();
-	gltSetText(this->settingsTexts.body, "Body");
-	this->settingsTexts.color = gltCreateText();
-	gltSetText(this->settingsTexts.color, "Color");
-	this->settingsTexts.head = gltCreateText();
-	gltSetText(this->settingsTexts.head, "Head");
-	this->settingsTexts.torso = gltCreateText();
-	gltSetText(this->settingsTexts.torso, "Torso");
-	this->settingsTexts.right = gltCreateText();
-	gltSetText(this->settingsTexts.right, "Right");
-	this->settingsTexts.left = gltCreateText();
-	gltSetText(this->settingsTexts.left, "Left");
-	this->settingsTexts.upperArm = gltCreateText();
-	gltSetText(this->settingsTexts.upperArm, "Upper Arm");
-	this->settingsTexts.lowerArm = gltCreateText();
-	gltSetText(this->settingsTexts.lowerArm, "Lower Arm");
-	this->settingsTexts.upperLeg = gltCreateText();
-	gltSetText(this->settingsTexts.upperLeg, "Upper Leg");
-	this->settingsTexts.lowerLeg = gltCreateText();
-	gltSetText(this->settingsTexts.lowerLeg, "Lower Leg");
+ 	// create all buttons here
+	// Button plus(ButtonType::PLUS, "+");
+	Button minus(ButtonType::MINUS, "-");
+	this->meshes = {};
+	// this->meshes.emplace_back(Mesh(plus.getVertices()));
+	this->meshes.emplace_back(Mesh(minus.getVertices()));
+	this->initShader(pathVertexShader, pathFragmentShader);
 }
 
 Window::~Window()
@@ -79,20 +59,6 @@ Window::~Window()
 	SDL_DestroyWindow(this->window);
 	for (auto& mesh: this->meshes) {
 		mesh.deleteMesh();
-	}
-	if (this->settingsTexts.name != nullptr) {
-		gltDeleteText(this->settingsTexts.name);
-		gltDeleteText(this->settingsTexts.body);
-		gltDeleteText(this->settingsTexts.color);
-		gltDeleteText(this->settingsTexts.head);
-		gltDeleteText(this->settingsTexts.torso);
-		gltDeleteText(this->settingsTexts.right);
-		gltDeleteText(this->settingsTexts.left);
-		gltDeleteText(this->settingsTexts.upperArm);
-		gltDeleteText(this->settingsTexts.lowerArm);
-		gltDeleteText(this->settingsTexts.upperLeg);
-		gltDeleteText(this->settingsTexts.lowerLeg);
-		gltTerminate();
 	}
 }
 
@@ -165,9 +131,15 @@ SDL_WindowID Window::getWindowId() {
 	return SDL_GetWindowID(this->window);
 }
 
-void Window::drawMeshOnWindow(std::size_t index) {
+void Window::drawMeshOnWindow(std::size_t index, bool isColorAvailable) {
 	this->makeCurrent();
-	this->shader.setUniformVec3(this->meshes[index].getColor(), "color");
+	if (isColorAvailable)
+		this->shader.setUniformVec3(this->meshes[index].getColor(), "color");
+	else {
+		float color[] = {.4f, .4f, .4f};
+		this->shader.setUniformVec3(color, "color");
+	}
+
 	glBindVertexArray(this->meshes[index].getVAO());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawArrays(GL_TRIANGLES, 0, this->meshes[index].getVertexCount());
@@ -212,196 +184,168 @@ void Window::drawSettingsText() {
 	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 ///////////////////////HEADER////////////////////////////////
-	gltDrawText2DAligned(this->settingsTexts.name,
-		(GLfloat)(this->width / 2),
-		(GLfloat)(heightOffset),
-		3.5f,
-		GLT_CENTER, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.name,
+// 		(GLfloat)(this->width / 2),
+// 		(GLfloat)(heightOffset),
+// 		3.5f,
+// 		GLT_CENTER, GLT_TOP
+// 	);
 
-///////////////////////BODY////////////////////////////////
-	gltDrawText2DAligned(this->settingsTexts.body,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 16 + heightOffset),
-		3.f,
-		GLT_LEFT, GLT_TOP
-	);
+// ///////////////////////BODY////////////////////////////////
+// 	gltDrawText2DAligned(this->settingsTexts.body,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 16 + heightOffset),
+// 		3.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.head,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.head,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset),
+// 		2.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.torso,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + optionHeightOffset),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.torso,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + optionHeightOffset),
+// 		2.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.right,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2)),
-		2.5f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.right,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2)),
+// 		2.5f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.upperArm,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2.5)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
-
-	gltDrawText2DAligned(this->settingsTexts.lowerArm,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 3.5)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.left,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 6.5)),
+// 		2.5f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 	
-	gltDrawText2DAligned(this->settingsTexts.upperLeg,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 4.5)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.upper,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 7)),
+// 		2.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 5.5)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
-
-	gltDrawText2DAligned(this->settingsTexts.left,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 6.5)),
-		2.5f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.lower,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 8)),
+// 		2.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 	
-	gltDrawText2DAligned(this->settingsTexts.upperArm,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 7)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.arm,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 9)),
+// 		2.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.lowerArm,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 8)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
-	
-	gltDrawText2DAligned(this->settingsTexts.upperLeg,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 9)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
-
-	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
-		(GLfloat)(this->width / 16),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 10)),
-		2.f,
-		GLT_LEFT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.leg,
+// 		(GLfloat)(this->width / 16),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 10)),
+// 		2.f,
+// 		GLT_LEFT, GLT_TOP
+// 	);
 
 ///////////////////////COLOR////////////////////////////////
-	gltDrawText2DAligned(this->settingsTexts.color,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 16 + heightOffset),
-		3.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.color,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 16 + heightOffset),
+// 		3.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.head,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.head,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.torso,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + optionHeightOffset),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.torso,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + optionHeightOffset),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.right,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2)),
-		2.5f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.right,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2)),
+// 		2.5f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.upperArm,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2.5)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.upperArm,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2.5)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.lowerArm,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 3.5)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.lowerArm,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 3.5)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 	
-	gltDrawText2DAligned(this->settingsTexts.upperLeg,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 4.5)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.upperLeg,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 4.5)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 5.5)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 5.5)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.left,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 6.5)),
-		2.5f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.left,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 6.5)),
+// 		2.5f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 	
-	gltDrawText2DAligned(this->settingsTexts.upperArm,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 7)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.upperArm,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 7)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.lowerArm,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 8)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.lowerArm,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 8)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 	
-	gltDrawText2DAligned(this->settingsTexts.upperLeg,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 9)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.upperLeg,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 9)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
-	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
-		(GLfloat)((this->width / 16) * 15),
-		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 10)),
-		2.f,
-		GLT_RIGHT, GLT_TOP
-	);
+// 	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
+// 		(GLfloat)((this->width / 16) * 15),
+// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 10)),
+// 		2.f,
+// 		GLT_RIGHT, GLT_TOP
+// 	);
 
 	gltEndDraw();	
 }

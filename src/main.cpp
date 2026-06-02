@@ -1,6 +1,5 @@
 #include "../includes/Window.hpp"
 
-
 int MAIN_SCREEN_WIDTH = 1900;
 int MAIN_SCREEN_HEIGHT = 1080;
 int SETTINGS_SCREEN_WIDTH = 800;
@@ -58,19 +57,22 @@ void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix,
 
 void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& body) {
 	mainWindow.makeCurrent();
-	auto& mainWindowMeshes = mainWindow.getMeshes();
-	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
+	auto mainWindowMeshesSize = mainWindow.getMeshes().size();
+	for (std::size_t i = 0; i < mainWindowMeshesSize; i++) {
 		setModelForAnimation(mainWindow.getAnimations(), mainWindow.getShader(), mainWindow.getMatrix(), body, i);
-		mainWindow.drawMeshOnWindow(i);
+		mainWindow.drawMeshOnWindow(i, true);
 	}
 
 	settingsWindow.makeCurrent();
 	settingsWindow.drawSettingsText();
+	auto settingsWindowMeshesSize = settingsWindow.getMeshes().size();
+	for (std::size_t i = 0; i < settingsWindowMeshesSize; i++) {
+		settingsWindow.drawMeshOnWindow(i, false);
+	}
 }
 
 int main(void) {
-	try
-	{
+	try {
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
 			std::cout << "SHIIII INIT: " << SDL_GetError() << std::endl;
 			return -1;
@@ -84,7 +86,7 @@ int main(void) {
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 		BodyParts body;
-		Window mainWindow("humanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, "shaders/MainWVertex.glsl", "shaders/MainWFragment.glsl", body);
+		Window mainWindow("HumanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, "shaders/MainWVertex.glsl", "shaders/MainWFragment.glsl", body);
 		Window settingsWindow("Settings", SETTINGS_SCREEN_WIDTH, SETTINGS_SCREEN_HEIGHT, "shaders/SettingsWVertex.glsl", "shaders/SettingsWFragment.glsl");
 
 		bool running = true;
@@ -110,11 +112,10 @@ int main(void) {
 				break ;
 			};
 		}
-	}
-	catch(const std::exception& e)
-	{
+	} catch(const std::exception& e) {
 		std::cerr << e.what() << '\n';
 	}
+
 	SDL_Quit();
 	return 0;
 }

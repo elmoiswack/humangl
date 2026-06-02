@@ -24,8 +24,23 @@ Mesh::Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor)
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
 	glBufferData(GL_ARRAY_BUFFER, bodyPart.size() * sizeof(SingleVertex3D), bodyPart.data(), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)sizeof(SingleVertex3D));
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)sizeof(SingleVertex3D));
+}
+
+Mesh::Mesh(std::vector<SingleVertex3D>& button)
+{
+	this->vertexCount = button.size();
+	
+	glGenVertexArrays(1, &this->VAO);
+	glGenBuffers(1, &this->VBO);
+
+	glBindVertexArray(this->VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, button.size() * sizeof(SingleVertex3D), button.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)0);
 }
 
 Mesh::~Mesh() {

@@ -17,23 +17,6 @@
 #include "Animation.hpp"
 #include "BodyParts.hpp"
 
-#define GLT_IMPLEMENTATION
-#include "../includes/gltext.h"
-
-struct SettingsText {
-	GLTtext* name = nullptr;
-	GLTtext* body = nullptr;
-	GLTtext* color = nullptr;
-	GLTtext* head = nullptr;
-	GLTtext* torso = nullptr;
-	GLTtext* right = nullptr;
-	GLTtext* left = nullptr;
-	GLTtext* upperArm = nullptr;
-	GLTtext* lowerArm = nullptr;
-	GLTtext* upperLeg = nullptr;
-	GLTtext* lowerLeg = nullptr;
-};
-
 class Window
 {
 private:
@@ -47,7 +30,6 @@ private:
 	Camera camera;
 	Matrix matrix;
 	Animation animations;
-	SettingsText settingsTexts;
 
 public:
 	Window(const char* name, int width, int height, const char* pathVertexShader, const char* pathFragmentShader, BodyParts& body);
@@ -62,7 +44,7 @@ public:
 	SDL_Window* getWindow();
 	SDL_WindowID getWindowId();
 
-	void drawMeshOnWindow(std::size_t index);
+	void drawMeshOnWindow(std::size_t index, bool isColorAvailable);
 	void clearScreen();
 
 	void computeView();
