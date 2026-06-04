@@ -30,6 +30,9 @@ Mesh::Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor)
 
 Mesh::Mesh(std::vector<SingleVertex3D>& button)
 {
+	this->meshColor[0] = 0.4f;
+	this->meshColor[1] = 0.4f;
+	this->meshColor[2] = 0.4f;
 	this->vertexCount = button.size();
 	
 	glGenVertexArrays(1, &this->VAO);

@@ -2,7 +2,6 @@
 # define MESH_HPP
 
 #include "BodyParts.hpp"
-#include "Button.hpp"
 #include "glad/glad.h"
 
 class Mesh

@@ -16,6 +16,7 @@
 #include "Matrix.hpp"
 #include "Animation.hpp"
 #include "BodyParts.hpp"
+#include "Button.hpp"
 
 class Window
 {
@@ -26,6 +27,7 @@ private:
 	int heigth;
 
 	std::vector<Mesh> meshes;
+	std::vector<Button> buttons;
 	Shader shader;
 	Camera camera;
 	Matrix matrix;
@@ -37,25 +39,23 @@ public:
 	~Window();
 
 	void initWindow(const char* name, int width, int height);
-	void initShader(const char* pathVertexShader, const char* pathFragmentShader);
 
 	void makeCurrent();
 
 	SDL_Window* getWindow();
 	SDL_WindowID getWindowId();
 
-	void drawMeshOnWindow(std::size_t index, bool isColorAvailable);
+	void drawMeshOnWindow(Mesh& mesh);
 	void clearScreen();
 
 	void computeView();
 
 	std::vector<Mesh>& getMeshes();
+	std::vector<Button>& getButtons();
 	Shader& getShader();
 	Camera& getCamera();
 	Matrix& getMatrix();
 	Animation& getAnimations();
-
-	void drawSettingsText();
 
 	class FailedWindowCreation : public std::exception {
 	public:

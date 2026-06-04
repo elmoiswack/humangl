@@ -25,9 +25,13 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	for (size_t i = 0; i < bodyParts.size(); ++i) {
 		this->meshes.emplace_back(Mesh(bodyParts[i], colors[i].data()));
 	}
+	// this->buttons = {};
 
 	this->shader = Shader(pathVertexShader, pathFragmentShader);
-	this->initShader(pathVertexShader, pathFragmentShader);
+	this->shader.useProgram();
+	this->shader.setUniformMatrix4x4(this->matrix.getPerspective(), "perspective");
+	this->shader.setUniformMatrix4x4(this->matrix.getModel(), "model");
+	this->computeView();
 }
 
 Window::Window(const char* name, int width, int height, const char* pathVertexShader, const char* pathFragmentShader) :
@@ -44,13 +48,14 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
 	}
+
  	// create all buttons here
 	// Button plus(ButtonType::PLUS, "+");
-	Button minus(ButtonType::MINUS, "-");
+	this->buttons = {};
+	this->buttons.emplace_back(Button(ButtonType::MINUS, 20, 20, 200, 200, width, height));
+	this->buttons[0].createName("-");
 	this->meshes = {};
-	// this->meshes.emplace_back(Mesh(plus.getVertices()));
-	this->meshes.emplace_back(Mesh(minus.getVertices()));
-	this->initShader(pathVertexShader, pathFragmentShader);
+	this->shader = Shader(pathVertexShader, pathFragmentShader);
 }
 
 Window::~Window()
@@ -60,6 +65,10 @@ Window::~Window()
 	for (auto& mesh: this->meshes) {
 		mesh.deleteMesh();
 	}
+	for (auto& button: this->buttons) {
+		button.deleteName();
+	}
+	gltTerminate();
 }
 
 void Window::initWindow(const char* name, int width, int height) {
@@ -104,14 +113,6 @@ void Window::initWindow(const char* name, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-void Window::initShader(const char* pathVertexShader, const char* pathFragmentShader) {
-	this->shader = Shader(pathVertexShader, pathFragmentShader);
-	this->shader.useProgram();
-	this->shader.setUniformMatrix4x4(this->matrix.getPerspective(), "perspective");
-	this->shader.setUniformMatrix4x4(this->matrix.getModel(), "model");
-	this->computeView();
-}
-
 void Window::makeCurrent() {
 	if (!SDL_GL_MakeCurrent(this->window, this->openGLContext)) {
 		std::cout << "Failed to make current: " << SDL_GetError() << std::endl;
@@ -131,18 +132,13 @@ SDL_WindowID Window::getWindowId() {
 	return SDL_GetWindowID(this->window);
 }
 
-void Window::drawMeshOnWindow(std::size_t index, bool isColorAvailable) {
+void Window::drawMeshOnWindow(Mesh& mesh) {
 	this->makeCurrent();
-	if (isColorAvailable)
-		this->shader.setUniformVec3(this->meshes[index].getColor(), "color");
-	else {
-		float color[] = {.4f, .4f, .4f};
-		this->shader.setUniformVec3(color, "color");
-	}
+	this->shader.setUniformVec3(mesh.getColor(), "color");
 
-	glBindVertexArray(this->meshes[index].getVAO());
+	glBindVertexArray(mesh.getVAO());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawArrays(GL_TRIANGLES, 0, this->meshes[index].getVertexCount());
+	glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
 	glBindVertexArray(0);
 }
 
@@ -161,6 +157,10 @@ std::vector<Mesh>& Window::getMeshes() {
 	return this->meshes;
 }
 
+std::vector<Button>& Window::getButtons() {
+	return this->buttons;
+}
+
 Shader& Window::getShader() {
 	return this->shader;
 }
@@ -175,177 +175,4 @@ Matrix& Window::getMatrix() {
 
 Animation& Window::getAnimations() {
 	return this->animations;
-}
-
-void Window::drawSettingsText() {
-	float heightOffset = 10.f;
-	float optionHeightOffset = 70.f;
-	gltBeginDraw();
-	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-///////////////////////HEADER////////////////////////////////
-// 	gltDrawText2DAligned(this->settingsTexts.name,
-// 		(GLfloat)(this->width / 2),
-// 		(GLfloat)(heightOffset),
-// 		3.5f,
-// 		GLT_CENTER, GLT_TOP
-// 	);
-
-// ///////////////////////BODY////////////////////////////////
-// 	gltDrawText2DAligned(this->settingsTexts.body,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 16 + heightOffset),
-// 		3.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.head,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset),
-// 		2.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.torso,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + optionHeightOffset),
-// 		2.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.right,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2)),
-// 		2.5f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.left,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 6.5)),
-// 		2.5f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-	
-// 	gltDrawText2DAligned(this->settingsTexts.upper,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 7)),
-// 		2.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.lower,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 8)),
-// 		2.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-	
-// 	gltDrawText2DAligned(this->settingsTexts.arm,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 9)),
-// 		2.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.leg,
-// 		(GLfloat)(this->width / 16),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 10)),
-// 		2.f,
-// 		GLT_LEFT, GLT_TOP
-// 	);
-
-///////////////////////COLOR////////////////////////////////
-// 	gltDrawText2DAligned(this->settingsTexts.color,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 16 + heightOffset),
-// 		3.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.head,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.torso,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + optionHeightOffset),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.right,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2)),
-// 		2.5f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.upperArm,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 2.5)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.lowerArm,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 3.5)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-	
-// 	gltDrawText2DAligned(this->settingsTexts.upperLeg,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 4.5)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 5.5)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.left,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 6.5)),
-// 		2.5f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-	
-// 	gltDrawText2DAligned(this->settingsTexts.upperArm,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 7)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.lowerArm,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 8)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-	
-// 	gltDrawText2DAligned(this->settingsTexts.upperLeg,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 9)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-// 	gltDrawText2DAligned(this->settingsTexts.lowerLeg,
-// 		(GLfloat)((this->width / 16) * 15),
-// 		(GLfloat)(this->heigth / 8 + heightOffset + (optionHeightOffset * 10)),
-// 		2.f,
-// 		GLT_RIGHT, GLT_TOP
-// 	);
-
-	gltEndDraw();	
 }

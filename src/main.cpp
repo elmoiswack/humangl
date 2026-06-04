@@ -49,25 +49,24 @@ void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 }
 
 void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	if (animations.getCurrentAnimation() == AnimationTypes::WALKING)
-	{
+	if (animations.getCurrentAnimation() == AnimationTypes::WALKING) {
 		animations.walkingAnimation(shader, matrix, body, i);
 	}
 }
 
 void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& body) {
 	mainWindow.makeCurrent();
-	auto mainWindowMeshesSize = mainWindow.getMeshes().size();
-	for (std::size_t i = 0; i < mainWindowMeshesSize; i++) {
+	auto& mainWindowMeshes = mainWindow.getMeshes();
+	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
 		setModelForAnimation(mainWindow.getAnimations(), mainWindow.getShader(), mainWindow.getMatrix(), body, i);
-		mainWindow.drawMeshOnWindow(i, true);
+		mainWindow.drawMeshOnWindow(mainWindowMeshes[i]);
 	}
 
 	settingsWindow.makeCurrent();
-	settingsWindow.drawSettingsText();
-	auto settingsWindowMeshesSize = settingsWindow.getMeshes().size();
-	for (std::size_t i = 0; i < settingsWindowMeshesSize; i++) {
-		settingsWindow.drawMeshOnWindow(i, false);
+	auto& settingsButtons = settingsWindow.getButtons();
+	for (std::size_t i = 0; i < settingsButtons.size(); i++) {
+		settingsWindow.drawMeshOnWindow(settingsButtons[i].getMesh());
+		settingsButtons[i].drawName();
 	}
 }
 
