@@ -20,12 +20,10 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 		{0.8f, 0.0f, 0.8f},
 		{0.0f, 0.8f, 0.0f},
 	};
-	this->meshes = {};
 	auto bodyParts = body.getBody();
 	for (size_t i = 0; i < bodyParts.size(); ++i) {
 		this->meshes.emplace_back(Mesh(bodyParts[i], colors[i].data()));
 	}
-	// this->buttons = {};
 
 	this->shader = Shader(pathVertexShader, pathFragmentShader);
 	this->shader.useProgram();
@@ -48,12 +46,22 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
 	}
+	
+	this->buttons.emplace_back(Button(ButtonType::UNCLICKABLE, 285, 20, 230, 60, width, height));
+	GLTtext* screenName = gltCreateText();
+	gltSetText(screenName, "Settings");
+	this->buttonLabels.push_back(screenName);
 
- 	// create all buttons here
-	// Button plus(ButtonType::PLUS, "+");
-	this->buttons = {};
-	this->buttons.emplace_back(Button(ButtonType::MINUS, 20, 20, 200, 200, width, height));
-	this->buttons[0].createName("-");
+	this->buttons.emplace_back(Button(ButtonType::MINUS, 270, 800, 80, 80, width, height));
+	GLTtext* minus = gltCreateText();
+	gltSetText(minus, "-");
+	this->buttonLabels.push_back(minus);
+
+	this->buttons.emplace_back(Button(ButtonType::PLUS, 450, 800, 80, 80, width, height));
+	GLTtext* plus = gltCreateText();
+	gltSetText(plus, "+");
+	this->buttonLabels.push_back(plus);
+	
 	this->meshes = {};
 	this->shader = Shader(pathVertexShader, pathFragmentShader);
 }
@@ -65,8 +73,8 @@ Window::~Window()
 	for (auto& mesh: this->meshes) {
 		mesh.deleteMesh();
 	}
-	for (auto& button: this->buttons) {
-		button.deleteName();
+	for (auto& buttonLabel: this->buttonLabels) {
+		gltDeleteText(buttonLabel);
 	}
 	gltTerminate();
 }
@@ -161,6 +169,10 @@ std::vector<Button>& Window::getButtons() {
 	return this->buttons;
 }
 
+std::vector<GLTtext*>& Window::getButtonsLabels() {
+	return this->buttonLabels;
+}
+
 Shader& Window::getShader() {
 	return this->shader;
 }
@@ -175,4 +187,27 @@ Matrix& Window::getMatrix() {
 
 Animation& Window::getAnimations() {
 	return this->animations;
+}
+
+void Window::drawText(Button& button, GLTtext* text) {
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	float font = 3.0;
+	if (button.getType() != ButtonType::WORD && button.getType() != ButtonType::UNCLICKABLE)
+		font = 6.0;
+
+	gltBeginDraw();
+	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
+	gltDrawText2D(
+		text,
+		(GLfloat)button.getX(),
+		(GLfloat)button.getY(),
+		font
+	);
+	gltEndDraw();
+
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
 }

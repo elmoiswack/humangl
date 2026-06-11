@@ -14,6 +14,7 @@ enum ButtonType {
 	PLUS,
 	MINUS,
 	WORD,
+	UNCLICKABLE
 };
 
 class Button
@@ -22,7 +23,6 @@ private:
 	std::vector<SingleVertex3D> vertices;
 	Mesh mesh;
 	ButtonType type;
-	GLTtext* name = nullptr;
 	float width;
 	float height;
 	float posX;
@@ -35,13 +35,14 @@ public:
 
 	void setVertices(float x, float y, int width, int height, int screenWidth, int screenHeight);
 	std::vector<SingleVertex3D>& getVertices();
-	
-	void createName(std::string buttonName);
-	void drawName();
+	float normalizeValue(float point, float screenValue);
 
+	ButtonType getType();
 	Mesh& getMesh();
-
-	void deleteName();
+	float getX();
+	float getY();
+	float getWidth();
+	float getHeight();
 };
 
 #endif

@@ -2,7 +2,6 @@
 
 Button::Button(ButtonType type, float x, float y, int width, int height, int screenWidth, int screenHeight) {
 	this->type = type;
-	this->name = nullptr;
 	this->setVertices(x, y, width, height, screenWidth, screenHeight);
 	this->mesh = Mesh(this->vertices);
 }
@@ -15,20 +14,27 @@ void Button::setVertices(float x, float y, int width, int height, int screenWidt
 	this->width = width;
 	this->height = height;
 
-	float halfScreenWidth = screenWidth / 2;
-	float halfScreenHeight = screenHeight / 2;
+	if (width == 0 || height == 0) {
+		this->vertices = {};
+		return ;
+	}
 
-	float point1X = (x > halfScreenWidth ? ((x + halfScreenWidth) / screenWidth) : -((x + halfScreenWidth) / screenWidth));
-	float point1Y = (y > halfScreenHeight ? -((y + halfScreenHeight) / screenHeight) : ((y + halfScreenHeight) / screenHeight));
+	if (x > screenWidth || y > screenHeight) {
+		this->vertices = {};
+		return ;
+	}
 
-	float point2X = ((x + width) > halfScreenWidth ? (((x + width) + halfScreenWidth) / screenWidth) : -(((x + width) + halfScreenWidth) / screenWidth));
-	float point2Y = (y > halfScreenHeight ? -((y + halfScreenHeight) / screenHeight) : ((y + halfScreenHeight) / screenHeight));
+	float point1X = normalizeValue(x, screenWidth);
+	float point1Y = -normalizeValue(y, screenHeight);
+
+	float point2X = normalizeValue(x + width, screenWidth);
+	float point2Y = -normalizeValue(y, screenHeight);
 	
-	float point3X = (x > halfScreenWidth ? ((x + halfScreenWidth) / screenWidth) : -((x + halfScreenWidth) / screenWidth));
-	float point3Y = ((y + height) > halfScreenHeight ? -(((y + height) + halfScreenHeight) / screenHeight) : (((y + height) + halfScreenHeight) / screenHeight));
+	float point3X = normalizeValue(x, screenWidth);
+	float point3Y = -normalizeValue(y + height, screenHeight);
 	
-	float point4X = ((x + width) > halfScreenWidth ? (((x + width) + halfScreenWidth) / screenWidth) : -(((x + width) + halfScreenWidth) / screenWidth));
-	float point4Y = ((y + height) > halfScreenHeight ? -(((y + height) + halfScreenHeight) / screenHeight) : (((y + height) + halfScreenHeight) / screenHeight));
+	float point4X = normalizeValue(x + width, screenWidth);
+	float point4Y = -normalizeValue(y + height, screenHeight);
 
 	this->vertices = {
 		SingleVertex3D{point1X, point1Y, 0.0f},
@@ -40,6 +46,10 @@ void Button::setVertices(float x, float y, int width, int height, int screenWidt
 	};
 }
 
+float Button::normalizeValue(float point, float screenValue) {
+	return (((point / screenValue) * 2) - 1);
+}
+
 std::vector<SingleVertex3D>& Button::getVertices() {
 	return this->vertices;
 }
@@ -48,32 +58,22 @@ Mesh& Button::getMesh() {
 	return this->mesh;
 }
 
-void Button::createName(std::string buttonName) {
-	this->name = gltCreateText();
-	gltSetText(this->name, "-");
+ButtonType Button::getType() {
+	return this->type;
 }
 
-void Button::drawName() {
-	gltBeginDraw();
-	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
-	std::cout << this->name->_text << std::endl;
-	std::cout << this->name->_textLength << std::endl;
-	std::cout << this->name->_vao << std::endl;
-	std::cout << this->name->_vbo << std::endl;
-	if (this->name->_vertices == nullptr) {
-		std::cout << "dasdsad MEHDJHDSBDUSD" << std::endl;
-	}
-	std::cout << this->name->_vertices << std::endl;
-	gltDrawText2D(
-		this->name,
-		(GLfloat)(this->posX + (this->posX * 0.25)),
-		(GLfloat)(this->posY + (this->posY * 0.25)),
-		2.0f
-	);
-	gltEndDraw();
+float Button::getX() {
+	return this->posX;
 }
 
-void Button::deleteName() {
-	gltDeleteText(this->name);
-	this->name = nullptr;
+float Button::getY() {
+	return this->posY;
+}
+
+float Button::getWidth() {
+	return this->width;
+}
+
+float Button::getHeight() {
+	return this->height;
 }

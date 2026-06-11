@@ -63,10 +63,11 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 	}
 
 	settingsWindow.makeCurrent();
-	auto& settingsButtons = settingsWindow.getButtons();
-	for (std::size_t i = 0; i < settingsButtons.size(); i++) {
-		settingsWindow.drawMeshOnWindow(settingsButtons[i].getMesh());
-		settingsButtons[i].drawName();
+	auto& buttons = settingsWindow.getButtons();
+	auto& labels = settingsWindow.getButtonsLabels();
+	for (std::size_t i = 0; i < buttons.size(); i++) {
+		settingsWindow.drawMeshOnWindow(buttons[i].getMesh());
+		settingsWindow.drawText(buttons[i], labels[i]);
 	}
 }
 

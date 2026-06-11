@@ -28,6 +28,7 @@ private:
 
 	std::vector<Mesh> meshes;
 	std::vector<Button> buttons;
+	std::vector<GLTtext*> buttonLabels;
 	Shader shader;
 	Camera camera;
 	Matrix matrix;
@@ -46,12 +47,14 @@ public:
 	SDL_WindowID getWindowId();
 
 	void drawMeshOnWindow(Mesh& mesh);
+	void drawText(Button& button, GLTtext* text);
 	void clearScreen();
 
 	void computeView();
 
 	std::vector<Mesh>& getMeshes();
 	std::vector<Button>& getButtons();
+	std::vector<GLTtext*>& getButtonsLabels();
 	Shader& getShader();
 	Camera& getCamera();
 	Matrix& getMatrix();
@@ -63,6 +66,9 @@ public:
 			return ("Failed to create window or openGL context!");
 		}
 	};
+
+
+
 };
 
 #endif
