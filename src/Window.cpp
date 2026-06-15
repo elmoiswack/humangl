@@ -92,6 +92,36 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	gltSetText(legText, "Leg");
 	this->buttonLabels.push_back(legText);
 
+	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 550, 120, 40, width, height));
+	GLTtext* widthText = gltCreateText();
+	gltSetText(widthText, "Width");
+	this->buttonLabels.push_back(widthText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 550, 130, 40, width, height));
+	GLTtext* heightText = gltCreateText();
+	gltSetText(heightText, "Height");
+	this->buttonLabels.push_back(heightText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 550, 120, 40, width, height));
+	GLTtext* depthText = gltCreateText();
+	gltSetText(depthText, "Depth");
+	this->buttonLabels.push_back(depthText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 650, 120, 40, width, height));
+	GLTtext* rText = gltCreateText();
+	gltSetText(rText, "Red");
+	this->buttonLabels.push_back(rText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 650, 130, 40, width, height));
+	GLTtext* bText = gltCreateText();
+	gltSetText(bText, "Blue");
+	this->buttonLabels.push_back(bText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 650, 120, 40, width, height));
+	GLTtext* gText = gltCreateText();
+	gltSetText(gText, "Green");
+	this->buttonLabels.push_back(gText);
+
 	this->buttons.emplace_back(Button(ButtonType::MINUS, 270, 800, 80, 80, width, height));
 	GLTtext* minusText = gltCreateText();
 	gltSetText(minusText, "-");

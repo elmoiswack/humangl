@@ -4,6 +4,7 @@ Button::Button(ButtonType type, float x, float y, int width, int height, int scr
 	this->type = type;
 	this->setVertices(x, y, width, height, screenWidth, screenHeight);
 	this->mesh = Mesh(this->vertices);
+	this->active = false;
 }
 
 Button::~Button() {}
@@ -48,10 +49,14 @@ void Button::setVertices(float x, float y, int width, int height, int screenWidt
 
 void Button::activateButton() {
 	this->active = true;
+	float color[3] = {0.6f, 0.6f, 0.6f};
+	this->mesh.updateColor(color);
 }
 
 void Button::deactivateButton() {
 	this->active = false;
+	float color[3] = {0.4f, 0.4f, 0.4f};
+	this->mesh.updateColor(color);
 }
 
 bool Button::getActive() {
