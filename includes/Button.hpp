@@ -27,7 +27,7 @@ private:
 	float height;
 	float posX;
 	float posY;
-	bool active = false;
+	bool active;
 
 public:
 	Button(ButtonType type, float x, float y, int width, int height, int screenWidth, int screenHeight);
@@ -36,6 +36,10 @@ public:
 	void setVertices(float x, float y, int width, int height, int screenWidth, int screenHeight);
 	std::vector<SingleVertex3D>& getVertices();
 	float normalizeValue(float point, float screenValue);
+
+	void activateButton();
+	void deactivateButton();
+	bool getActive();
 
 	ButtonType getType();
 	Mesh& getMesh();

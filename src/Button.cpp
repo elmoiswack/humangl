@@ -46,6 +46,18 @@ void Button::setVertices(float x, float y, int width, int height, int screenWidt
 	};
 }
 
+void Button::activateButton() {
+	this->active = true;
+}
+
+void Button::deactivateButton() {
+	this->active = false;
+}
+
+bool Button::getActive() {
+	return this->active;
+}
+
 float Button::normalizeValue(float point, float screenValue) {
 	return (((point / screenValue) * 2) - 1);
 }

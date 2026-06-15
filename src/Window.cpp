@@ -52,15 +52,55 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	gltSetText(screenName, "Settings");
 	this->buttonLabels.push_back(screenName);
 
+	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 130, 110, 40, width, height));
+	GLTtext* bodyText = gltCreateText();
+	gltSetText(bodyText, "Body");
+	this->buttonLabels.push_back(bodyText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 130, 120, 40, width, height));
+	GLTtext* colorText = gltCreateText();
+	gltSetText(colorText, "Color");
+	this->buttonLabels.push_back(colorText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 240, 110, 40, width, height));
+	GLTtext* leftText = gltCreateText();
+	gltSetText(leftText, "Left");
+	this->buttonLabels.push_back(leftText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 240, 120, 40, width, height));
+	GLTtext* rightText = gltCreateText();
+	gltSetText(rightText, "Right");
+	this->buttonLabels.push_back(rightText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 350, 120, 40, width, height));
+	GLTtext* upperText = gltCreateText();
+	gltSetText(upperText, "Upper"); 
+	this->buttonLabels.push_back(upperText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 350, 120, 40, width, height));
+	GLTtext* lowerText = gltCreateText();
+	gltSetText(lowerText, "Lower");
+	this->buttonLabels.push_back(lowerText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 450, 90, 40, width, height));
+	GLTtext* armText = gltCreateText();
+	gltSetText(armText, "Arm");
+	this->buttonLabels.push_back(armText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 450, 90, 40, width, height));
+	GLTtext* legText = gltCreateText();
+	gltSetText(legText, "Leg");
+	this->buttonLabels.push_back(legText);
+
 	this->buttons.emplace_back(Button(ButtonType::MINUS, 270, 800, 80, 80, width, height));
-	GLTtext* minus = gltCreateText();
-	gltSetText(minus, "-");
-	this->buttonLabels.push_back(minus);
+	GLTtext* minusText = gltCreateText();
+	gltSetText(minusText, "-");
+	this->buttonLabels.push_back(minusText);
 
 	this->buttons.emplace_back(Button(ButtonType::PLUS, 450, 800, 80, 80, width, height));
-	GLTtext* plus = gltCreateText();
-	gltSetText(plus, "+");
-	this->buttonLabels.push_back(plus);
+	GLTtext* plusText = gltCreateText(); 
+	gltSetText(plusText, "+");
+	this->buttonLabels.push_back(plusText);
 	
 	this->meshes = {};
 	this->shader = Shader(pathVertexShader, pathFragmentShader);
@@ -194,12 +234,23 @@ void Window::drawText(Button& button, GLTtext* text) {
 	glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	auto type = button.getType();
+
 	float font = 3.0;
-	if (button.getType() != ButtonType::WORD && button.getType() != ButtonType::UNCLICKABLE)
+	if (type == ButtonType::WORD) {
+		font = 2.5;
+	} else if (type != ButtonType::WORD && type != ButtonType::UNCLICKABLE) {
 		font = 6.0;
+	}
 
 	gltBeginDraw();
-	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
+	if (type != ButtonType::WORD)
+		gltColor(1.0f, 1.0f, 1.0f, 1.0f);
+	else if (button.getActive() == true)
+		gltColor(1.0f, 1.0f, 1.0f, 1.0f);
+	else
+		gltColor(0.7f, 0.7f, 0.7f, 1.0f);
+	
 	gltDrawText2D(
 		text,
 		(GLfloat)button.getX(),

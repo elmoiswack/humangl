@@ -10,9 +10,7 @@ Camera::Camera()
 	this->z = 3.0f;
 }
 
-Camera::~Camera()
-{
-}
+Camera::~Camera() {}
 
 void Camera::rotateLeft() {
 
