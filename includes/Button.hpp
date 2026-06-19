@@ -37,6 +37,8 @@ public:
 	std::vector<SingleVertex3D>& getVertices();
 	float normalizeValue(float point, float screenValue);
 
+	int checkOnClick(float x, float y);
+
 	void activateButton();
 	void deactivateButton();
 	bool getActive();

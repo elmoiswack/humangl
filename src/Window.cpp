@@ -113,14 +113,14 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	this->buttonLabels.push_back(rText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 650, 130, 40, width, height));
-	GLTtext* bText = gltCreateText();
-	gltSetText(bText, "Blue");
-	this->buttonLabels.push_back(bText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 650, 120, 40, width, height));
 	GLTtext* gText = gltCreateText();
 	gltSetText(gText, "Green");
 	this->buttonLabels.push_back(gText);
+
+	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 650, 120, 40, width, height));
+	GLTtext* bText = gltCreateText();
+	gltSetText(bText, "Blue");
+	this->buttonLabels.push_back(bText);
 
 	this->buttons.emplace_back(Button(ButtonType::MINUS, 270, 800, 80, 80, width, height));
 	GLTtext* minusText = gltCreateText();
@@ -291,4 +291,21 @@ void Window::drawText(Button& button, GLTtext* text) {
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
+}
+
+void Window::checkButtonCounterpart(std::size_t index) {
+	if (index >= ButtonOrder::WIDTH) {
+		for (std::size_t i = ButtonOrder::WIDTH; i <= ButtonOrder::BLUE; i++) {
+			if (i == index)
+				continue;
+			else
+				this->buttons[i].deactivateButton();
+		}
+	} else if (index % 2 == 0) {
+		if (this->buttons[index - 1].getActive() == true)
+			this->buttons[index - 1].deactivateButton();
+	} else {
+		if (this->buttons[index + 1].getActive() == true)
+			this->buttons[index + 1].deactivateButton();		
+	}
 }

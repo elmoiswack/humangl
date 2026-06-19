@@ -18,6 +18,24 @@
 #include "BodyParts.hpp"
 #include "Button.hpp"
 
+enum ButtonOrder {
+	TITLE,
+	BODY,
+	COLOR,
+	LEFT,
+	RIGHT,
+	UPPER,
+	LOWER,
+	ARM,
+	LEG,
+	WIDTH,
+	HEIGHT,
+	DEPTH,
+	RED,
+	GREEN,
+	BLUE
+};
+
 class Window
 {
 private:
@@ -59,6 +77,8 @@ public:
 	Camera& getCamera();
 	Matrix& getMatrix();
 	Animation& getAnimations();
+
+	void checkButtonCounterpart(std::size_t index);
 
 	class FailedWindowCreation : public std::exception {
 	public:

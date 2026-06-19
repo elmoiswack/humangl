@@ -32,6 +32,7 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
+	auto& buttons = settingsWindow.getButtons();
 
 	while (SDL_PollEvent(&event)) {
 		if(event.type == SDL_EVENT_QUIT) {
@@ -45,6 +46,18 @@ void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 		if (event.window.windowID == mainWindow.getWindowId() && event.type == SDL_EVENT_KEY_DOWN) {
 			inputSwitchMainWindow(event.key.key, mainWindow, running);
     	}
+		if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+            float x = event.motion.x;
+            float y = event.motion.y;
+
+			for (std::size_t i = 0; i < buttons.size(); i++) {
+				if (buttons[i].getType() == ButtonType::UNCLICKABLE)
+					continue ;
+				if (buttons[i].checkOnClick(x, y) == 1) {
+					settingsWindow.checkButtonCounterpart(i);
+				}
+			}
+		}
     }
 }
 

@@ -47,6 +47,20 @@ void Button::setVertices(float x, float y, int width, int height, int screenWidt
 	};
 }
 
+int Button::checkOnClick(float x, float y) {
+	if ((x >= this->posX) && (x <= (this->posX + this->width)) && \
+		(y >= this->posY) && (y <= (this->posY + this->height))) {
+		if (this->active == false) {
+			this->activateButton();
+			return 1;
+		} else {
+			this->deactivateButton();
+			return 0;
+		}
+	}
+	return 0;
+}
+
 void Button::activateButton() {
 	this->active = true;
 	float color[3] = {0.6f, 0.6f, 0.6f};
