@@ -33,7 +33,7 @@ enum ButtonOrder {
 	DEPTH,
 	RED,
 	GREEN,
-	BLUE
+	BLUE,
 };
 
 class Window

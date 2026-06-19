@@ -54,7 +54,17 @@ void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 				if (buttons[i].getType() == ButtonType::UNCLICKABLE)
 					continue ;
 				if (buttons[i].checkOnClick(x, y) == 1) {
-					settingsWindow.checkButtonCounterpart(i);
+					if (buttons[i].getType() == ButtonType::PLUS || buttons[i].getType() == ButtonType::MINUS) {
+						if (buttons[i].getActive() == false) {
+							std::cout << "AAAAAAAAAAAAAAAAA" << std::endl;
+							buttons[i].activateButton();
+						} else {
+							std::cout << "BBBBBBBBBBBBB" << std::endl;
+							buttons[i].deactivateButton();
+						}
+					} else {
+						settingsWindow.checkButtonCounterpart(i);
+					}
 				}
 			}
 		}

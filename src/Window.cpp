@@ -294,7 +294,7 @@ void Window::drawText(Button& button, GLTtext* text) {
 }
 
 void Window::checkButtonCounterpart(std::size_t index) {
-	if (index >= ButtonOrder::WIDTH) {
+	if (index >= ButtonOrder::WIDTH && index <= ButtonOrder::BLUE) {
 		for (std::size_t i = ButtonOrder::WIDTH; i <= ButtonOrder::BLUE; i++) {
 			if (i == index)
 				continue;
@@ -306,6 +306,6 @@ void Window::checkButtonCounterpart(std::size_t index) {
 			this->buttons[index - 1].deactivateButton();
 	} else {
 		if (this->buttons[index + 1].getActive() == true)
-			this->buttons[index + 1].deactivateButton();		
+			this->buttons[index + 1].deactivateButton();
 	}
 }
