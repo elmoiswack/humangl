@@ -25,7 +25,7 @@ Mesh::Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor)
 
 	glBufferData(GL_ARRAY_BUFFER, bodyPart.size() * sizeof(SingleVertex3D), bodyPart.data(), GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)sizeof(SingleVertex3D));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)0);
 }
 
 Mesh::Mesh(std::vector<SingleVertex3D>& button)
@@ -66,6 +66,7 @@ void Mesh::updateColor(float* newColor) {
 	this->meshColor[0] = newColor[0];
 	this->meshColor[1] = newColor[1];
 	this->meshColor[2] = newColor[2];
+	std::cout << "0: " << this->meshColor[0] << ", 1:" << this->meshColor[1] << ", 2:" << this->meshColor[2] << std::endl;
 }
 
 void Mesh::updateVBO(std::vector<SingleVertex3D>& bodyPart) {

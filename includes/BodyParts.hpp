@@ -27,8 +27,10 @@ class BodyParts
 {
 private:
 	std::vector<std::vector<SingleVertex3D>> body;
-	int bodyPartSize = 72;
-	
+	int bodyPartSize = 36;
+	float incrementingValueBody = 0.05;
+	float incrementingValueColor = 0.1;
+
 	float headWidth;
 	float headHeight;
 	float headDepth;
@@ -85,7 +87,6 @@ public:
 	BodyParts();
 	~BodyParts();
 	
-	void computeFacesForRectVertices(std::vector<SingleVertex3D>& input, std::vector<SingleVertex3D>& output);
 	void computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex3D>& result);
 	
 	void computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& array);
@@ -103,6 +104,10 @@ public:
 
 	SingleVertex3D& getRightUpLegPivot();
 	SingleVertex3D& getRightLowLegPivot();
+
+	void updateWidth(BodyPartsIndex part, float value);
+	void updateHeight(BodyPartsIndex part, float value);
+	void updateDepth(BodyPartsIndex part, float value);
 
 };
 

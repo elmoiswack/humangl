@@ -29,7 +29,7 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	}
 }
 
-void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
+void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
 	auto& buttons = settingsWindow.getButtons();
@@ -47,26 +47,7 @@ void checkInput(Window& mainWindow, Window& settingsWindow, bool& running) {
 			inputSwitchMainWindow(event.key.key, mainWindow, running);
     	}
 		if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-            float x = event.motion.x;
-            float y = event.motion.y;
-
-			for (std::size_t i = 0; i < buttons.size(); i++) {
-				if (buttons[i].getType() == ButtonType::UNCLICKABLE)
-					continue ;
-				if (buttons[i].checkOnClick(x, y) == 1) {
-					if (buttons[i].getType() == ButtonType::PLUS || buttons[i].getType() == ButtonType::MINUS) {
-						if (buttons[i].getActive() == false) {
-							std::cout << "AAAAAAAAAAAAAAAAA" << std::endl;
-							buttons[i].activateButton();
-						} else {
-							std::cout << "BBBBBBBBBBBBB" << std::endl;
-							buttons[i].deactivateButton();
-						}
-					} else {
-						settingsWindow.checkButtonCounterpart(i);
-					}
-				}
-			}
+			settingsWindow.checkIfButtonPressed(event.motion.x, event.motion.y, body, mainWindow.getMeshes());
 		}
     }
 }
@@ -118,7 +99,7 @@ int main(void) {
 			mainWindow.clearScreen();
 			settingsWindow.clearScreen();
 
-			checkInput(mainWindow, settingsWindow, running);
+			checkInput(mainWindow, settingsWindow, body, running);
 
 			mainWindow.computeView();
 			drawPartsOnScreen(mainWindow, settingsWindow, body);

@@ -68,44 +68,6 @@ BodyParts::BodyParts()
 
 BodyParts::~BodyParts() {}
 
-void BodyParts::computeFacesForRectVertices(std::vector<SingleVertex3D>& input, std::vector<SingleVertex3D>& output) {
-	const int standardOrder[72] = {
-		0, 0, 0,
-		1, 1, 0,
-		2, 2, 0,
-		3, 3, 0,
-
-		4, 4, 1,
-		5, 5, 1,
-		6, 6, 1,
-		7, 7, 1,
-
-		8, 8, 2,
-		9, 9, 2,
-		10, 10, 2,
-		11, 11, 2,
-
-		12, 12, 3,
-		13, 13, 3,
-		14, 14, 3,
-		15, 15, 3,
-		
-		16, 16, 4,
-		17, 17, 4,
-		18, 18, 4,
-		19, 19, 4,
-
-		20, 20, 5,
-		21, 21, 5,
-		22, 22, 5,
-		23, 23, 0,
-	};
-
-	for (int i = 0; i < 72; i++) {
-		output.push_back(input[standardOrder[i]]);
-	}
-}
-
 void BodyParts::computeSizeToRectVertex(float width, float height, float depth, std::vector<SingleVertex3D>& result) {
 	std::vector<SingleVertex3D> standardRect = {};
 
@@ -139,7 +101,16 @@ void BodyParts::computeSizeToRectVertex(float width, float height, float depth, 
 	standardRect.push_back({width, -height, depth});
 	standardRect.push_back({-width, -height, depth});
 
-	this->computeFacesForRectVertices(standardRect, result);
+	result.clear();
+    for (int face = 0; face < 6; face++) {
+        unsigned int i = face * 4;
+        result.push_back(standardRect[i]);
+		result.push_back(standardRect[i + 1]); 
+		result.push_back(standardRect[i + 2]);
+        result.push_back(standardRect[i + 2]); 
+		result.push_back(standardRect[i + 3]); 
+		result.push_back(standardRect[i]);
+    }
 }
 
 void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& array) {
@@ -242,4 +213,139 @@ SingleVertex3D& BodyParts::getRightUpLegPivot() {
 
 SingleVertex3D& BodyParts::getRightLowLegPivot() {
 	return this->legRightLowPivotPoint;
+}
+
+void BodyParts::updateWidth(BodyPartsIndex part, float value) {
+    switch (part)
+    {
+        case HEAD:
+            headWidth += value;
+            break;
+
+        case TORSO:
+            torsoWidth += value;
+            break;
+
+        case LEFTUPARM:
+            armLeftUpWidth += value;
+            break;
+
+        case LEFTLOWARM:
+            armLeftLowWidth += value;
+            break;
+
+        case RIGHTUPARM:
+            armRightUpWidth += value;
+            break;
+
+        case RIGHTLOWARM:
+            armRightLowWidth += value;
+            break;
+
+        case LEFTUPLEG:
+            legLeftUpWidth += value;
+            break;
+
+        case LEFTLOWLEG:
+            legLeftLowWidth += value;
+            break;
+
+        case RIGHTUPLEG:
+            legRightUpWidth += value;
+            break;
+
+        case RIGHTLOWLEG:
+            legRightLowWidth += value;
+            break;
+    }
+}
+
+void BodyParts::updateHeight(BodyPartsIndex part, float value) {
+    switch (part)
+    {
+        case HEAD:
+            headHeight += value;
+            break;
+
+        case TORSO:
+            torsoHeight += value;
+            break;
+
+        case LEFTUPARM:
+            armLeftUpHeight += value;
+            break;
+
+        case LEFTLOWARM:
+            armLeftLowHeight += value;
+            break;
+
+        case RIGHTUPARM:
+            armRightUpHeight += value;
+            break;
+
+        case RIGHTLOWARM:
+            armRightLowHeight += value;
+            break;
+
+        case LEFTUPLEG:
+            legLeftUpHeight += value;
+            break;
+
+        case LEFTLOWLEG:
+            legLeftLowHeight += value;
+            break;
+
+        case RIGHTUPLEG:
+            legRightUpHeight += value;
+            break;
+
+        case RIGHTLOWLEG:
+            legRightLowHeight += value;
+            break;
+    }
+}
+
+void BodyParts::updateDepth(BodyPartsIndex part, float value) {
+    switch (part)
+    {
+        case HEAD:
+            headDepth += value;
+            break;
+
+        case TORSO:
+            torsoDepth += value;
+            break;
+
+        case LEFTUPARM:
+            armLeftUpDepth += value;
+            break;
+
+        case LEFTLOWARM:
+            armLeftLowDepth += value;
+            break;
+
+        case RIGHTUPARM:
+            armRightUpDepth += value;
+            break;
+
+        case RIGHTLOWARM:
+            armRightLowDepth += value;
+            break;
+
+        case LEFTUPLEG:
+            legLeftUpDepth += value;
+            break;
+
+        case LEFTLOWLEG:
+            legLeftLowDepth += value;
+            break;
+
+        case RIGHTUPLEG:
+            legRightUpDepth += value;
+            break;
+
+        case RIGHTLOWLEG:
+            legRightLowDepth += value;
+            break;
+    }
 }

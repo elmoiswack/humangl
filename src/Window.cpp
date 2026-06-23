@@ -46,91 +46,7 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
 	}
-	
-	this->buttons.emplace_back(Button(ButtonType::UNCLICKABLE, 285, 20, 230, 60, width, height));
-	GLTtext* screenName = gltCreateText();
-	gltSetText(screenName, "Settings");
-	this->buttonLabels.push_back(screenName);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 130, 110, 40, width, height));
-	GLTtext* bodyText = gltCreateText();
-	gltSetText(bodyText, "Body");
-	this->buttonLabels.push_back(bodyText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 130, 120, 40, width, height));
-	GLTtext* colorText = gltCreateText();
-	gltSetText(colorText, "Color");
-	this->buttonLabels.push_back(colorText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 240, 110, 40, width, height));
-	GLTtext* leftText = gltCreateText();
-	gltSetText(leftText, "Left");
-	this->buttonLabels.push_back(leftText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 240, 120, 40, width, height));
-	GLTtext* rightText = gltCreateText();
-	gltSetText(rightText, "Right");
-	this->buttonLabels.push_back(rightText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 350, 120, 40, width, height));
-	GLTtext* upperText = gltCreateText();
-	gltSetText(upperText, "Upper"); 
-	this->buttonLabels.push_back(upperText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 350, 120, 40, width, height));
-	GLTtext* lowerText = gltCreateText();
-	gltSetText(lowerText, "Lower");
-	this->buttonLabels.push_back(lowerText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 450, 90, 40, width, height));
-	GLTtext* armText = gltCreateText();
-	gltSetText(armText, "Arm");
-	this->buttonLabels.push_back(armText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 450, 90, 40, width, height));
-	GLTtext* legText = gltCreateText();
-	gltSetText(legText, "Leg");
-	this->buttonLabels.push_back(legText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 550, 120, 40, width, height));
-	GLTtext* widthText = gltCreateText();
-	gltSetText(widthText, "Width");
-	this->buttonLabels.push_back(widthText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 550, 130, 40, width, height));
-	GLTtext* heightText = gltCreateText();
-	gltSetText(heightText, "Height");
-	this->buttonLabels.push_back(heightText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 550, 120, 40, width, height));
-	GLTtext* depthText = gltCreateText();
-	gltSetText(depthText, "Depth");
-	this->buttonLabels.push_back(depthText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 650, 120, 40, width, height));
-	GLTtext* rText = gltCreateText();
-	gltSetText(rText, "Red");
-	this->buttonLabels.push_back(rText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 650, 130, 40, width, height));
-	GLTtext* gText = gltCreateText();
-	gltSetText(gText, "Green");
-	this->buttonLabels.push_back(gText);
-
-	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 650, 120, 40, width, height));
-	GLTtext* bText = gltCreateText();
-	gltSetText(bText, "Blue");
-	this->buttonLabels.push_back(bText);
-
-	this->buttons.emplace_back(Button(ButtonType::MINUS, 270, 800, 80, 80, width, height));
-	GLTtext* minusText = gltCreateText();
-	gltSetText(minusText, "-");
-	this->buttonLabels.push_back(minusText);
-
-	this->buttons.emplace_back(Button(ButtonType::PLUS, 450, 800, 80, 80, width, height));
-	GLTtext* plusText = gltCreateText(); 
-	gltSetText(plusText, "+");
-	this->buttonLabels.push_back(plusText);
+	this->initButtons(width, height);
 	
 	this->meshes = {};
 	this->shader = Shader(pathVertexShader, pathFragmentShader);
@@ -291,21 +207,4 @@ void Window::drawText(Button& button, GLTtext* text) {
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
-}
-
-void Window::checkButtonCounterpart(std::size_t index) {
-	if (index >= ButtonOrder::WIDTH && index <= ButtonOrder::BLUE) {
-		for (std::size_t i = ButtonOrder::WIDTH; i <= ButtonOrder::BLUE; i++) {
-			if (i == index)
-				continue;
-			else
-				this->buttons[i].deactivateButton();
-		}
-	} else if (index % 2 == 0) {
-		if (this->buttons[index - 1].getActive() == true)
-			this->buttons[index - 1].deactivateButton();
-	} else {
-		if (this->buttons[index + 1].getActive() == true)
-			this->buttons[index + 1].deactivateButton();
-	}
 }
