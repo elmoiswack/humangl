@@ -73,8 +73,18 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 	auto& buttons = settingsWindow.getButtons();
 	auto& labels = settingsWindow.getButtonsLabels();
 	for (std::size_t i = 0; i < buttons.size(); i++) {
+		if (buttons[ButtonOrder::COLOR].getActive() == true && i == ButtonOrder::WIDTH) {
+			i = ButtonOrder::DEPTH;
+			continue;
+		} else if (buttons[ButtonOrder::BODY].getActive() == true && i == ButtonOrder::RED) {
+			i = ButtonOrder::BLUE;
+			continue;			
+		} else if (buttons[ButtonOrder::BODY].getActive() == false && buttons[ButtonOrder::COLOR].getActive() == false && i == ButtonOrder::WIDTH) {
+			i = ButtonOrder::BLUE;
+			continue;			
+		}
 		settingsWindow.drawMeshOnWindow(buttons[i].getMesh());
-		settingsWindow.drawText(buttons[i], labels[i]);
+		settingsWindow.drawText(buttons[i], labels[i]);			
 	}
 }
 

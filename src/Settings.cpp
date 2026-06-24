@@ -71,17 +71,17 @@ void Window::initButtons(int width, int height) {
 	gltSetText(depthText, "Depth");
 	this->buttonLabels.push_back(depthText);
 
-	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 700, 120, 40, width, height));
+	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 600, 120, 40, width, height));
 	GLTtext* rText = gltCreateText();
 	gltSetText(rText, "Red");
 	this->buttonLabels.push_back(rText);
 
-	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 700, 130, 40, width, height));
+	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 600, 130, 40, width, height));
 	GLTtext* gText = gltCreateText();
 	gltSetText(gText, "Green");
 	this->buttonLabels.push_back(gText);
 
-	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 700, 120, 40, width, height));
+	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 600, 120, 40, width, height));
 	GLTtext* bText = gltCreateText();
 	gltSetText(bText, "Blue");
 	this->buttonLabels.push_back(bText);
@@ -352,7 +352,52 @@ void Window::checkButtonCounterpart(std::size_t index) {
 	// 	if (this->buttons[index + 1].getActive() == true)
 	// 		this->buttons[index + 1].deactivateButton();
 	// }
-	for (std::size_t i = 0; i < this->buttons.size(); i++) {
-		
+	if (this->selectedButtons.body == false) {
+		this->buttons[ButtonOrder::BODY].deactivateButton();
+	}
+	if (this->selectedButtons.color == false) {
+		this->buttons[ButtonOrder::COLOR].deactivateButton();
+	}
+	if (this->selectedButtons.head == false) {
+		this->buttons[ButtonOrder::HEADINDEX].deactivateButton();
+	}
+	if (this->selectedButtons.torso == false) {
+		this->buttons[ButtonOrder::TORSOINDEX].deactivateButton();
+	}
+	if (this->selectedButtons.left == false) {
+		this->buttons[ButtonOrder::LEFT].deactivateButton();
+	}
+	if (this->selectedButtons.right == false) {
+		this->buttons[ButtonOrder::RIGHT].deactivateButton();
+	}
+	if (this->selectedButtons.upper == false) {
+		this->buttons[ButtonOrder::UPPER].deactivateButton();
+	}
+	if (this->selectedButtons.lower == false) {
+		this->buttons[ButtonOrder::LOWER].deactivateButton();
+	}
+	if (this->selectedButtons.arm == false) {
+		this->buttons[ButtonOrder::ARM].deactivateButton();
+	}
+	if (this->selectedButtons.leg == false) {
+		this->buttons[ButtonOrder::LEG].deactivateButton();
+	}
+	if (this->selectedButtons.width == false) {
+		this->buttons[ButtonOrder::WIDTH].deactivateButton();
+	}
+	if (this->selectedButtons.height == false) {
+		this->buttons[ButtonOrder::HEIGHT].deactivateButton();
+	}
+	if (this->selectedButtons.depth == false) {
+		this->buttons[ButtonOrder::DEPTH].deactivateButton();
+	}
+	if (this->selectedButtons.red == false) {
+		this->buttons[ButtonOrder::RED].deactivateButton();
+	}
+	if (this->selectedButtons.green == false) {
+		this->buttons[ButtonOrder::GREEN].deactivateButton();
+	}
+	if (this->selectedButtons.blue == false) {
+		this->buttons[ButtonOrder::BLUE].deactivateButton();
 	}
 }
