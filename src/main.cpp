@@ -46,8 +46,11 @@ void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, boo
 		if (event.window.windowID == mainWindow.getWindowId() && event.type == SDL_EVENT_KEY_DOWN) {
 			inputSwitchMainWindow(event.key.key, mainWindow, running);
     	}
-		if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-			settingsWindow.checkIfButtonPressed(event.motion.x, event.motion.y, body, mainWindow.getMeshes());
+		if (event.window.windowID == settingsWindow.getWindowId() && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+			if (settingsWindow.checkIfButtonPressed(event.motion.x, event.motion.y, body, mainWindow.getMeshes())) {	
+				mainWindow.makeCurrent();
+				mainWindow.updateMeshBody(body);
+			}
 		}
     }
 }

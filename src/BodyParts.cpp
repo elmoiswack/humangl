@@ -1,69 +1,47 @@
 #include "../includes/BodyParts.hpp"
+#include <iostream>
 
 BodyParts::BodyParts()
 {
 	this->body.resize(10);
+    this->bodySizes.resize(10);
+    this->pivotPoints.resize(10);
 
-	this->headWidth = .1f;
-	this->headHeight = .1f;
-	this->headDepth = .1f;
-	this->computeSizeToRectVertex(this->headWidth, this->headHeight, this->headDepth, this->body[BodyPartsIndex::HEAD]);
+    this->bodySizes[BodyPartsIndex::HEAD] = {.1f, .1f, .1f};
+	this->computeSizeToRectVertex(.1f, .1f, .1f, this->body[BodyPartsIndex::HEAD]);
 
-
-	this->torsoWidth = .15f;
-	this->torsoHeight = .25f;
-	this->torsoDepth = .15f;
-	this->computeSizeToRectVertex(this->torsoWidth, this->torsoHeight, this->torsoDepth, this->body[BodyPartsIndex::TORSO]);
+    this->bodySizes[BodyPartsIndex::TORSO] = {.15f, .25f, .15f};
+	this->computeSizeToRectVertex(.15f, .25f, .15f, this->body[BodyPartsIndex::TORSO]);
 	
-	this->armLeftUpWidth = 0.035f;
-	this->armLeftUpHeight = .07f;
-	this->armLeftUpDepth = 0.035f;
-	this->computeSizeToRectVertex(this->armLeftUpWidth, this->armLeftUpHeight, this->armLeftUpDepth, this->body[BodyPartsIndex::LEFTUPARM]);
-	this->computePivotPoint(this->armLeftUpPivotPoint, this->body[BodyPartsIndex::LEFTUPARM]);
+    this->bodySizes[BodyPartsIndex::LEFTUPARM] = {.035f, .07f, .035f};
+	this->computeSizeToRectVertex(.035f, .07f, .035f, this->body[BodyPartsIndex::LEFTUPARM]);
 
-	this->armLeftLowWidth = 0.035f;
-	this->armLeftLowHeight = .07f;
-	this->armLeftLowDepth = 0.035f;
-	this->computeSizeToRectVertex(this->armLeftLowWidth, this->armLeftLowHeight, this->armLeftLowDepth, this->body[BodyPartsIndex::LEFTLOWARM]);
-	this->computePivotPoint(this->armLeftLowPivotPoint, this->body[BodyPartsIndex::LEFTLOWARM]);
+    this->bodySizes[BodyPartsIndex::LEFTLOWARM] = {.035f, .07f, .035f};
+	this->computeSizeToRectVertex(.035f, .07f, .035f, this->body[BodyPartsIndex::LEFTLOWARM]);
 	
-	this->armRightUpWidth = 0.035f;
-	this->armRightUpHeight = .07f;
-	this->armRightUpDepth = 0.035f;
-	this->computeSizeToRectVertex(this->armRightUpWidth, this->armRightUpHeight, this->armRightUpDepth, this->body[BodyPartsIndex::RIGHTUPARM]);
-	this->computePivotPoint(this->armRightUpPivotPoint, this->body[BodyPartsIndex::RIGHTUPARM]);
+    this->bodySizes[BodyPartsIndex::RIGHTUPARM] = {.035f, .07f, .035f};
+	this->computeSizeToRectVertex(.035f, .07f, .035f, this->body[BodyPartsIndex::RIGHTUPARM]);
 
-	this->armRightLowWidth = 0.035f;
-	this->armRightLowHeight = .07f;
-	this->armRightLowDepth = 0.035f;
-	this->computeSizeToRectVertex(this->armRightLowWidth, this->armRightLowHeight, this->armRightLowDepth, this->body[BodyPartsIndex::RIGHTLOWARM]);
-	this->computePivotPoint(this->armRightLowPivotPoint, this->body[BodyPartsIndex::RIGHTLOWARM]);
+    this->bodySizes[BodyPartsIndex::RIGHTLOWARM] = {.035f, .07f, .035f};
+	this->computeSizeToRectVertex(.035f, .07f, .035f, this->body[BodyPartsIndex::RIGHTLOWARM]);
 	
-	this->legLeftUpWidth = .025;
-	this->legLeftUpHeight = .07;
-	this->legLeftUpDepth = .025;
-	this->computeSizeToRectVertex(this->legLeftUpWidth, this->legLeftUpHeight, this->legLeftUpDepth, this->body[BodyPartsIndex::LEFTUPLEG]);
-	this->computePivotPoint(this->legLeftUpPivotPoint, this->body[BodyPartsIndex::LEFTUPLEG]);
+    this->bodySizes[BodyPartsIndex::LEFTUPLEG] = {.025f, .07f, .025f};
+	this->computeSizeToRectVertex(.025f, .07f, .025f, this->body[BodyPartsIndex::LEFTUPLEG]);
 
-	this->legLeftLowWidth = .025;
-	this->legLeftLowHeight = .07;
-	this->legLeftLowDepth = .025;
-	this->computeSizeToRectVertex(this->legLeftLowWidth, this->legLeftLowHeight, this->legLeftLowDepth, this->body[BodyPartsIndex::LEFTLOWLEG]);
-	this->computePivotPoint(this->legLeftLowPivotPoint, this->body[BodyPartsIndex::LEFTLOWLEG]);
+    this->bodySizes[BodyPartsIndex::LEFTLOWLEG] = {.025f, .07f, .025f};
+	this->computeSizeToRectVertex(.025f, .07f, .025f, this->body[BodyPartsIndex::LEFTLOWLEG]);
 
-	this->legRightUpWidth = .025;
-	this->legRightUpHeight = .07;
-	this->legRightUpDepth = .025;
-	this->computeSizeToRectVertex(this->legRightUpWidth, this->legRightUpHeight, this->legRightUpDepth, this->body[BodyPartsIndex::RIGHTUPLEG]);
-	this->computePivotPoint(this->legRightUpPivotPoint, this->body[BodyPartsIndex::RIGHTUPLEG]);
+    this->bodySizes[BodyPartsIndex::RIGHTUPLEG] = {.025f, .07f, .025f};
+	this->computeSizeToRectVertex(.025f, .07f, .025f, this->body[BodyPartsIndex::RIGHTUPLEG]);
 
-	this->legRightLowWidth = .025;
-	this->legRightLowHeight = .07;
-	this->legRightLowDepth = .025;
-	this->computeSizeToRectVertex(this->legRightLowWidth, this->legRightLowHeight, this->legRightLowDepth, this->body[BodyPartsIndex::RIGHTLOWLEG]);
-	this->computePivotPoint(this->legRightLowPivotPoint, this->body[BodyPartsIndex::RIGHTLOWLEG]);
+    this->bodySizes[BodyPartsIndex::RIGHTLOWLEG] = {.025f, .07f, .025f};
+	this->computeSizeToRectVertex(.025f, .07f, .025f, this->body[BodyPartsIndex::RIGHTLOWLEG]);
 
 	this->computeBody();
+	for (std::size_t i = 0; i < this->body.size(); i++) {
+		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO)
+			this->computePivotPoint(this->pivotPoints[i], this->body[i]);
+	}
 }
 
 BodyParts::~BodyParts() {}
@@ -113,10 +91,10 @@ void BodyParts::computeSizeToRectVertex(float width, float height, float depth, 
     }
 }
 
-void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& array) {
+void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& bodypart) {
 	float maxY = std::max_element(
-		array.begin(),
-		array.end(),
+		bodypart.begin(),
+		bodypart.end(),
 		[](const SingleVertex3D& a, const SingleVertex3D& b) {
 			return a.y < b.y;
     	}
@@ -126,7 +104,7 @@ void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVerte
 	float sumZ = 0.0f;
 	int count = 0;
 
-	for (const auto& v : array)
+	for (const auto& v : bodypart)
 	{
 		if (v.y == maxY)
 		{
@@ -143,40 +121,84 @@ void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVerte
 
 void BodyParts::computeBody() {
     for (std::size_t i = 0; i < this->bodyPartSize; i++) {
-        this->body[BodyPartsIndex::HEAD][i].y += this->torsoHeight + this->headHeight;
+        this->body[BodyPartsIndex::HEAD][i].y += this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::HEAD].height;
 
-        this->body[BodyPartsIndex::LEFTUPARM][i].x -= (this->torsoWidth + this->armLeftUpWidth);
-        this->body[BodyPartsIndex::LEFTUPARM][i].y += (this->torsoHeight - this->armLeftUpHeight);
-        this->body[BodyPartsIndex::LEFTUPARM][i].z -= ((this->torsoDepth / 2) - this->armLeftUpDepth);
+        this->body[BodyPartsIndex::LEFTUPARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPARM].width);
+        this->body[BodyPartsIndex::LEFTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTUPARM].height);
+        this->body[BodyPartsIndex::LEFTUPARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTUPARM].depth);
 
-        this->body[BodyPartsIndex::LEFTLOWARM][i].x -= (this->torsoWidth + this->armLeftLowWidth);
-        this->body[BodyPartsIndex::LEFTLOWARM][i].y += (this->torsoHeight - this->armLeftLowHeight) - (this->armLeftUpHeight * 2);
-        this->body[BodyPartsIndex::LEFTLOWARM][i].z -= ((this->torsoDepth / 2) - this->armLeftLowDepth);
+        this->body[BodyPartsIndex::LEFTLOWARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTLOWARM].width);
+        this->body[BodyPartsIndex::LEFTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTLOWARM].height) - (this->bodySizes[BodyPartsIndex::LEFTUPARM].height * 2);
+        this->body[BodyPartsIndex::LEFTLOWARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTLOWARM].depth);
 
-        this->body[BodyPartsIndex::RIGHTUPARM][i].x += (this->torsoWidth + this->armRightUpWidth);
-        this->body[BodyPartsIndex::RIGHTUPARM][i].y += (this->torsoHeight - this->armRightUpHeight);
-        this->body[BodyPartsIndex::RIGHTUPARM][i].z -= ((this->torsoDepth / 2) - this->armRightUpDepth);
+        this->body[BodyPartsIndex::RIGHTUPARM][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::RIGHTUPARM].width);
+        this->body[BodyPartsIndex::RIGHTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTUPARM].height);
+        this->body[BodyPartsIndex::RIGHTUPARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTUPARM].depth);
 
-        this->body[BodyPartsIndex::RIGHTLOWARM][i].x += (this->torsoWidth + this->armRightLowWidth);
-        this->body[BodyPartsIndex::RIGHTLOWARM][i].y += (this->torsoHeight - this->armRightLowHeight) - (this->armRightUpHeight * 2);
-        this->body[BodyPartsIndex::RIGHTLOWARM][i].z -= ((this->torsoDepth / 2) - this->armRightLowDepth);
+        this->body[BodyPartsIndex::RIGHTLOWARM][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::RIGHTLOWARM].width);
+        this->body[BodyPartsIndex::RIGHTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTLOWARM].height) - (this->bodySizes[BodyPartsIndex::RIGHTUPARM].height * 2);
+        this->body[BodyPartsIndex::RIGHTLOWARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTLOWARM].depth);
 
-        this->body[BodyPartsIndex::LEFTUPLEG][i].y -= (this->torsoHeight + this->legLeftUpHeight);
-        this->body[BodyPartsIndex::LEFTUPLEG][i].x += (-this->torsoWidth + this->legLeftUpWidth);
-        this->body[BodyPartsIndex::LEFTUPLEG][i].z -= ((this->torsoDepth / 2) - this->legLeftUpDepth);
+        this->body[BodyPartsIndex::LEFTUPLEG][i].x += (-this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPLEG].width);
+        this->body[BodyPartsIndex::LEFTUPLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::LEFTUPLEG].height);
+        this->body[BodyPartsIndex::LEFTUPLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTUPLEG].depth);
 
-        this->body[BodyPartsIndex::LEFTLOWLEG][i].y -= (this->torsoHeight + this->legLeftLowHeight) + (this->legLeftUpHeight * 2);
-        this->body[BodyPartsIndex::LEFTLOWLEG][i].x += (-this->torsoWidth + this->legLeftLowWidth);
-        this->body[BodyPartsIndex::LEFTLOWLEG][i].z -= ((this->torsoDepth / 2) - this->legLeftLowDepth);
+        this->body[BodyPartsIndex::LEFTLOWLEG][i].x += (-this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTLOWLEG].width);
+        this->body[BodyPartsIndex::LEFTLOWLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::LEFTLOWLEG].height) + (this->bodySizes[BodyPartsIndex::LEFTUPLEG].height * 2);
+        this->body[BodyPartsIndex::LEFTLOWLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTLOWLEG].depth);
 
-        this->body[BodyPartsIndex::RIGHTUPLEG][i].y -= (this->torsoHeight + this->legRightUpHeight);
-        this->body[BodyPartsIndex::RIGHTUPLEG][i].x += (this->torsoWidth - this->legRightUpWidth);
-        this->body[BodyPartsIndex::RIGHTUPLEG][i].z -= ((this->torsoDepth / 2) - this->legRightUpDepth);
+        this->body[BodyPartsIndex::RIGHTUPLEG][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width - this->bodySizes[BodyPartsIndex::RIGHTUPLEG].width);
+        this->body[BodyPartsIndex::RIGHTUPLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::RIGHTUPLEG].height);
+        this->body[BodyPartsIndex::RIGHTUPLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTUPLEG].depth);
 
-        this->body[BodyPartsIndex::RIGHTLOWLEG][i].y -= (this->torsoHeight + this->legRightLowHeight) + (this->legRightUpHeight * 2);
-        this->body[BodyPartsIndex::RIGHTLOWLEG][i].x += (this->torsoWidth - this->legRightLowWidth);
-        this->body[BodyPartsIndex::RIGHTLOWLEG][i].z -= ((this->torsoDepth / 2) - this->legRightLowDepth);
+        this->body[BodyPartsIndex::RIGHTLOWLEG][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width - this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].width);
+        this->body[BodyPartsIndex::RIGHTLOWLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].height) + (this->bodySizes[BodyPartsIndex::RIGHTUPLEG].height * 2);
+        this->body[BodyPartsIndex::RIGHTLOWLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].depth);
     }
+}
+
+void BodyParts::recomputeBody(float width, float height, float depth, BodyPartsIndex part) {
+	for (std::size_t i = 0; i < this->body.size(); i++) {
+  		this->computeSizeToRectVertex(this->bodySizes[i].width, this->bodySizes[i].height, this->bodySizes[i].depth, this->body[i]);
+		if (part != BodyPartsIndex::HEAD && part != BodyPartsIndex::TORSO)
+		  this->computePivotPoint(this->pivotPoints[i], this->body[i]);
+	}
+	this->computeBody();
+}
+
+void BodyParts::updateWidth(BodyPartsIndex part, float value) {
+    this->bodySizes[part].width += value;
+
+    if (this->bodySizes[part].width < 0.01f) {
+        this->bodySizes[part].width = 0.01;
+    } else if (this->bodySizes[part].width > 1.0f) {
+        this->bodySizes[part].width = 1.0f;
+    }
+
+    this->recomputeBody(this->bodySizes[part].width, this->bodySizes[part].height, this->bodySizes[part].depth, part);
+}
+
+void BodyParts::updateHeight(BodyPartsIndex part, float value) {
+    this->bodySizes[part].height += value;
+    
+    if (this->bodySizes[part].height < 0.01f) {
+        this->bodySizes[part].height = 0.01;
+    } else if (this->bodySizes[part].height > 1.0f) {
+        this->bodySizes[part].height = 1.0f;
+    }
+    this->recomputeBody(this->bodySizes[part].width, this->bodySizes[part].height, this->bodySizes[part].depth, part);
+}
+
+void BodyParts::updateDepth(BodyPartsIndex part, float value) {
+    this->bodySizes[part].depth += value;
+
+    if (this->bodySizes[part].depth < 0.01f) {
+        this->bodySizes[part].depth = 0.01;
+    } else if (this->bodySizes[part].depth > 1.0f) {
+        this->bodySizes[part].depth = 1.0f;
+    }
+
+    this->recomputeBody(this->bodySizes[part].width, this->bodySizes[part].height, this->bodySizes[part].depth, part);
 }
 
 std::vector<std::vector<SingleVertex3D>>& BodyParts::getBody() {
@@ -184,168 +206,33 @@ std::vector<std::vector<SingleVertex3D>>& BodyParts::getBody() {
 }
 
 SingleVertex3D& BodyParts::getLeftUpArmPivot() {
-	return this->armLeftUpPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::LEFTUPARM];
 }
 
 SingleVertex3D& BodyParts::getLeftLowArmPivot() {
-	return this->armLeftLowPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::LEFTLOWARM];
 }
 
 SingleVertex3D& BodyParts::getRightUpArmPivot() {
-	return this->armRightUpPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::RIGHTUPARM];
 }
 
 SingleVertex3D& BodyParts::getRightLowArmPivot() {
-	return this->armRightLowPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::RIGHTLOWARM];
 }
 
 SingleVertex3D& BodyParts::getLeftUpLegPivot() {
-	return this->legLeftUpPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::LEFTUPLEG];
 }
 
 SingleVertex3D& BodyParts::getLeftLowLegPivot() {
-	return this->legLeftLowPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::LEFTLOWLEG];
 }
 
 SingleVertex3D& BodyParts::getRightUpLegPivot() {
-	return this->legRightUpPivotPoint;
+    return this->pivotPoints[BodyPartsIndex::RIGHTUPLEG];
 }
 
 SingleVertex3D& BodyParts::getRightLowLegPivot() {
-	return this->legRightLowPivotPoint;
-}
-
-void BodyParts::updateWidth(BodyPartsIndex part, float value) {
-    switch (part)
-    {
-        case HEAD:
-            headWidth += value;
-            break;
-
-        case TORSO:
-            torsoWidth += value;
-            break;
-
-        case LEFTUPARM:
-            armLeftUpWidth += value;
-            break;
-
-        case LEFTLOWARM:
-            armLeftLowWidth += value;
-            break;
-
-        case RIGHTUPARM:
-            armRightUpWidth += value;
-            break;
-
-        case RIGHTLOWARM:
-            armRightLowWidth += value;
-            break;
-
-        case LEFTUPLEG:
-            legLeftUpWidth += value;
-            break;
-
-        case LEFTLOWLEG:
-            legLeftLowWidth += value;
-            break;
-
-        case RIGHTUPLEG:
-            legRightUpWidth += value;
-            break;
-
-        case RIGHTLOWLEG:
-            legRightLowWidth += value;
-            break;
-    }
-}
-
-void BodyParts::updateHeight(BodyPartsIndex part, float value) {
-    switch (part)
-    {
-        case HEAD:
-            headHeight += value;
-            break;
-
-        case TORSO:
-            torsoHeight += value;
-            break;
-
-        case LEFTUPARM:
-            armLeftUpHeight += value;
-            break;
-
-        case LEFTLOWARM:
-            armLeftLowHeight += value;
-            break;
-
-        case RIGHTUPARM:
-            armRightUpHeight += value;
-            break;
-
-        case RIGHTLOWARM:
-            armRightLowHeight += value;
-            break;
-
-        case LEFTUPLEG:
-            legLeftUpHeight += value;
-            break;
-
-        case LEFTLOWLEG:
-            legLeftLowHeight += value;
-            break;
-
-        case RIGHTUPLEG:
-            legRightUpHeight += value;
-            break;
-
-        case RIGHTLOWLEG:
-            legRightLowHeight += value;
-            break;
-    }
-}
-
-void BodyParts::updateDepth(BodyPartsIndex part, float value) {
-    switch (part)
-    {
-        case HEAD:
-            headDepth += value;
-            break;
-
-        case TORSO:
-            torsoDepth += value;
-            break;
-
-        case LEFTUPARM:
-            armLeftUpDepth += value;
-            break;
-
-        case LEFTLOWARM:
-            armLeftLowDepth += value;
-            break;
-
-        case RIGHTUPARM:
-            armRightUpDepth += value;
-            break;
-
-        case RIGHTLOWARM:
-            armRightLowDepth += value;
-            break;
-
-        case LEFTUPLEG:
-            legLeftUpDepth += value;
-            break;
-
-        case LEFTLOWLEG:
-            legLeftLowDepth += value;
-            break;
-
-        case RIGHTUPLEG:
-            legRightUpDepth += value;
-            break;
-
-        case RIGHTLOWLEG:
-            legRightLowDepth += value;
-            break;
-    }
+    return this->pivotPoints[BodyPartsIndex::RIGHTLOWLEG];
 }

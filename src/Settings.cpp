@@ -97,35 +97,34 @@ void Window::initButtons(int width, int height) {
 	this->buttonLabels.push_back(plusText);	
 }
 
-void Window::checkIfButtonPressed(float x, float y, BodyParts& body, std::vector<Mesh>& meshes) {
+bool Window::checkIfButtonPressed(float x, float y, BodyParts& body, std::vector<Mesh>& meshes) {
 	for (std::size_t i = 1; i < buttons.size(); i++) {
 		if (buttons[i].checkOnClick(x, y) == 1) {
 			if ((buttons[i].getType() == ButtonType::PLUS) || (buttons[i].getType() == ButtonType::MINUS)) {
-				this->checkStruct(buttons[i].getType(), body, meshes);
+				return this->checkStruct(buttons[i].getType(), body, meshes);
 			} else {
 				this->updateStruct(i);
 			}
 			break ;
 		}
 	}
+	return false;
 }
 
-void Window::checkStruct(ButtonType type, BodyParts& body, std::vector<Mesh>& meshes)
-{
+bool Window::checkStruct(ButtonType type, BodyParts& body, std::vector<Mesh>& meshes) {
     BodyPartsIndex part = getSelectedPart();
 
     if (part == static_cast<BodyPartsIndex>(-1))
-        return;
+        return false;
 
-    modifyPart(part, type, body, meshes);
+    return modifyPart(part, type, body, meshes);
 }
 
-BodyPartsIndex Window::getSelectedPart()
-{
+BodyPartsIndex Window::getSelectedPart() {
     if (selectedButtons.head)
-        return BodyPartsIndex::HEAD;
+		return BodyPartsIndex::HEAD;
 
-    if (selectedButtons.torso)
+    if (selectedButtons.torso) 
         return BodyPartsIndex::TORSO;
 
     if (selectedButtons.left && selectedButtons.upper && selectedButtons.arm)
@@ -155,70 +154,65 @@ BodyPartsIndex Window::getSelectedPart()
     return static_cast<BodyPartsIndex>(-1);
 }
 
-void Window::modifyPart(BodyPartsIndex part, ButtonType type, BodyParts& body, std::vector<Mesh>& meshes)
-{
+bool Window::modifyPart(BodyPartsIndex part, ButtonType type, BodyParts& body, std::vector<Mesh>& meshes) {
     if (selectedButtons.body)
     {
         if (selectedButtons.width) {
             if (type == ButtonType::PLUS)
-               	body.updateWidth(part, 0.05);
+               	body.updateWidth(part, 0.01);
             else
-                body.updateWidth(part, -0.05);
-            return ;
+                body.updateWidth(part, -0.01);
         } 
-		if (selectedButtons.height) {
+		else if (selectedButtons.height) {
             if (type == ButtonType::PLUS)
-                body.updateHeight(part, 0.05);
+                body.updateHeight(part, 0.01);
             else
-                body.updateHeight(part, -0.05);
-            return ;
+                body.updateHeight(part, -0.01);
         }
-        if (selectedButtons.depth) {
+        else if (selectedButtons.depth) {
             if (type == ButtonType::PLUS)
-                body.updateDepth(part, 0.05);
+                body.updateDepth(part, 0.01);
             else
-                body.updateDepth(part, -0.05);
-            return ;
+                body.updateDepth(part, -0.01);
         }
+        return true;
     } else if (selectedButtons.color) {
-		std::cout << "AAAAAAAAa" << std::endl;
         if (selectedButtons.red) {
             if (type == ButtonType::PLUS)
-                this->updateMesh(meshes[part], 0, 0.05);
+                this->updateMeshColor(meshes[part], 0, 0.05);
             else
-                this->updateMesh(meshes[part], 0, -0.05);
-            return ;			
+                this->updateMeshColor(meshes[part], 0, -0.05);
         }
-        if (selectedButtons.green) {
-			std::cout << "LETS" << std::endl;
+        else if (selectedButtons.green) {
             if (type == ButtonType::PLUS)
-			{
-				std::cout << "GOOOO" << std::endl;
-                this->updateMesh(meshes[part], 1, 0.05);
-			}
+                this->updateMeshColor(meshes[part], 1, 0.05);
             else
-                this->updateMesh(meshes[part], 1, -0.05);
-            return ;	
+                this->updateMeshColor(meshes[part], 1, -0.05);
         }
-        if (selectedButtons.blue) {
+        else if (selectedButtons.blue) {
             if (type == ButtonType::PLUS)
-                this->updateMesh(meshes[part], 2, 0.05);
+                this->updateMeshColor(meshes[part], 2, 0.05);
             else
-                this->updateMesh(meshes[part], 2, -0.05);
-            return ;	
+                this->updateMeshColor(meshes[part], 2, -0.05);
         }
     }
+	return false;
 }
 
-void Window::updateMesh(Mesh& mesh, int colorIndex, float value) {
+void Window::updateMeshBody(BodyParts& body) {
+	auto& parts = body.getBody();
+	for (std::size_t i = 0; i < parts.size(); i++) {
+		this->meshes[i].updateVBO(parts[i]);
+	}
+}
+
+void Window::updateMeshColor(Mesh& mesh, int colorIndex, float value) {
 	auto colors = mesh.getColor();
-	std::cout << "before: " << colors[colorIndex] << std::endl;
 	colors[colorIndex] += value;
 	if (colors[colorIndex] > 1.0f)
 		colors[colorIndex] = 1.0f;
 	if (colors[colorIndex] < 0.0f)
 		colors[colorIndex] = 0.0f;
-	std::cout << "after: " << colors[colorIndex] << std::endl;
 	mesh.updateColor(colors);
 }
 
@@ -242,6 +236,7 @@ void Window::updateStruct(std::size_t i) {
 		this->selectedButtons.lower = false;
 		this->selectedButtons.arm = false;
 		this->selectedButtons.leg = false;
+		break ;
 	case ButtonOrder::TORSOINDEX:
 		this->selectedButtons.head = false;
 		this->selectedButtons.torso = true;
@@ -251,59 +246,90 @@ void Window::updateStruct(std::size_t i) {
 		this->selectedButtons.lower = false;	
 		this->selectedButtons.arm = false;
 		this->selectedButtons.leg = false;
+		break ;
 	case ButtonOrder::LEFT:
 		this->selectedButtons.left = true;
 		this->selectedButtons.right = false;
+		this->selectedButtons.head = false;
+		this->selectedButtons.torso = false;
 		break;
 	case ButtonOrder::RIGHT:
 		this->selectedButtons.left = false;
 		this->selectedButtons.right = true;
+		this->selectedButtons.head = false;
+		this->selectedButtons.torso = false;
 		break;
 	case ButtonOrder::UPPER:
 		this->selectedButtons.upper = true;
 		this->selectedButtons.lower = false;
+		this->selectedButtons.head = false;
+		this->selectedButtons.torso = false;
 		break;
 	case ButtonOrder::LOWER:
 		this->selectedButtons.upper = false;
 		this->selectedButtons.lower = true;
+		this->selectedButtons.head = false;
+		this->selectedButtons.torso = false;
 		break;
 	case ButtonOrder::ARM:
 		this->selectedButtons.arm = true;
 		this->selectedButtons.leg = false;
+		this->selectedButtons.head = false;
+		this->selectedButtons.torso = false;
 		break;
 	case ButtonOrder::LEG:
 		this->selectedButtons.arm = false;
 		this->selectedButtons.leg = true;
+		this->selectedButtons.head = false;
+		this->selectedButtons.torso = false;
 		break;
 	case ButtonOrder::WIDTH:
 		this->selectedButtons.width = true;
 		this->selectedButtons.height = false;
 		this->selectedButtons.depth = false;
+		this->selectedButtons.red = false;
+		this->selectedButtons.green = false;
+		this->selectedButtons.blue = false;
 		break;
 	case ButtonOrder::HEIGHT:
 		this->selectedButtons.width = false;
 		this->selectedButtons.height = true;
 		this->selectedButtons.depth = false;
+		this->selectedButtons.red = false;
+		this->selectedButtons.green = false;
+		this->selectedButtons.blue = false;
 		break;
 	case ButtonOrder::DEPTH:
 		this->selectedButtons.width = false;
 		this->selectedButtons.height = false;
 		this->selectedButtons.depth = true;
+		this->selectedButtons.red = false;
+		this->selectedButtons.green = false;
+		this->selectedButtons.blue = false;
 		break;
 	case ButtonOrder::RED:
 		this->selectedButtons.red = true;
 		this->selectedButtons.green = false;
 		this->selectedButtons.blue = false;
+		this->selectedButtons.width = false;
+		this->selectedButtons.height = false;
+		this->selectedButtons.depth = false;
 		break;
 	case ButtonOrder::GREEN:
 		this->selectedButtons.red = false;
 		this->selectedButtons.green = true;
 		this->selectedButtons.blue = false;
+		this->selectedButtons.width = false;
+		this->selectedButtons.height = false;
+		this->selectedButtons.depth = false;
 		break;
 	case ButtonOrder::BLUE:
 		this->selectedButtons.red = false;
 		this->selectedButtons.green = false;
 		this->selectedButtons.blue = true;
+		this->selectedButtons.width = false;
+		this->selectedButtons.height = false;
+		this->selectedButtons.depth = false;
 		break;
 	default:
 		break;
@@ -312,18 +338,21 @@ void Window::updateStruct(std::size_t i) {
 }
 
 void Window::checkButtonCounterpart(std::size_t index) {
-	if (index >= ButtonOrder::WIDTH && index <= ButtonOrder::BLUE) {
-		for (std::size_t i = ButtonOrder::WIDTH; i <= ButtonOrder::BLUE; i++) {
-			if (i == index)
-				continue;
-			else
-				this->buttons[i].deactivateButton();
-		}
-	} else if (index % 2 == 0) {
-		if (this->buttons[index - 1].getActive() == true)
-			this->buttons[index - 1].deactivateButton();
-	} else {
-		if (this->buttons[index + 1].getActive() == true)
-			this->buttons[index + 1].deactivateButton();
+	// if (index >= ButtonOrder::WIDTH && index <= ButtonOrder::BLUE) {
+	// 	for (std::size_t i = ButtonOrder::WIDTH; i <= ButtonOrder::BLUE; i++) {
+	// 		if (i == index)
+	// 			continue;
+	// 		else
+	// 			this->buttons[i].deactivateButton();
+	// 	}
+	// } else if (index % 2 == 0) {
+	// 	if (this->buttons[index - 1].getActive() == true)
+	// 		this->buttons[index - 1].deactivateButton();
+	// } else {
+	// 	if (this->buttons[index + 1].getActive() == true)
+	// 		this->buttons[index + 1].deactivateButton();
+	// }
+	for (std::size_t i = 0; i < this->buttons.size(); i++) {
+		
 	}
 }

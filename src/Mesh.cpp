@@ -66,13 +66,20 @@ void Mesh::updateColor(float* newColor) {
 	this->meshColor[0] = newColor[0];
 	this->meshColor[1] = newColor[1];
 	this->meshColor[2] = newColor[2];
-	std::cout << "0: " << this->meshColor[0] << ", 1:" << this->meshColor[1] << ", 2:" << this->meshColor[2] << std::endl;
 }
 
 void Mesh::updateVBO(std::vector<SingleVertex3D>& bodyPart) {
-	this->vertexCount = bodyPart.size();
-	glBufferData(GL_ARRAY_BUFFER, bodyPart.size() * sizeof(SingleVertex3D), bodyPart.data(), GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+	SingleVertex3D* vboData = static_cast<SingleVertex3D*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+	if (vboData == nullptr) {
+		std::cout << "VBODATA = NULL BRUHHHHHHHHHHHH" << std::endl;
+		return ;
+	}
+	auto data = bodyPart.data();
+	for (std::size_t i = 0; i < bodyPart.size(); i++) {
+		vboData[i] = data[i];
+	}
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
 void Mesh::deleteMesh() {

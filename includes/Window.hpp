@@ -99,11 +99,12 @@ public:
 	Matrix& getMatrix();
 	Animation& getAnimations();
 
-	void checkIfButtonPressed(float x, float y, BodyParts& body, std::vector<Mesh>& meshes);
-	void checkStruct(ButtonType type, BodyParts& body, std::vector<Mesh>& meshes);
+	bool checkIfButtonPressed(float x, float y, BodyParts& body, std::vector<Mesh>& meshes);
+	bool checkStruct(ButtonType type, BodyParts& body, std::vector<Mesh>& meshes);
 	BodyPartsIndex getSelectedPart();
-	void modifyPart(BodyPartsIndex part, ButtonType type, BodyParts& body, std::vector<Mesh>& meshes);
-	void updateMesh(Mesh& mesh, int colorIndex, float value);
+	bool modifyPart(BodyPartsIndex part, ButtonType type, BodyParts& body, std::vector<Mesh>& meshes);
+	void updateMeshBody(BodyParts& body);
+	void updateMeshColor(Mesh& mesh, int colorIndex, float value);
 
 	void updateStruct(std::size_t i);
 	void checkButtonCounterpart(std::size_t index);
