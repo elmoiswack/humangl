@@ -107,7 +107,7 @@ public:
 	void updateMeshColor(Mesh& mesh, int colorIndex, float value);
 
 	void updateStruct(std::size_t i);
-	void checkButtonCounterpart(std::size_t index);
+	void checkButtonCounterpart();
 
 	class FailedWindowCreation : public std::exception {
 	public:

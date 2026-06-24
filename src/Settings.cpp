@@ -334,24 +334,10 @@ void Window::updateStruct(std::size_t i) {
 	default:
 		break;
 	}
-	this->checkButtonCounterpart(i);
+	this->checkButtonCounterpart();
 }
 
-void Window::checkButtonCounterpart(std::size_t index) {
-	// if (index >= ButtonOrder::WIDTH && index <= ButtonOrder::BLUE) {
-	// 	for (std::size_t i = ButtonOrder::WIDTH; i <= ButtonOrder::BLUE; i++) {
-	// 		if (i == index)
-	// 			continue;
-	// 		else
-	// 			this->buttons[i].deactivateButton();
-	// 	}
-	// } else if (index % 2 == 0) {
-	// 	if (this->buttons[index - 1].getActive() == true)
-	// 		this->buttons[index - 1].deactivateButton();
-	// } else {
-	// 	if (this->buttons[index + 1].getActive() == true)
-	// 		this->buttons[index + 1].deactivateButton();
-	// }
+void Window::checkButtonCounterpart() {
 	if (this->selectedButtons.body == false) {
 		this->buttons[ButtonOrder::BODY].deactivateButton();
 	}
