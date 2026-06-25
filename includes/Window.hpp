@@ -36,8 +36,6 @@ enum ButtonOrder {
 	RED,
 	GREEN,
 	BLUE,
-	MINUS,
-	PLUS
 };
 
 struct SelectedButtons {

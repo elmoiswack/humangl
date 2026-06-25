@@ -100,10 +100,12 @@ void Window::initButtons(int width, int height) {
 bool Window::checkIfButtonPressed(float x, float y, BodyParts& body, std::vector<Mesh>& meshes) {
 	for (std::size_t i = 1; i < buttons.size(); i++) {
 		if (buttons[i].checkOnClick(x, y) == 1) {
-			if ((buttons[i].getType() == ButtonType::PLUS) || (buttons[i].getType() == ButtonType::MINUS))
+			if ((buttons[i].getType() == ButtonType::PLUS) || (buttons[i].getType() == ButtonType::MINUS)) {
+				buttons[i].deactivateButton();
 				return this->checkStruct(buttons[i].getType(), body, meshes);
-			else 
+			} else {
 				this->updateStruct(i);
+			} 
 			break ;
 		}
 	}
