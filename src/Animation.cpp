@@ -71,8 +71,8 @@ void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 }
 
 void Animation::incrementAngle(float& angle, bool& forward) {
-    if (angle + this->rotationSpeed >= .45f) {
-        angle = 0.45f;
+    if (angle + this->rotationSpeed >= .90f) {
+        angle = 0.90f;
 		forward = !forward;
     } else {
         angle += this->rotationSpeed;
@@ -80,8 +80,8 @@ void Animation::incrementAngle(float& angle, bool& forward) {
 }
 
 void Animation::decrementAngle(float& angle, bool& forward) {
-	if (angle - this->rotationSpeed <= -.45f) {
-		angle = -0.45f;
+	if (angle - this->rotationSpeed <= -.90f) {
+		angle = -0.90f;
 		forward = !forward;
     } else {
 		angle -= this->rotationSpeed;

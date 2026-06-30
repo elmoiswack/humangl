@@ -41,6 +41,9 @@ float* Matrix::getPivot() {
     return this->pivot;
 }
 
+float Matrix::degreesToRadians(float degrees) {
+	return (degrees * (M_PI / 180.0f));
+}
 void Matrix::getForward(float *forward) {
     float yRad = -90.0f * (M_PI / 180.0f);
     float xRad = 0.0f * (M_PI / 180.0f);
@@ -69,8 +72,11 @@ float Matrix::dot(const float a[3], const float b[3]) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
 
-void Matrix::computeViewMatrix(float x, float y, float z) {
-    float eye[3] = { x, y, z };
+void Matrix::computeViewMatrix(float x, float y, float z, float angle) {
+    float angleX = sin(angle) * 1.5;
+    float angleZ = cos(angle) * 1.5;
+
+    float eye[3] = { x + angleX, y, z + angleZ};
     float up[3]  = { 0.0f, 1.0f, 0.0f };
 
     float forward[3];

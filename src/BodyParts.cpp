@@ -10,8 +10,8 @@ BodyParts::BodyParts()
     this->bodySizes[BodyPartsIndex::HEAD] = {.1f, .1f, .1f};
 	this->computeSizeToRectVertex(.1f, .1f, .1f, this->body[BodyPartsIndex::HEAD]);
 
-    this->bodySizes[BodyPartsIndex::TORSO] = {.15f, .25f, .15f};
-	this->computeSizeToRectVertex(.15f, .25f, .15f, this->body[BodyPartsIndex::TORSO]);
+    this->bodySizes[BodyPartsIndex::TORSO] = {.12f, .18f, .12f};
+	this->computeSizeToRectVertex(.12f, .18f, .12f, this->body[BodyPartsIndex::TORSO]);
 	
     this->bodySizes[BodyPartsIndex::LEFTUPARM] = {.035f, .07f, .035f};
 	this->computeSizeToRectVertex(.035f, .07f, .035f, this->body[BodyPartsIndex::LEFTUPARM]);
@@ -125,35 +125,35 @@ void BodyParts::computeBody() {
 
         this->body[BodyPartsIndex::LEFTUPARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPARM].width);
         this->body[BodyPartsIndex::LEFTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTUPARM].height);
-        this->body[BodyPartsIndex::LEFTUPARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTUPARM].depth);
+        this->body[BodyPartsIndex::LEFTUPARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::LEFTUPARM].depth * 3));
 
         this->body[BodyPartsIndex::LEFTLOWARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTLOWARM].width);
         this->body[BodyPartsIndex::LEFTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTLOWARM].height) - (this->bodySizes[BodyPartsIndex::LEFTUPARM].height * 2);
-        this->body[BodyPartsIndex::LEFTLOWARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTLOWARM].depth);
+        this->body[BodyPartsIndex::LEFTLOWARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::LEFTLOWARM].depth * 3));
 
         this->body[BodyPartsIndex::RIGHTUPARM][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::RIGHTUPARM].width);
         this->body[BodyPartsIndex::RIGHTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTUPARM].height);
-        this->body[BodyPartsIndex::RIGHTUPARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTUPARM].depth);
+        this->body[BodyPartsIndex::RIGHTUPARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::RIGHTUPARM].depth * 3));
 
         this->body[BodyPartsIndex::RIGHTLOWARM][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::RIGHTLOWARM].width);
         this->body[BodyPartsIndex::RIGHTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTLOWARM].height) - (this->bodySizes[BodyPartsIndex::RIGHTUPARM].height * 2);
-        this->body[BodyPartsIndex::RIGHTLOWARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTLOWARM].depth);
+        this->body[BodyPartsIndex::RIGHTLOWARM][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::RIGHTLOWARM].depth * 3));
 
         this->body[BodyPartsIndex::LEFTUPLEG][i].x += (-this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPLEG].width);
         this->body[BodyPartsIndex::LEFTUPLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::LEFTUPLEG].height);
-        this->body[BodyPartsIndex::LEFTUPLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTUPLEG].depth);
+        this->body[BodyPartsIndex::LEFTUPLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::LEFTUPLEG].depth * 3));
 
         this->body[BodyPartsIndex::LEFTLOWLEG][i].x += (-this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTLOWLEG].width);
         this->body[BodyPartsIndex::LEFTLOWLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::LEFTLOWLEG].height) + (this->bodySizes[BodyPartsIndex::LEFTUPLEG].height * 2);
-        this->body[BodyPartsIndex::LEFTLOWLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::LEFTLOWLEG].depth);
+        this->body[BodyPartsIndex::LEFTLOWLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::LEFTLOWLEG].depth * 3));
 
         this->body[BodyPartsIndex::RIGHTUPLEG][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width - this->bodySizes[BodyPartsIndex::RIGHTUPLEG].width);
         this->body[BodyPartsIndex::RIGHTUPLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::RIGHTUPLEG].height);
-        this->body[BodyPartsIndex::RIGHTUPLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTUPLEG].depth);
+        this->body[BodyPartsIndex::RIGHTUPLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::RIGHTUPLEG].depth * 3));
 
         this->body[BodyPartsIndex::RIGHTLOWLEG][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width - this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].width);
         this->body[BodyPartsIndex::RIGHTLOWLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].height) + (this->bodySizes[BodyPartsIndex::RIGHTUPLEG].height * 2);
-        this->body[BodyPartsIndex::RIGHTLOWLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].depth);
+        this->body[BodyPartsIndex::RIGHTLOWLEG][i].z -= ((this->bodySizes[BodyPartsIndex::TORSO].depth / 2) - (this->bodySizes[BodyPartsIndex::RIGHTLOWLEG].depth * 3));
     }
 }
 

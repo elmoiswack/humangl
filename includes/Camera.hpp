@@ -8,6 +8,7 @@ class Camera
 private:
 	float x, y, z;
 	float yRotation, xRotation, rotationSpeed;
+	float angle;
 
 public:
 	Camera();
@@ -24,8 +25,8 @@ public:
 	void setY(float value);
 	void setZ(float value);
 
-	void rotateLeft(Matrix& matrix, float deltaTime);
-	void rotateRight(Matrix& matrix, float deltaTime);
+	float getAngle();
+	void setAngle(float newAngle);
 };
 
 #endif

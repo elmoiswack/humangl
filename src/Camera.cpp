@@ -12,17 +12,10 @@ Camera::Camera()
 	this->yRotation = -90.0f;
 	this->xRotation = 0.0f;
 	this->rotationSpeed = 1.05f;
+	this->angle = 0.0f;
 }
 
 Camera::~Camera() {}
-
-void Camera::rotateLeft(Matrix& matrix, float deltaTime) {
-
-}
-
-void Camera::rotateRight(Matrix& matrix, float deltaTime) {
-
-}
 
 float Camera::getX() {
 	return this->x;
@@ -58,4 +51,12 @@ void Camera::setY(float value) {
 
 void Camera::setZ(float value) {
 	this->z = value;
+}
+
+float Camera::getAngle() {
+	return this->angle;
+}
+
+void Camera::setAngle(float newAngle) {
+	this->angle = newAngle;
 }

@@ -6,6 +6,8 @@ int SETTINGS_SCREEN_WIDTH = 800;
 int SETTINGS_SCREEN_HEIGHT = 950;
 
 void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& running, float deltaTime) {
+	bool recomputeView = false;
+	
 	switch (keyEvent)
 	{
 	case SDLK_LEFT:
@@ -14,6 +16,12 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	case SDLK_RIGHT:
 		mainWindow.rotateRight(deltaTime);
 		break;
+	case SDLK_UP:
+		mainWindow.rotateUp(deltaTime);
+		break ;
+	case SDLK_DOWN:
+		mainWindow.rotateDown(deltaTime);
+		break ;
 	case SDLK_W:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
 			mainWindow.makeCurrent();
@@ -34,6 +42,9 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	default:
 		break;
 	}
+
+	if (recomputeView)
+	{} // recompute view
 }
 
 void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running, float deltaTime) {
