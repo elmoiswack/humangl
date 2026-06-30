@@ -143,9 +143,18 @@ void Window::clearScreen() {
 
 void Window::computeView() {
 	this->makeCurrent();
-	this->matrix.computeViewMatrix(this->camera);
+	this->matrix.computeViewMatrix(this->camera.getX(), this->camera.getY(), this->camera.getZ());
 	this->shader.setUniformMatrix4x4(this->matrix.getView(), "view");
 }
+
+void Window::rotateRight(float deltaTime) {
+	this->camera.rotateRight(this->matrix, deltaTime);
+}
+
+void Window::rotateLeft(float deltaTime) {
+	this->camera.rotateLeft(this->matrix, deltaTime);
+}
+
 
 std::vector<Mesh>& Window::getMeshes() {
 	return this->meshes;

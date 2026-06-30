@@ -2,21 +2,25 @@
 #include <SDL3/SDL_video.h>
 #include <SDL3/SDL.h>
 #include <cmath>
+#include <iostream>
 
 Camera::Camera()
 {
 	this->x = 0.0f;
 	this->y = 0.0f;
 	this->z = 3.0f;
+	this->yRotation = -90.0f;
+	this->xRotation = 0.0f;
+	this->rotationSpeed = 1.05f;
 }
 
 Camera::~Camera() {}
 
-void Camera::rotateLeft() {
+void Camera::rotateLeft(Matrix& matrix, float deltaTime) {
 
 }
 
-void Camera::rotateRight() {
+void Camera::rotateRight(Matrix& matrix, float deltaTime) {
 
 }
 
@@ -30,6 +34,18 @@ float Camera::getY() {
 
 float Camera::getZ() {
 	return this->z;
+}
+
+float Camera::getXRotation() {
+	return this->xRotation;
+}
+
+float Camera::getYRotation() {
+	return this->yRotation;
+}
+
+float Camera::getRotationSpeed() {
+	return this->rotationSpeed;
 }
 
 void Camera::setX(float value) {

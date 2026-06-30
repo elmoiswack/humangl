@@ -1,8 +1,6 @@
 #ifndef MATRIX_HPP
 # define MATRIX_HPP
 
-#include "Camera.hpp"
-
 class Matrix
 {
 private:
@@ -27,7 +25,7 @@ public:
 	void normalize(float v[3]);
 	void cross(float out[3], const float a[3], const float b[3]);
 	float dot(const float a[3], const float b[3]);
-	void computeViewMatrix(Camera& cam);
+	void computeViewMatrix(float x, float y, float z);
 
 	void setModelToIdentity();
 	void setRotationXMatrix(float& angle);

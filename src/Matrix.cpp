@@ -69,8 +69,8 @@ float Matrix::dot(const float a[3], const float b[3]) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
 
-void Matrix::computeViewMatrix(Camera& cam) {
-    float eye[3] = { cam.getX(), cam.getY(), cam.getZ() };
+void Matrix::computeViewMatrix(float x, float y, float z) {
+    float eye[3] = { x, y, z };
     float up[3]  = { 0.0f, 1.0f, 0.0f };
 
     float forward[3];

@@ -28,9 +28,47 @@ Animation::Animation()
 
 	this->rightLegLowRotationAngle = 0.0f;
 	this->rightLegLowRotationForward = false;
+
+	this->currentJumpHeight = 0.0f;
+	this->maxJumpHeight = .2f;
+	this->jumpSpeed = 0.015;
+	this->incrementJumpHeight = true;
 }
 
 Animation::~Animation() {}
+
+void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
+	switch (this->currentAnimation)
+	{
+	case AnimationTypes::IDLE:
+		return ;
+	case AnimationTypes::WALKING:
+		this->walkingAnimation(shader, matrix, body, i);
+		return ;
+	case AnimationTypes::JUMP:
+		this->jumpAnimation(shader, matrix, body, i);
+		return ;
+	default:
+		return ;
+	}
+}
+
+void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
+	this->currentAnimation = AnimationTypes::IDLE;
+	this->leftArmUpRotationAngle = 0.0f;
+	this->leftArmLowRotationAngle = 0.0f;
+	this->rightArmUpRotationAngle = 0.0f;
+	this->rightArmLowRotationAngle = 0.0f;
+	this->leftLegUpRotationAngle = 0.0f;
+	this->leftLegLowRotationAngle = 0.0f;
+	this->rightLegUpRotationAngle = 0.0f;
+	this->rightLegLowRotationAngle = 0.0f;
+	this->currentJumpHeight = 0.0f;
+	matrix.setModelToIdentity();
+	shader.setUniformMatrix4x4(matrix.getModel(), "model");
+	shader.setUniform1f(0.0f, "jumpHeight");
+	shader.setUniform1i(0, "animation");
+}
 
 void Animation::incrementAngle(float& angle, bool& forward) {
     if (angle + this->rotationSpeed >= .45f) {
@@ -54,21 +92,6 @@ float Animation::roundTo2Decimals(float& angle) {
 	float var = angle;
 	float value = (int)(var * 100 + .5);
     return (float)value / 100;	
-}
-
-bool Animation::checkIfPartsFinished() {
-	if ((this->roundTo2Decimals(this->leftArmUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->leftArmLowRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightArmUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightArmLowRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->leftLegUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->leftLegLowRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightLegUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightLegLowRotationAngle) != 0.00) \
-	) {
-		return false;
-	}
-	return true;
 }
 
 void Animation::leftArmUpRotation() {
@@ -127,113 +150,8 @@ void Animation::rightLegLowRotation() {
 		this->decrementAngle(this->rightLegLowRotationAngle, this->rightLegLowRotationForward);
 }
 
-void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	auto& pivotLeftUpArm = body.getLeftUpArmPivot();
-	auto& pivotLeftLowArm = body.getLeftLowArmPivot();
-
-	auto& pivotRightUpArm = body.getRightUpArmPivot();
-	auto& pivotRightLowArm = body.getRightLowArmPivot();
-
-	auto& pivotLeftUpLeg = body.getLeftUpLegPivot();
-	auto& pivotLeftLowLeg = body.getLeftLowLegPivot();
-
-	auto& pivotRightUpLeg = body.getRightUpLegPivot();
-	auto& pivotRightLowLeg = body.getRightLowLegPivot();
-
-	switch (i)
-	{
-	case BodyPartsIndex::LEFTUPARM:
-		this->leftArmUpRotation();
-		matrix.setRotationYMatrix(this->leftArmUpRotationAngle);
-		matrix.setPivotMatrix(pivotLeftUpArm.x, pivotLeftUpArm.y, pivotLeftUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftUpArm.x, -pivotLeftUpArm.y, -pivotLeftUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break;
-
-	case BodyPartsIndex::LEFTLOWARM:
-		this->leftArmLowRotation();
-		matrix.setRotationYMatrix(this->leftArmLowRotationAngle);
-		matrix.setPivotMatrix(pivotLeftLowArm.x, pivotLeftLowArm.y, pivotLeftLowArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftLowArm.x, -pivotLeftLowArm.y, -pivotLeftLowArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break;
-	
-	case BodyPartsIndex::RIGHTUPARM:
-		this->rightArmUpRotation();
-		matrix.setRotationYMatrix(this->rightArmUpRotationAngle);
-		matrix.setPivotMatrix(pivotRightUpArm.x, pivotRightUpArm.y, pivotRightUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightUpArm.x, -pivotRightUpArm.y, -pivotRightUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break; 
-
-	case BodyPartsIndex::RIGHTLOWARM:
-		this->rightArmLowRotation();
-		matrix.setRotationYMatrix(this->rightArmLowRotationAngle);
-		matrix.setPivotMatrix(pivotRightLowArm.x, pivotRightLowArm.y, pivotRightLowArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightLowArm.x, -pivotRightLowArm.y, -pivotRightLowArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break; 
-	
-	case BodyPartsIndex::LEFTUPLEG:
-		this->leftLegUpRotation();
-		matrix.setRotationYMatrix(this->leftLegUpRotationAngle);
-		matrix.setPivotMatrix(pivotLeftUpLeg.x, pivotLeftUpLeg.y, pivotLeftUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftUpLeg.x, -pivotLeftUpLeg.y, -pivotLeftUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break;
-
-	case BodyPartsIndex::LEFTLOWLEG:
-		this->leftLegLowRotation();
-		matrix.setRotationYMatrix(this->leftLegLowRotationAngle);
-		matrix.setPivotMatrix(pivotLeftLowLeg.x, pivotLeftLowLeg.y, pivotLeftLowLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftLowLeg.x, -pivotLeftLowLeg.y, -pivotLeftLowLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break;
-	
-	case BodyPartsIndex::RIGHTUPLEG:
-		this->rightLegUpRotation();
-		matrix.setRotationYMatrix(this->rightLegUpRotationAngle);
-		matrix.setPivotMatrix(pivotRightUpLeg.x, pivotRightUpLeg.y, pivotRightUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightUpLeg.x, -pivotRightUpLeg.y, -pivotRightUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break; 
-
-	case BodyPartsIndex::RIGHTLOWLEG:
-		this->rightLegLowRotation();
-		matrix.setRotationYMatrix(this->rightLegLowRotationAngle);
-		matrix.setPivotMatrix(pivotRightLowLeg.x, pivotRightLowLeg.y, pivotRightLowLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightLowLeg.x, -pivotRightLowLeg.y, -pivotRightLowLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
-		break;
-
-	default:
-		matrix.setModelToIdentity();
-		shader.setUniformMatrix4x4(matrix.getIdentity(), "positivePivotMatrix");
-		shader.setUniformMatrix4x4(matrix.getIdentity(), "negativePivotMatrix");
-		break;
-	}
-	
-	
-	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) && (this->checkIfPartsFinished() == true)) {
-		this->currentAnimation = AnimationTypes::IDLE;
-		matrix.setModelToIdentity();
-		shader.setUniformMatrix4x4(matrix.getModel(), "model");
-		shader.setUniform1i(0, "walkingAnimation");
-		return ;
-	}
-	shader.setUniformMatrix4x4(matrix.getModel(), "model");
-}
-
 bool Animation::isAnimationFinished() {
-	return (this->currentAnimation == AnimationTypes::IDLE ? true : false);
+	return (this->currentAnimation == AnimationTypes::IDLE);
 }
 	
 void Animation::startAnimation(AnimationTypes whichAnimation) {
@@ -243,4 +161,3 @@ void Animation::startAnimation(AnimationTypes whichAnimation) {
 AnimationTypes Animation::getCurrentAnimation() {
 	return this->currentAnimation;
 }
-

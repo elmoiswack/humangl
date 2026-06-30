@@ -126,6 +126,10 @@ void Shader::setUniform1i(const int value, const char* name) {
     glUniform1i(glGetUniformLocation(this->shaderProgram, name), value);
 }
 
+void Shader::setUniform1f(const float value, const char* name) {
+    glUniform1f(glGetUniformLocation(this->shaderProgram, name), value);
+}
+
 int Shader::getUniform1i(const char* name) {
     GLint value;
     glGetUniformiv(this->shaderProgram, glGetUniformLocation(this->shaderProgram, name), &value);

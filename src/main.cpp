@@ -5,20 +5,27 @@ int MAIN_SCREEN_HEIGHT = 1080;
 int SETTINGS_SCREEN_WIDTH = 800;
 int SETTINGS_SCREEN_HEIGHT = 950;
 
-void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& running) {
+void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& running, float deltaTime) {
 	switch (keyEvent)
 	{
 	case SDLK_LEFT:
-		mainWindow.getCamera().rotateLeft();
+		mainWindow.rotateLeft(deltaTime);
 		break ;
 	case SDLK_RIGHT:
-		mainWindow.getCamera().rotateRight();
+		mainWindow.rotateRight(deltaTime);
 		break;
 	case SDLK_W:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
 			mainWindow.makeCurrent();
-			mainWindow.getShader().setUniform1i(1, "walkingAnimation");
+			mainWindow.getShader().setUniform1i(1, "animation");
 			mainWindow.getAnimations().startAnimation(AnimationTypes::WALKING);
+		}
+		break;
+	case SDLK_SPACE:
+		if (mainWindow.getAnimations().isAnimationFinished() == true) {
+			mainWindow.makeCurrent();
+			mainWindow.getShader().setUniform1i(1, "animation");
+			mainWindow.getAnimations().startAnimation(AnimationTypes::JUMP);
 		}
 		break;
 	case SDLK_ESCAPE:
@@ -29,7 +36,7 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	}
 }
 
-void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running) {
+void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running, float deltaTime) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
 	auto& buttons = settingsWindow.getButtons();
@@ -44,7 +51,7 @@ void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, boo
 			running = false;
 		}
 		if (event.window.windowID == mainWindow.getWindowId() && event.type == SDL_EVENT_KEY_DOWN) {
-			inputSwitchMainWindow(event.key.key, mainWindow, running);
+			inputSwitchMainWindow(event.key.key, mainWindow, running, deltaTime);
     	}
 		if (event.window.windowID == settingsWindow.getWindowId() && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
 			if (settingsWindow.checkIfButtonPressed(event.motion.x, event.motion.y, body, mainWindow.getMeshes())) {	
@@ -55,17 +62,12 @@ void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, boo
     }
 }
 
-void setModelForAnimation(Animation& animations, Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	if (animations.getCurrentAnimation() == AnimationTypes::WALKING) {
-		animations.walkingAnimation(shader, matrix, body, i);
-	}
-}
-
 void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& body) {
 	mainWindow.makeCurrent();
 	auto& mainWindowMeshes = mainWindow.getMeshes();
+	auto& mainWindowAnimations = mainWindow.getAnimations();
 	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
-		setModelForAnimation(mainWindow.getAnimations(), mainWindow.getShader(), mainWindow.getMatrix(), body, i);
+		mainWindowAnimations.checkAnimation(mainWindow.getShader(), mainWindow.getMatrix(), body, i);
 		mainWindow.drawMeshOnWindow(mainWindowMeshes[i]);
 	}
 
@@ -107,12 +109,16 @@ int main(void) {
 		Window settingsWindow("Settings", SETTINGS_SCREEN_WIDTH, SETTINGS_SCREEN_HEIGHT, "shaders/SettingsWVertex.glsl", "shaders/SettingsWFragment.glsl");
 
 		bool running = true;
-
+		float lastFrame = SDL_GetTicks();
 		while (running) {
+			float currentFrame = SDL_GetTicks();
+			float deltaTime = currentFrame - lastFrame;
+			lastFrame = currentFrame;
+
 			mainWindow.clearScreen();
 			settingsWindow.clearScreen();
 
-			checkInput(mainWindow, settingsWindow, body, running);
+			checkInput(mainWindow, settingsWindow, body, running, deltaTime);
 
 			mainWindow.computeView();
 			drawPartsOnScreen(mainWindow, settingsWindow, body);

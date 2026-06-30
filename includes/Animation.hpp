@@ -41,18 +41,29 @@ private:
 	float rightLegLowRotationAngle;
 	bool rightLegLowRotationForward;
 
+	float currentJumpHeight;
+	float maxJumpHeight;
+	float jumpSpeed;
+	bool incrementJumpHeight;
 
 public:
 	Animation();
 	~Animation();
 
+	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void resetAnimation(Shader& shader, Matrix& matrix);
+	
 	void incrementAngle(float& angle, bool& forward);
 	void decrementAngle(float& angle, bool& forward);
 
 	float roundTo2Decimals(float& angle);
-	bool checkIfPartsFinished();
-
+	
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	bool checkIfWalkingFinished();
+
+	void jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void incrementHeight();
+	bool checkIfJumpFinished();
 
 	void leftArmUpRotation();
 	void leftArmLowRotation();

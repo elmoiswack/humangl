@@ -7,13 +7,15 @@ uniform mat4 model;
 uniform mat4 positivePivotMatrix;
 uniform mat4 negativePivotMatrix;
 
-uniform int walkingAnimation;
+uniform int animation;
+uniform float jumpHeight;
 
 void main()
 {
-	if (walkingAnimation == 1)
+	if (animation == 1)
 	{
-		gl_Position = perspective * view * positivePivotMatrix * model * negativePivotMatrix * vec4(aPos, 1);
+		vec3 position = vec3(aPos.x, aPos.y + jumpHeight, aPos.z);
+		gl_Position = perspective * view * positivePivotMatrix * model * negativePivotMatrix * vec4(position, 1);
 	}
 	else
 	{

@@ -90,6 +90,8 @@ public:
 	void clearScreen();
 
 	void computeView();
+	void rotateRight(float deltaTime);
+	void rotateLeft(float deltaTime);
 
 	std::vector<Mesh>& getMeshes();
 	std::vector<Button>& getButtons();
