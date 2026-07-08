@@ -25,14 +25,14 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	case SDLK_W:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
 			mainWindow.makeCurrent();
-			mainWindow.getShader().setUniform1i(1, "animation");
+			mainWindow.getShader().setUniform1i(AnimationTypes::WALKING, "animation");
 			mainWindow.getAnimations().startAnimation(AnimationTypes::WALKING);
 		}
 		break;
 	case SDLK_SPACE:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
 			mainWindow.makeCurrent();
-			mainWindow.getShader().setUniform1i(1, "animation");
+			mainWindow.getShader().setUniform1i(AnimationTypes::JUMP, "animation");
 			mainWindow.getAnimations().startAnimation(AnimationTypes::JUMP);
 		}
 		break;
@@ -56,10 +56,12 @@ void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, boo
 		if(event.type == SDL_EVENT_QUIT) {
 			std::cout << "SDL_EVENT_QUIT EVENT" << std::endl;
 			running = false;
+			return ;
 		}
 		if (state[SDL_SCANCODE_ESCAPE]) {
 			std::cout << "SDL_SCANCODE_ESCAPE EVENT" << std::endl;
 			running = false;
+			return ;
 		}
 		if (event.window.windowID == mainWindow.getWindowId() && event.type == SDL_EVENT_KEY_DOWN) {
 			inputSwitchMainWindow(event.key.key, mainWindow, running, deltaTime);
@@ -97,7 +99,7 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 			continue;			
 		}
 		settingsWindow.drawMeshOnWindow(buttons[i].getMesh());
-		settingsWindow.drawText(buttons[i], labels[i]);			
+		settingsWindow.drawText(buttons[i], labels[i]);
 	}
 }
 

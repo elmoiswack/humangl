@@ -18,16 +18,16 @@ Animation::Animation()
 	this->rightArmLowRotationForward = false;
 
 	this->leftLegUpRotationAngle = 0.0f;
-	this->leftLegUpRotationForward = true;
+	this->leftLegUpRotationForward = false;
 
 	this->leftLegLowRotationAngle = 0.0f;
-	this->leftLegLowRotationForward = true;
+	this->leftLegLowRotationForward = false;
 
 	this->rightLegUpRotationAngle = 0.0f;
-	this->rightLegUpRotationForward = false;
+	this->rightLegUpRotationForward = true;
 
 	this->rightLegLowRotationAngle = 0.0f;
-	this->rightLegLowRotationForward = false;
+	this->rightLegLowRotationForward = true;
 
 	this->currentJumpHeight = 0.0f;
 	this->maxJumpHeight = .2f;
@@ -67,7 +67,7 @@ void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 	matrix.setModelToIdentity();
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 	shader.setUniform1f(0.0f, "jumpHeight");
-	shader.setUniform1i(0, "animation");
+	shader.setUniform1i(AnimationTypes::IDLE, "animation");
 }
 
 void Animation::incrementAngle(float& angle, bool& forward) {
