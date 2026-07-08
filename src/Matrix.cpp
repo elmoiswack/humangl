@@ -44,14 +44,6 @@ float* Matrix::getPivot() {
 float Matrix::degreesToRadians(float degrees) {
 	return (degrees * (M_PI / 180.0f));
 }
-void Matrix::getForward(float *forward) {
-    float yRad = -90.0f * (M_PI / 180.0f);
-    float xRad = 0.0f * (M_PI / 180.0f);
-
-    forward[0] = cosf(yRad) * cosf(xRad);
-    forward[1] = sinf(xRad);
-    forward[2] = sinf(yRad) * cosf(xRad);
-}
 
 void Matrix::normalize(float v[3]) {
     float len = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
@@ -72,15 +64,20 @@ float Matrix::dot(const float a[3], const float b[3]) {
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
 
-void Matrix::computeViewMatrix(float x, float y, float z, float angle) {
-    float angleX = sin(angle) * 1.5;
-    float angleZ = cos(angle) * 1.5;
+void Matrix::computeViewMatrix(float targetX, float targetY, float targetZ, float angle, float radius) {
+    float eye[3] = {
+        targetX + radius * sinf(angle),
+        targetY,
+        targetZ + radius * cosf(angle)
+    };
+    float target[3] = { targetX, targetY, targetZ };
+    float up[3] = { 0.0f, 1.0f, 0.0f };
 
-    float eye[3] = { x + angleX, y, z + angleZ};
-    float up[3]  = { 0.0f, 1.0f, 0.0f };
-
-    float forward[3];
-    this->getForward(forward);
+    float forward[3] = {
+        target[0] - eye[0],
+        target[1] - eye[1],
+        target[2] - eye[2]
+    };
     this->normalize(forward);
 
     float s[3];
@@ -90,25 +87,25 @@ void Matrix::computeViewMatrix(float x, float y, float z, float angle) {
     float u[3];
     this->cross(u, s, forward);
 
-    this->view[0]  =  s[0];
-    this->view[1]  =  u[0];
-    this->view[2]  = -forward[0];
-    this->view[3]  =  0.0f;
-
-    this->view[4]  =  s[1];
-    this->view[5]  =  u[1];
-    this->view[6]  = -forward[1];
-    this->view[7]  =  0.0f;
-
-    this->view[8]  =  s[2];
-    this->view[9]  =  u[2];
-    this->view[10] = -forward[2];
-    this->view[11] =  0.0f;
+    this->view[0]  =  s[0];  
+    this->view[1]  =  u[0];  
+    this->view[2]  = -forward[0];  
+    this->view[3]  = 0.0f;
+    
+    this->view[4]  =  s[1];  
+    this->view[5]  =  u[1];  
+    this->view[6]  = -forward[1];  
+    this->view[7]  = 0.0f;
+    
+    this->view[8]  =  s[2];  
+    this->view[9]  =  u[2];  
+    this->view[10] = -forward[2];  
+    this->view[11] = 0.0f;
 
     this->view[12] = -dot(s, eye);
     this->view[13] = -dot(u, eye);
     this->view[14] =  dot(forward, eye);
-    this->view[15] =  1.f;
+    this->view[15] =  1.0f;
 }
 
 void Matrix::setModelToIdentity() {

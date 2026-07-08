@@ -6,13 +6,14 @@
 
 Camera::Camera()
 {
-	this->x = 0.0f;
-	this->y = 0.0f;
-	this->z = 2.0f;
-	this->yRotation = -90.0f;
-	this->xRotation = 0.0f;
-	this->rotationSpeed = 1.05f;
-	this->angle = 0.0f;
+    this->x = 0.0f; 
+    this->y = 0.0f;         
+    this->z = 0.0f;
+    this->radius = 3.0f;
+    this->yRotation = -90.0f;
+    this->xRotation = 0.0f;
+    this->rotationSpeed = 1.05f;
+    this->angle = 0.0f;
 }
 
 Camera::~Camera() {}
@@ -27,6 +28,10 @@ float Camera::getY() {
 
 float Camera::getZ() {
 	return this->z;
+}
+
+float Camera::getRadius() {
+	return this->radius;
 }
 
 float Camera::getXRotation() {
@@ -51,6 +56,10 @@ void Camera::setY(float value) {
 
 void Camera::setZ(float value) {
 	this->z = value;
+}
+
+void Camera::setRadius(float value) {
+	this->radius = value;
 }
 
 float Camera::getAngle() {

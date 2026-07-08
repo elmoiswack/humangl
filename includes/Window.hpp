@@ -92,8 +92,6 @@ public:
 	void computeView();
 	void rotateRight(float deltaTime);
 	void rotateLeft(float deltaTime);
-	void rotateUp(float deltaTime);
-	void rotateDown(float deltaTime);
 
 	std::vector<Mesh>& getMeshes();
 	std::vector<Button>& getButtons();

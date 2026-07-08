@@ -6,7 +6,7 @@
 class Camera
 {
 private:
-	float x, y, z;
+	float x, y, z, radius;
 	float yRotation, xRotation, rotationSpeed;
 	float angle;
 
@@ -17,6 +17,7 @@ public:
 	float getX();
 	float getY();
 	float getZ();
+	float getRadius();
 	float getXRotation(); 
 	float getYRotation(); 
 	float getRotationSpeed();
@@ -24,6 +25,7 @@ public:
 	void setX(float value);
 	void setY(float value);
 	void setZ(float value);
+	void setRadius(float value);
 
 	float getAngle();
 	void setAngle(float newAngle);

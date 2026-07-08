@@ -12,16 +12,12 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	{
 	case SDLK_LEFT:
 		mainWindow.rotateLeft(deltaTime);
+		recomputeView = true;
 		break ;
 	case SDLK_RIGHT:
 		mainWindow.rotateRight(deltaTime);
+		recomputeView = true;
 		break;
-	case SDLK_UP:
-		mainWindow.rotateUp(deltaTime);
-		break ;
-	case SDLK_DOWN:
-		mainWindow.rotateDown(deltaTime);
-		break ;
 	case SDLK_W:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
 			mainWindow.makeCurrent();
@@ -44,7 +40,7 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 	}
 
 	if (recomputeView)
-	{} // recompute view
+		mainWindow.computeView();
 }
 
 void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running, float deltaTime) {
@@ -133,7 +129,6 @@ int main(void) {
 
 			checkInput(mainWindow, settingsWindow, body, running, deltaTime);
 
-			mainWindow.computeView();
 			drawPartsOnScreen(mainWindow, settingsWindow, body);
 
 			mainWindow.makeCurrent();

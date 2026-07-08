@@ -22,11 +22,10 @@ public:
 	float* getPivot();
 
 	float degreesToRadians(float degrees);
-	void getForward(float *forward);
 	void normalize(float v[3]);
 	void cross(float out[3], const float a[3], const float b[3]);
 	float dot(const float a[3], const float b[3]);
-	void computeViewMatrix(float x, float y, float z, float angle);
+	void computeViewMatrix(float targetX, float targetY, float targetZ, float angle, float radius);
 
 	void setModelToIdentity();
 	void setRotationXMatrix(float& angle);
