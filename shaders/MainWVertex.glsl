@@ -12,11 +12,14 @@ uniform float jumpHeight;
 
 void main()
 {
-	if (animation == 1)
+	int walkingAnimation = 1;
+	int jumpAnimation = 2;
+
+	if (animation == walkingAnimation)
 	{
 		gl_Position = perspective * view * positivePivotMatrix * model * negativePivotMatrix * vec4(aPos, 1);
 	}
-	else if (animation == 2)
+	else if (animation == jumpAnimation)
 	{
 		vec3 position = vec3(aPos.x, aPos.y + jumpHeight, aPos.z);
 		gl_Position = perspective * view  * model * vec4(position, 1);
