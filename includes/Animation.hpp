@@ -9,6 +9,7 @@ enum AnimationTypes {
 	IDLE,
 	WALKING,
 	JUMP,
+	RUN,
 };
 
 class Animation
@@ -60,6 +61,7 @@ public:
 	
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	bool checkIfWalkingFinished();
+	void runAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 
 	void jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void incrementHeight();

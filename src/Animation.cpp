@@ -48,6 +48,9 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 	case AnimationTypes::JUMP:
 		this->jumpAnimation(shader, matrix, body, i);
 		return ;
+	case AnimationTypes::RUN:
+		this->walkingAnimation(shader, matrix, body, i);
+		return ;
 	default:
 		return ;
 	}
@@ -71,20 +74,28 @@ void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 }
 
 void Animation::incrementAngle(float& angle, bool& forward) {
-    if (angle + this->rotationSpeed >= .90f) {
+	float speed = this->rotationSpeed;
+	if (this->currentAnimation == AnimationTypes::RUN)
+		speed = this->rotationSpeed * 1.5;
+
+    if (angle + speed >= .90f) {
         angle = 0.90f;
 		forward = !forward;
     } else {
-        angle += this->rotationSpeed;
+        angle += speed;
     }
 }
 
 void Animation::decrementAngle(float& angle, bool& forward) {
-	if (angle - this->rotationSpeed <= -.90f) {
+	float speed = this->rotationSpeed;
+	if (this->currentAnimation == AnimationTypes::RUN)
+		speed = this->rotationSpeed * 1.5;
+
+	if (angle - speed <= -.90f) {
 		angle = -0.90f;
 		forward = !forward;
     } else {
-		angle -= this->rotationSpeed;
+		angle -= speed;
     }
 }
 
