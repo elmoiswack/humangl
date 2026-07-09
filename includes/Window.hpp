@@ -80,7 +80,7 @@ public:
 
 	void initWindow(const char* name, int width, int height);
 	void initButtons(int width, int height);
-	void makeCurrent();
+	bool makeCurrent();
 
 	SDL_Window* getWindow();
 	SDL_WindowID getWindowId();
@@ -115,6 +115,13 @@ public:
 	public:
 		const char *what() const throw() {
 			return ("Failed to create window or openGL context!");
+		}
+	};
+
+	class FailedTextCreation : public std::exception {
+	public:
+		const char *what() const throw() {
+			return ("Failed to create text for settings page!");
 		}
 	};
 };

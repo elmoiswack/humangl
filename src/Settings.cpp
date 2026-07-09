@@ -3,97 +3,135 @@
 void Window::initButtons(int width, int height) {
 	this->buttons.emplace_back(Button(ButtonType::UNCLICKABLE, 285, 20, 230, 60, width, height));
 	GLTtext* screenName = gltCreateText();
-	gltSetText(screenName, "Settings");
+	if (!screenName || !gltSetText(screenName, "Settings")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(screenName);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 100, 110, 40, width, height));
 	GLTtext* bodyText = gltCreateText();
-	gltSetText(bodyText, "Body");
+	if (!bodyText || !gltSetText(bodyText, "Body")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(bodyText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 100, 120, 40, width, height));
 	GLTtext* colorText = gltCreateText();
-	gltSetText(colorText, "Color");
+	if (!colorText || !gltSetText(colorText, "Color")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(colorText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 200, 110, 40, width, height));
 	GLTtext* headText = gltCreateText();
-	gltSetText(headText, "Head");
+	if (!headText || !gltSetText(headText, "Head")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(headText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 200, 120, 40, width, height));
 	GLTtext* torsoText = gltCreateText();
-	gltSetText(torsoText, "Torso");
+	if (!torsoText || !gltSetText(torsoText, "Torso")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(torsoText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 300, 110, 40, width, height));
 	GLTtext* leftText = gltCreateText();
-	gltSetText(leftText, "Left");
+	if (!leftText || !gltSetText(leftText, "Left")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(leftText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 300, 120, 40, width, height));
 	GLTtext* rightText = gltCreateText();
-	gltSetText(rightText, "Right");
+	if (!rightText || !gltSetText(rightText, "Right")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(rightText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 400, 120, 40, width, height));
 	GLTtext* upperText = gltCreateText();
-	gltSetText(upperText, "Upper"); 
+	if (!upperText || !gltSetText(upperText, "Upper")) { 
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(upperText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 400, 120, 40, width, height));
 	GLTtext* lowerText = gltCreateText();
-	gltSetText(lowerText, "Lower");
+	if (!lowerText || !gltSetText(lowerText, "Lower")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(lowerText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 150, 500, 90, 40, width, height));
 	GLTtext* armText = gltCreateText();
-	gltSetText(armText, "Arm");
+	if (!armText || !gltSetText(armText, "Arm")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(armText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 450, 500, 90, 40, width, height));
 	GLTtext* legText = gltCreateText();
-	gltSetText(legText, "Leg");
+	if (!legText || !gltSetText(legText, "Leg")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(legText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 600, 120, 40, width, height));
 	GLTtext* widthText = gltCreateText();
-	gltSetText(widthText, "Width");
+	if (!widthText || !gltSetText(widthText, "Width")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(widthText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 600, 130, 40, width, height));
 	GLTtext* heightText = gltCreateText();
-	gltSetText(heightText, "Height");
+	if (!heightText || !gltSetText(heightText, "Height")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(heightText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 600, 120, 40, width, height));
 	GLTtext* depthText = gltCreateText();
-	gltSetText(depthText, "Depth");
+	if (!depthText || !gltSetText(depthText, "Depth")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(depthText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 120, 600, 120, 40, width, height));
 	GLTtext* rText = gltCreateText();
-	gltSetText(rText, "Red");
+	if (!rText || !gltSetText(rText, "Red")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(rText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 300, 600, 130, 40, width, height));
 	GLTtext* gText = gltCreateText();
-	gltSetText(gText, "Green");
+	if (!gText || !gltSetText(gText, "Green")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(gText);
 
 	this->buttons.emplace_back(Button(ButtonType::WORD, 480, 600, 120, 40, width, height));
 	GLTtext* bText = gltCreateText();
-	gltSetText(bText, "Blue");
+	if (!bText || !gltSetText(bText, "Blue")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(bText);
 
 	this->buttons.emplace_back(Button(ButtonType::MINUS, 270, 800, 80, 80, width, height));
 	GLTtext* minusText = gltCreateText();
-	gltSetText(minusText, "-");
+	if (!minusText || !gltSetText(minusText, "-")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(minusText);
 
 	this->buttons.emplace_back(Button(ButtonType::PLUS, 450, 800, 80, 80, width, height));
-	GLTtext* plusText = gltCreateText(); 
-	gltSetText(plusText, "+");
+	GLTtext* plusText = gltCreateText();
+	if (!plusText || !gltSetText(plusText, "+")) {
+		throw Window::FailedTextCreation();
+	}
 	this->buttonLabels.push_back(plusText);	
 }
 

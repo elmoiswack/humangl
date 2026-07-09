@@ -66,17 +66,20 @@ Window::~Window()
 }
 
 void Window::initWindow(const char* name, int width, int height) {
-	SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 0);
+	if (!SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 0)) {
+		std::cout << "ERROR: setattribute: " << SDL_GetError() << std::endl;
+		throw FailedWindowCreation();
+	}
 
 	this->window = SDL_CreateWindow(name, width, height, SDL_WINDOW_OPENGL);
 	if (this->window == nullptr) {
-		std::cout << "SHIIII WINDOW: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: window creation: " << SDL_GetError() << std::endl;
 		throw FailedWindowCreation();
 	}
 
 	this->openGLContext = SDL_GL_CreateContext(this->window);
 	if (this->openGLContext == nullptr) {
-		std::cout << "SHIIII openGLContext: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: openGLContext: " << SDL_GetError() << std::endl;
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
 	}
@@ -84,7 +87,7 @@ void Window::initWindow(const char* name, int width, int height) {
 	static bool gladInitialized = false;
 	if (!gladInitialized) {
 		if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-			std::cout << "SHIIII GLAD" << std::endl;
+			std::cout << "ERROR: GLAD" << std::endl;
 			SDL_GL_DestroyContext(this->openGLContext);
 			SDL_DestroyWindow(this->window);
 			throw FailedWindowCreation();
@@ -107,15 +110,18 @@ void Window::initWindow(const char* name, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-void Window::makeCurrent() {
+bool Window::makeCurrent() {
 	if (!SDL_GL_MakeCurrent(this->window, this->openGLContext)) {
 		std::cout << "Failed to make current: " << SDL_GetError() << std::endl;
+		return false;
 	}
 
 	if (!SDL_GL_SetSwapInterval(1)) {
 		std::cout << "Failed to setSwap: " << SDL_GetError() << std::endl;
+		return false;
 	}
 	this->shader.useProgram();
+	return true;
 }
 
 SDL_Window* Window::getWindow() {
@@ -127,7 +133,8 @@ SDL_WindowID Window::getWindowId() {
 }
 
 void Window::drawMeshOnWindow(Mesh& mesh) {
-	this->makeCurrent();
+	if (!this->makeCurrent())
+		return ;
 	this->shader.setUniformVec3(mesh.getColor(), "color");
 
 	glBindVertexArray(mesh.getVAO());
@@ -137,12 +144,14 @@ void Window::drawMeshOnWindow(Mesh& mesh) {
 }
 
 void Window::clearScreen() {
-	this->makeCurrent();
+	if (!this->makeCurrent())
+		return ;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::computeView() {
-    this->makeCurrent();
+    if (!this->makeCurrent())
+		return ;
     this->matrix.computeViewMatrix(
         this->camera.getX(), this->camera.getY(), this->camera.getZ(),
         this->camera.getAngle(),

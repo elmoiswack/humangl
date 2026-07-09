@@ -28,12 +28,14 @@ Shader::Shader(const char* pathToVertex, const char* pathToFragment)
     if (!success) {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
         std::cout << "Vertex shader compilation failed:\n" << infoLog << std::endl;
-	}
+        throw Shader::FailedCompilingShader();
+    }
     
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << "Fragment shader compilation failed:\n" << infoLog << std::endl;
+        throw Shader::FailedCompilingShader();
 	}
 
     this->shaderProgram = glCreateProgram();
@@ -45,6 +47,7 @@ Shader::Shader(const char* pathToVertex, const char* pathToFragment)
     if (!success) {
         glGetProgramInfoLog(this->shaderProgram, 512, NULL, infoLog);
         std::cout << "Shader program linking failed:\n" << infoLog << std::endl;
+        throw Shader::FailedCompilingShader();
     }
 
     glDeleteShader(vertexShader);
@@ -90,8 +93,7 @@ char* Shader::readFromFile(const char* pathToFile) {
 	std::ifstream file(pathToFile);
 
 	if (!file) {
-		std::cout << "Failed to open file: " << pathToFile << std::endl;
-		exit(1);
+		throw Shader::FailedReadingFile();
 	}
 
 	std::string fileLine;

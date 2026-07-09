@@ -20,14 +20,16 @@ void inputSwitchMainWindow(SDL_Keycode keyEvent, Window& mainWindow, bool& runni
 		break;
 	case SDLK_W:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
-			mainWindow.makeCurrent();
+			if (!mainWindow.makeCurrent())
+				return ;
 			mainWindow.getShader().setUniform1i(AnimationTypes::WALKING, "animation");
 			mainWindow.getAnimations().startAnimation(AnimationTypes::WALKING);
 		}
 		break;
 	case SDLK_SPACE:
 		if (mainWindow.getAnimations().isAnimationFinished() == true) {
-			mainWindow.makeCurrent();
+			if (!mainWindow.makeCurrent())
+				return ;
 			mainWindow.getShader().setUniform1i(AnimationTypes::JUMP, "animation");
 			mainWindow.getAnimations().startAnimation(AnimationTypes::JUMP);
 		}
@@ -64,7 +66,8 @@ void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, boo
     	}
 		if (event.window.windowID == settingsWindow.getWindowId() && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
 			if (settingsWindow.checkIfButtonPressed(event.motion.x, event.motion.y, body, mainWindow.getMeshes())) {	
-				mainWindow.makeCurrent();
+				if (!mainWindow.makeCurrent())
+					return ;
 				mainWindow.updateMeshBody(body);
 			}
 		}
@@ -72,7 +75,8 @@ void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, boo
 }
 
 void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& body) {
-	mainWindow.makeCurrent();
+	if (!mainWindow.makeCurrent())
+		return ;
 	auto& mainWindowMeshes = mainWindow.getMeshes();
 	auto& mainWindowAnimations = mainWindow.getAnimations();
 	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
@@ -80,7 +84,8 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 		mainWindow.drawMeshOnWindow(mainWindowMeshes[i]);
 	}
 
-	settingsWindow.makeCurrent();
+	if (!settingsWindow.makeCurrent())
+		return ;
 	auto& buttons = settingsWindow.getButtons();
 	auto& labels = settingsWindow.getButtonsLabels();
 	for (std::size_t i = 0; i < buttons.size(); i++) {
@@ -131,17 +136,19 @@ int main(void) {
 
 			drawPartsOnScreen(mainWindow, settingsWindow, body);
 
-			mainWindow.makeCurrent();
-			if ((!SDL_GL_SwapWindow(mainWindow.getWindow()))) {
-				std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
-				break ;
-			};
+			if (mainWindow.makeCurrent()) {
+				if ((!SDL_GL_SwapWindow(mainWindow.getWindow()))) {
+					std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+					break ;
+				}
+			}
 
-			settingsWindow.makeCurrent();
-			if ((!SDL_GL_SwapWindow(settingsWindow.getWindow()))) {
-				std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
-				break ;
-			};
+			if (settingsWindow.makeCurrent()) {
+				if ((!SDL_GL_SwapWindow(settingsWindow.getWindow()))) {
+					std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+					break ;
+				}
+			}
 		}
 	} catch(const std::exception& e) {
 		std::cerr << e.what() << '\n';

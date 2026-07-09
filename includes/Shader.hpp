@@ -30,6 +30,19 @@ public:
 	void setUniform1f(const float value, const char* name);
 
 	int getUniform1i(const char* name);
+
+	class FailedReadingFile : public std::exception {
+	public:
+		const char *what() const throw() {
+			return ("Failed to read to content of the shader file!");
+		}
+	};
+	class FailedCompilingShader : public std::exception {
+	public:
+		const char *what() const throw() {
+			return ("Failed to compile shader!");
+		}
+	};
 };
 
 #endif
