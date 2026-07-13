@@ -16,7 +16,7 @@ void main()
 	int jumpAnimation = 2;
 	int runAnimation = 3;
 
-	if (animation == walkingAnimation || animation == runAnimation)
+	if ((animation == walkingAnimation) || (animation == runAnimation))
 	{
 		gl_Position = perspective * view * positivePivotMatrix * model * negativePivotMatrix * vec4(aPos, 1);
 	}

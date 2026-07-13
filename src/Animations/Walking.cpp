@@ -1,9 +1,7 @@
 #include "../../includes/Animation.hpp"
 
 void Animation::incrementAngle(float& angle, bool& forward) {
-	float speed = this->rotationSpeed;
-	if (this->currentAnimation == AnimationTypes::RUN)
-		speed = this->rotationSpeed * 1.5;
+	float speed = this->currentAnimation != AnimationTypes::RUN ? this->rotationSpeed : this->rotationSpeed * 1.5;
 
     if (angle + speed >= .90f) {
         angle = 0.90f;
