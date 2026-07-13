@@ -41,7 +41,7 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	if (!gltInit()) {
-		fprintf(stderr, "Failed to initialize glText\n");
+		std::cout << "Failed to init GLText" << std::endl;
 		SDL_GL_DestroyContext(this->openGLContext);
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
@@ -67,19 +67,19 @@ Window::~Window()
 
 void Window::initWindow(const char* name, int width, int height) {
 	if (!SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 0)) {
-		std::cout << "ERROR: setattribute: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: SDL_GL_SetAttribute(): " << SDL_GetError() << std::endl;
 		throw FailedWindowCreation();
 	}
 
 	this->window = SDL_CreateWindow(name, width, height, SDL_WINDOW_OPENGL);
 	if (this->window == nullptr) {
-		std::cout << "ERROR: window creation: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: SDL_CreateWindow(): " << SDL_GetError() << std::endl;
 		throw FailedWindowCreation();
 	}
 
 	this->openGLContext = SDL_GL_CreateContext(this->window);
 	if (this->openGLContext == nullptr) {
-		std::cout << "ERROR: openGLContext: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: SDL_GL_CreateContext(): " << SDL_GetError() << std::endl;
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
 	}
@@ -87,7 +87,7 @@ void Window::initWindow(const char* name, int width, int height) {
 	static bool gladInitialized = false;
 	if (!gladInitialized) {
 		if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-			std::cout << "ERROR: GLAD" << std::endl;
+			std::cout << "ERROR: gladLoadGLLoader():" << std::endl;
 			SDL_GL_DestroyContext(this->openGLContext);
 			SDL_DestroyWindow(this->window);
 			throw FailedWindowCreation();
@@ -96,7 +96,7 @@ void Window::initWindow(const char* name, int width, int height) {
 	}
 	
 	if (!SDL_GL_MakeCurrent(this->window, this->openGLContext)) {
-		std::cout << "Failed to make current: " << SDL_GetError() << std::endl;
+		std::cout << "Error: SDL_GL_MakeCurrent(): " << SDL_GetError() << std::endl;
 		SDL_GL_DestroyContext(this->openGLContext);
 		SDL_DestroyWindow(this->window);
 		throw FailedWindowCreation();
@@ -112,12 +112,12 @@ void Window::initWindow(const char* name, int width, int height) {
 
 bool Window::makeCurrent() {
 	if (!SDL_GL_MakeCurrent(this->window, this->openGLContext)) {
-		std::cout << "Failed to make current: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: SDL_GL_MakeCurrent(): " << SDL_GetError() << std::endl;
 		return false;
 	}
 
 	if (!SDL_GL_SetSwapInterval(1)) {
-		std::cout << "Failed to setSwap: " << SDL_GetError() << std::endl;
+		std::cout << "ERROR: SDL_GL_SetSwapInterval(): " << SDL_GetError() << std::endl;
 		return false;
 	}
 	this->shader.useProgram();

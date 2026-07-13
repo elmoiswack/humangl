@@ -52,7 +52,6 @@ void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 	if ((!state[SDL_SCANCODE_T]) && animations.getCurrentAnimation() == AnimationTypes::TEST) {
 		animations.decreaseAngleTpose();
 	}
-
 }
 
 void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running, float deltaTime) {
@@ -129,7 +128,7 @@ void printControls() {
 int main(void) {
 	try {
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
-			std::cout << "SHIIII INIT: " << SDL_GetError() << std::endl;
+			std::cout << "ERROR: SDL_Init(): " << SDL_GetError() << std::endl;
 			return -1;
 		}
 
@@ -161,14 +160,14 @@ int main(void) {
 
 			if (mainWindow.makeCurrent()) {
 				if ((!SDL_GL_SwapWindow(mainWindow.getWindow()))) {
-					std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+					std::cout << "ERROR: SDL_GL_SwapWindow(): " << SDL_GetError() << std::endl;
 					break ;
 				}
 			}
 
 			if (settingsWindow.makeCurrent()) {
 				if ((!SDL_GL_SwapWindow(settingsWindow.getWindow()))) {
-					std::cout << "SHIIII SDL_GL_SwapWindow: " << SDL_GetError() << std::endl;
+					std::cout << "ERROR: SDL_GL_SwapWindow(): " << SDL_GetError() << std::endl;
 					break ;
 				}
 			}

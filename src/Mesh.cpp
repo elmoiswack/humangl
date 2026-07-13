@@ -72,7 +72,7 @@ void Mesh::updateVBO(std::vector<SingleVertex3D>& bodyPart) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 	SingleVertex3D* vboData = static_cast<SingleVertex3D*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 	if (vboData == nullptr) {
-		std::cout << "VBODATA = NULL BRUHHHHHHHHHHHH" << std::endl;
+		std::cout << "ERROR: VBO data is null" << std::endl;
 		return ;
 	}
 	auto data = bodyPart.data();
