@@ -53,7 +53,6 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 		this->applyRotation(shader, matrix,
 			this->leftArmLowRotationForward, this->leftArmLowRotationAngle,
 			body.getLeftUpArmPivot());
-
 		break;
 	
 	case BodyPartsIndex::RIGHTUPARM:

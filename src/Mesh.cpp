@@ -47,7 +47,7 @@ Mesh::Mesh(std::vector<SingleVertex3D>& button)
 }
 
 Mesh::~Mesh() {
-	// this->deleteMesh(); //need to fix
+	// this->deleteMesh(); //TODO: need to fix
 }
 
 std::size_t& Mesh::getVertexCount() {
