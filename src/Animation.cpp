@@ -35,6 +35,7 @@ Animation::Animation()
 	this->incrementJumpHeight = true;
 
 	this->tposeDecreaseAngle = false;
+	this->flexDecreaseAngle = false;
 }
 
 Animation::~Animation() {}
@@ -53,8 +54,11 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 	case AnimationTypes::RUN:
 		this->walkingAnimation(shader, matrix, body, i);
 		return ;
-	case AnimationTypes::TEST:
+	case AnimationTypes::TPOSE:
 		this->tposeAnimation(shader, matrix, body, i);
+		return ;
+	case AnimationTypes::FLEX:
+		this->flexAnimation(shader, matrix, body, i);
 		return ;
 	default:
 		return ;
@@ -73,6 +77,7 @@ void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 	this->rightLegLowRotationAngle = 0.0f;
 	this->currentJumpHeight = 0.0f;
 	this->tposeDecreaseAngle = false;
+	this->flexDecreaseAngle = false;
 	matrix.setModelToIdentity();
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 	shader.setUniform1f(0.0f, "jumpHeight");
@@ -89,4 +94,17 @@ void Animation::startAnimation(AnimationTypes whichAnimation) {
 
 AnimationTypes Animation::getCurrentAnimation() {
 	return this->currentAnimation;
+}
+
+void Animation::moveTowards(float& value, float target, float speed) {
+    if (value < target)
+        value = std::min(value + speed, target);
+    else
+        value = std::max(value - speed, target);
+}
+
+float Animation::roundTo2Decimals(float& angle) {
+	float var = angle;
+	float value = (int)(var * 100 + .5);
+    return (float)value / 100;	
 }

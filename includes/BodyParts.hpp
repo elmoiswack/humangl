@@ -55,9 +55,16 @@ public:
 	std::vector<std::vector<SingleVertex3D>>& getBody();
 
 	SingleVertex3D& getLeftUpArmPivot();
+	SingleVertex3D& getLeftLowArmPivot();
+
 	SingleVertex3D& getRightUpArmPivot();
+	SingleVertex3D& getRightLowArmPivot();
+
 	SingleVertex3D& getLeftUpLegPivot();
-	SingleVertex3D& getRightUpLegPivot();
+	SingleVertex3D& getLeftLowLegPivot();
+
+	SingleVertex3D& getRightUpLegPivot();	
+	SingleVertex3D& getRightLowLegPivot();
 
 };
 

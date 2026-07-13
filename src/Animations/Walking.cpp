@@ -103,12 +103,6 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 }
 
-float Animation::roundTo2Decimals(float& angle) {
-	float var = angle;
-	float value = (int)(var * 100 + .5);
-    return (float)value / 100;	
-}
-
 bool Animation::checkIfWalkingFinished() {
 	if ((this->roundTo2Decimals(this->leftArmUpRotationAngle) != 0.00) || \
 		(this->roundTo2Decimals(this->leftArmLowRotationAngle) != 0.00) || \

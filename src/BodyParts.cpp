@@ -221,14 +221,30 @@ SingleVertex3D& BodyParts::getLeftUpArmPivot() {
     return this->pivotPoints[BodyPartsIndex::LEFTUPARM];
 }
 
+SingleVertex3D& BodyParts::getLeftLowArmPivot() {
+    return this->pivotPoints[BodyPartsIndex::LEFTLOWARM];
+}
+
 SingleVertex3D& BodyParts::getRightUpArmPivot() {
     return this->pivotPoints[BodyPartsIndex::RIGHTUPARM];
+}
+
+SingleVertex3D& BodyParts::getRightLowArmPivot() {
+    return this->pivotPoints[BodyPartsIndex::RIGHTLOWARM];
 }
 
 SingleVertex3D& BodyParts::getLeftUpLegPivot() {
     return this->pivotPoints[BodyPartsIndex::LEFTUPLEG];
 }
 
+SingleVertex3D& BodyParts::getLeftLowLegPivot() {
+    return this->pivotPoints[BodyPartsIndex::LEFTLOWLEG];
+}
+
 SingleVertex3D& BodyParts::getRightUpLegPivot() {
     return this->pivotPoints[BodyPartsIndex::RIGHTUPLEG];
+}
+
+SingleVertex3D& BodyParts::getRightLowLegPivot() {
+    return this->pivotPoints[BodyPartsIndex::RIGHTLOWLEG];
 }

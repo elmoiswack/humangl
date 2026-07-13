@@ -45,12 +45,22 @@ void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 	if ((state[SDL_SCANCODE_T]) && \
 		animations.isAnimationFinished()) {
 		if (mainWindow.makeCurrent()) {
-			mainWindow.getShader().setUniform1i(AnimationTypes::TEST, "animation");
-			animations.startAnimation(AnimationTypes::TEST);
+			mainWindow.getShader().setUniform1i(AnimationTypes::TPOSE, "animation");
+			animations.startAnimation(AnimationTypes::TPOSE);
 		}
 	}
-	if ((!state[SDL_SCANCODE_T]) && animations.getCurrentAnimation() == AnimationTypes::TEST) {
+	if ((!state[SDL_SCANCODE_T]) && animations.getCurrentAnimation() == AnimationTypes::TPOSE) {
 		animations.decreaseAngleTpose();
+	}
+	if ((state[SDL_SCANCODE_F]) && \
+		animations.isAnimationFinished()) {
+		if (mainWindow.makeCurrent()) {
+			mainWindow.getShader().setUniform1i(AnimationTypes::FLEX, "animation");
+			animations.startAnimation(AnimationTypes::FLEX);
+		}
+	}
+	if ((!state[SDL_SCANCODE_F]) && animations.getCurrentAnimation() == AnimationTypes::FLEX) {
+		animations.decreaseAngleFlex();
 	}
 }
 

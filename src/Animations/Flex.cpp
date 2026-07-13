@@ -1,13 +1,20 @@
 #include "../../includes/Animation.hpp"
 
-void Animation::computeAngleTpose(float& angle, bool decrease, bool left) {
-	float maxAngle = 1.56f;
-    float target = decrease ? 0.0f : (left ? maxAngle : -maxAngle);
+void Animation::computeAngleFlex(float& angle, bool decrease, bool left, bool lower) {
+	float target = 0.0f;
+
+	if (lower) {
+		float maxAngleLower = 2.0f;
+    	target = decrease ? 0.0f : (left ? maxAngleLower : -maxAngleLower);	
+	} else {
+		float maxAngleUpper = 1.56f;
+		target = decrease ? 0.0f : (left ? maxAngleUpper : -maxAngleUpper);		
+	}
     this->moveTowards(angle, target, this->rotationSpeed);
 }
 
-void Animation::applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left) {
-	computeAngleTpose(angle, this->tposeDecreaseAngle, left);
+void Animation::applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower) {
+	computeAngleFlex(angle, this->flexDecreaseAngle, left, lower);
 	matrix.setRotationZMatrix(angle);
 	matrix.setPivotMatrix(pivot.x, pivot.y, pivot.z);
 	shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
@@ -15,31 +22,31 @@ void Animation::applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward
 	shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
 }
 
-void Animation::tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
+void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
 	switch (i)
 	{
 	case BodyPartsIndex::LEFTUPARM:
-		this->applyTposeRotation(shader, matrix,
+		this->applyFlexRotation(shader, matrix,
 			this->leftArmUpRotationForward, this->leftArmUpRotationAngle,
-			body.getLeftUpArmPivot(), true);
+			body.getLeftUpArmPivot(), true, false);
 		break;
 
 	case BodyPartsIndex::LEFTLOWARM:
-		this->applyTposeRotation(shader, matrix,
+		this->applyFlexRotation(shader, matrix,
 			this->leftArmLowRotationForward, this->leftArmLowRotationAngle,
-			body.getLeftUpArmPivot(), true);
+			body.getLeftUpArmPivot(), true, true);
 		break;
 	
 	case BodyPartsIndex::RIGHTUPARM:
-		this->applyTposeRotation(shader, matrix,
+		this->applyFlexRotation(shader, matrix,
 			this->rightArmUpRotationForward, this->rightArmUpRotationAngle,
-			body.getRightUpArmPivot(), false);
+			body.getRightUpArmPivot(), false, false);
 		break; 
 
 	case BodyPartsIndex::RIGHTLOWARM:
-		this->applyTposeRotation(shader, matrix,
+		this->applyFlexRotation(shader, matrix,
 			this->rightArmLowRotationForward, this->rightArmLowRotationAngle,
-			body.getRightUpArmPivot(), false);
+			body.getRightUpArmPivot(), false, true);
 		break; 
 
 	default:
@@ -49,14 +56,14 @@ void Animation::tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 		break;
 	}
 	
-	if ((i >= BodyPartsIndex::LEFTUPARM) && (i <= BodyPartsIndex::RIGHTLOWARM) && (this->checkIfTposeFinished())) {
+	if ((i >= BodyPartsIndex::LEFTUPARM) && (i <= BodyPartsIndex::RIGHTLOWARM) && (this->checkIfFlexFinished())) {
 		this->resetAnimation(shader, matrix);
 		return ;
 	}
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 }
 
-bool Animation::checkIfTposeFinished() {
+bool Animation::checkIfFlexFinished() {
 	if ((this->roundTo2Decimals(this->leftArmUpRotationAngle) != 0.00) || \
 		(this->roundTo2Decimals(this->leftArmLowRotationAngle) != 0.00) || \
 		(this->roundTo2Decimals(this->rightArmUpRotationAngle) != 0.00) || \
@@ -67,6 +74,6 @@ bool Animation::checkIfTposeFinished() {
 	return true;
 }
 
-void Animation::decreaseAngleTpose() {
-	this->tposeDecreaseAngle = true;
+void Animation::decreaseAngleFlex() {
+	this->flexDecreaseAngle = true;
 }
