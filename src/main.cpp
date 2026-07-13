@@ -113,6 +113,19 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 	}
 }
 
+void printControls() {
+	std::cout << "----------CONTROLS----------" << std::endl;
+	std::cout << "-----------Camera-----------" << std::endl;
+	std::cout << "Rotate left: LEFT ARROW" << std::endl;
+	std::cout << "Rotate right: RIGHT ARROW" << std::endl; 
+	std::cout << "----------Animation---------" << std::endl;
+	std::cout << "Walking: W" << std::endl;
+	std::cout << "Running: SHIFT + W" << std::endl;
+	std::cout << "Jump: SPACE" << std::endl;
+	std::cout << "TPose: T" << std::endl;
+	std::cout << "----------------------------" << std::endl;
+}
+
 int main(void) {
 	try {
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -130,6 +143,8 @@ int main(void) {
 		BodyParts body;
 		Window mainWindow("HumanGL", MAIN_SCREEN_WIDTH, MAIN_SCREEN_HEIGHT, "shaders/MainWVertex.glsl", "shaders/MainWFragment.glsl", body);
 		Window settingsWindow("Settings", SETTINGS_SCREEN_WIDTH, SETTINGS_SCREEN_HEIGHT, "shaders/SettingsWVertex.glsl", "shaders/SettingsWFragment.glsl");
+
+		printControls();
 
 		bool running = true;
 		float lastFrame = SDL_GetTicks();
