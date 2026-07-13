@@ -112,7 +112,7 @@ void Matrix::setModelToIdentity() {
     memcpy(this->model, this->identity, 16 * sizeof(float));
 }
 
-void Matrix::setRotationXMatrix(float& angle) {
+void Matrix::setRotationYMatrix(float& angle) {
     memcpy(this->model, this->identity, 16 * sizeof(float));
     this->model[0] = cosf(angle);
     this->model[2] = sinf(angle);
@@ -120,12 +120,20 @@ void Matrix::setRotationXMatrix(float& angle) {
     this->model[10] = cosf(angle);
 }
 
-void Matrix::setRotationYMatrix(float& angle) {
+void Matrix::setRotationXMatrix(float& angle) {
     memcpy(this->model, this->identity, 16 * sizeof(float));
     this->model[5] = cosf(angle);
     this->model[6] = -sinf(angle);
     this->model[9] = sinf(angle);
     this->model[10] = cosf(angle);
+}
+
+void Matrix::setRotationZMatrix(float& angle) {
+    memcpy(this->model, this->identity, 16 * sizeof(float));
+    this->model[0] = cosf(angle);
+    this->model[1] = -sinf(angle);
+    this->model[4] = sinf(angle);
+    this->model[5] = cosf(angle);
 }
 
 void Matrix::setPivotMatrix(float x, float y, float z) {

@@ -10,6 +10,7 @@ enum AnimationTypes {
 	WALKING,
 	JUMP,
 	RUN,
+	TEST,
 };
 
 class Animation
@@ -47,6 +48,8 @@ private:
 	float jumpSpeed;
 	bool incrementJumpHeight;
 
+	bool tposeDecreaseAngle;
+
 public:
 	Animation();
 	~Animation();
@@ -61,7 +64,7 @@ public:
 	float roundTo2Decimals(float& angle);
 	
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
-	void applyRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot);
+	void applyWalkingRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot);
 	bool checkIfWalkingFinished();
 
 	void jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
@@ -71,6 +74,11 @@ public:
 	bool isAnimationFinished();
 	void startAnimation(AnimationTypes whichAnimation);
 	AnimationTypes getCurrentAnimation();
+
+	void tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left);
+	void decreaseAngleTpose();
+	bool checkIfTposeFinished();
 };
 
 #endif

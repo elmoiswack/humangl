@@ -1,5 +1,6 @@
 #include "../includes/BodyParts.hpp"
 #include <iostream>
+#include <cmath>
 
 BodyParts::BodyParts()
 {
@@ -40,7 +41,7 @@ BodyParts::BodyParts()
 	this->computeBody(); 
 	for (std::size_t i = 0; i < this->body.size(); i++) {
 		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO)
-			this->computePivotPoint(this->pivotPoints[i], this->body[i]); // all lower body parts don't need a pivot point
+			this->computePivotPoint(this->pivotPoints[i], this->body[i]);
 	}
 }
 
@@ -97,17 +98,32 @@ void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVerte
 		bodypart.end(),
 		[](const SingleVertex3D& a, const SingleVertex3D& b) {
 			return a.y < b.y;
-    	}
+		}
 	)->y;
+
+	const float epsilon = 1e-6f;
+	std::vector<SingleVertex3D> topVerts;
+	for (const auto& v : bodypart) {
+		if (std::fabs(v.y - maxY) < epsilon)
+			topVerts.push_back(v);
+	}
+
+	float bestX = topVerts.front().x;
+	float bestAbsX = std::fabs(bestX);
+	for (const auto& v : topVerts) {
+		float absX = std::fabs(v.x);
+		if (absX < bestAbsX) {
+			bestAbsX = absX;
+			bestX = v.x;
+		}
+	}
 
 	float sumX = 0.0f;
 	float sumZ = 0.0f;
 	int count = 0;
 
-	for (const auto& v : bodypart)
-	{
-		if (v.y == maxY)
-		{
+	for (const auto& v : topVerts) {
+		if (std::fabs(v.x - bestX) < epsilon) {
 			sumX += v.x;
 			sumZ += v.z;
 			count++;
@@ -120,20 +136,22 @@ void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVerte
 }
 
 void BodyParts::computeBody() {
+	float armOffset = 0.04f;
+
     for (std::size_t i = 0; i < this->bodyPartSize; i++) {
         this->body[BodyPartsIndex::HEAD][i].y += this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::HEAD].height;
 
         this->body[BodyPartsIndex::LEFTUPARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPARM].width);
-        this->body[BodyPartsIndex::LEFTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTUPARM].height); 
+        this->body[BodyPartsIndex::LEFTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTUPARM].height) - armOffset; 
 
         this->body[BodyPartsIndex::LEFTLOWARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTLOWARM].width);
-        this->body[BodyPartsIndex::LEFTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTLOWARM].height) - (this->bodySizes[BodyPartsIndex::LEFTUPARM].height * 2);
+        this->body[BodyPartsIndex::LEFTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::LEFTLOWARM].height) - (this->bodySizes[BodyPartsIndex::LEFTUPARM].height * 2) - armOffset;
 
         this->body[BodyPartsIndex::RIGHTUPARM][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::RIGHTUPARM].width);
-        this->body[BodyPartsIndex::RIGHTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTUPARM].height);
+        this->body[BodyPartsIndex::RIGHTUPARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTUPARM].height) - armOffset;
 
         this->body[BodyPartsIndex::RIGHTLOWARM][i].x += (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::RIGHTLOWARM].width);
-        this->body[BodyPartsIndex::RIGHTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTLOWARM].height) - (this->bodySizes[BodyPartsIndex::RIGHTUPARM].height * 2);
+        this->body[BodyPartsIndex::RIGHTLOWARM][i].y += (this->bodySizes[BodyPartsIndex::TORSO].height - this->bodySizes[BodyPartsIndex::RIGHTLOWARM].height) - (this->bodySizes[BodyPartsIndex::RIGHTUPARM].height * 2) - armOffset;
 
         this->body[BodyPartsIndex::LEFTUPLEG][i].x += (-this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPLEG].width);
         this->body[BodyPartsIndex::LEFTUPLEG][i].y -= (this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::LEFTUPLEG].height);

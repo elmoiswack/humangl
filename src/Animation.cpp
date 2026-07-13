@@ -33,6 +33,8 @@ Animation::Animation()
 	this->maxJumpHeight = .2f;
 	this->jumpSpeed = 0.015;
 	this->incrementJumpHeight = true;
+
+	this->tposeDecreaseAngle = false;
 }
 
 Animation::~Animation() {}
@@ -51,6 +53,9 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 	case AnimationTypes::RUN:
 		this->walkingAnimation(shader, matrix, body, i);
 		return ;
+	case AnimationTypes::TEST:
+		this->tposeAnimation(shader, matrix, body, i);
+		return ;
 	default:
 		return ;
 	}
@@ -67,6 +72,7 @@ void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 	this->rightLegUpRotationAngle = 0.0f;
 	this->rightLegLowRotationAngle = 0.0f;
 	this->currentJumpHeight = 0.0f;
+	this->tposeDecreaseAngle = false;
 	matrix.setModelToIdentity();
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 	shader.setUniform1f(0.0f, "jumpHeight");

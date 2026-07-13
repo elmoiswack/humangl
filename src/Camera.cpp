@@ -9,7 +9,7 @@ Camera::Camera()
     this->x = 0.0f; 
     this->y = 0.0f;         
     this->z = 0.0f;
-    this->radius = 3.0f;
+    this->radius = 2.0f;
     this->yRotation = -90.0f;
     this->xRotation = 0.0f;
     this->rotationSpeed = 1.05f;

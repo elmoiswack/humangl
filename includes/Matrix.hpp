@@ -30,6 +30,7 @@ public:
 	void setModelToIdentity();
 	void setRotationXMatrix(float& angle);
 	void setRotationYMatrix(float& angle);
+	void setRotationZMatrix(float& angle);
 
 	void setPivotMatrix(float x, float y, float z);
 };

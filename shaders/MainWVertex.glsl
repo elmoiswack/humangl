@@ -15,6 +15,7 @@ void main()
 	int walkingAnimation = 1;
 	int jumpAnimation = 2;
 	int runAnimation = 3;
+	int testAnimation = 4;
 
 	if ((animation == walkingAnimation) || (animation == runAnimation))
 	{
@@ -24,6 +25,10 @@ void main()
 	{
 		vec3 position = vec3(aPos.x, aPos.y + jumpHeight, aPos.z);
 		gl_Position = perspective * view  * model * vec4(position, 1);
+	} 
+	else if (animation == testAnimation) 
+	{
+		gl_Position = perspective * view * positivePivotMatrix * model * negativePivotMatrix * vec4(aPos, 1);
 	}
 	else
 	{

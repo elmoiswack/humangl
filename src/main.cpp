@@ -7,6 +7,7 @@ int SETTINGS_SCREEN_HEIGHT = 950;
 
 void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 	bool recomputeView = false;
+	auto& animations = mainWindow.getAnimations();
 
 	if (state[SDL_SCANCODE_LEFT]) {
 		mainWindow.rotateLeft(deltaTime);
@@ -20,27 +21,38 @@ void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 	if (recomputeView)
 		mainWindow.computeView();
 
-	if (state[SDL_SCANCODE_SPACE] && mainWindow.getAnimations().isAnimationFinished()) {
+	if (state[SDL_SCANCODE_SPACE] && animations.isAnimationFinished()) {
 		if (mainWindow.makeCurrent()) {
 			mainWindow.getShader().setUniform1i(AnimationTypes::JUMP, "animation");
-			mainWindow.getAnimations().startAnimation(AnimationTypes::JUMP);
+			animations.startAnimation(AnimationTypes::JUMP);
 			return ;
 		}
 	}
 	if ((state[SDL_SCANCODE_W] && (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT])) && \
-		mainWindow.getAnimations().isAnimationFinished()) {
+		animations.isAnimationFinished()) {
 		if (mainWindow.makeCurrent()) {
 			mainWindow.getShader().setUniform1i(AnimationTypes::RUN, "animation");
-			mainWindow.getAnimations().startAnimation(AnimationTypes::RUN);
+			animations.startAnimation(AnimationTypes::RUN);
 		}
 	}
 	if ((state[SDL_SCANCODE_W] && !(state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT])) && \
-		mainWindow.getAnimations().isAnimationFinished()) {
+		animations.isAnimationFinished()) {
 		if (mainWindow.makeCurrent()) {
 			mainWindow.getShader().setUniform1i(AnimationTypes::WALKING, "animation");
-			mainWindow.getAnimations().startAnimation(AnimationTypes::WALKING);
+			animations.startAnimation(AnimationTypes::WALKING);
 		}
 	}
+	if ((state[SDL_SCANCODE_T]) && \
+		animations.isAnimationFinished()) {
+		if (mainWindow.makeCurrent()) {
+			mainWindow.getShader().setUniform1i(AnimationTypes::TEST, "animation");
+			animations.startAnimation(AnimationTypes::TEST);
+		}
+	}
+	if ((!state[SDL_SCANCODE_T]) && animations.getCurrentAnimation() == AnimationTypes::TEST) {
+		animations.decreaseAngleTpose();
+	}
+
 }
 
 void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running, float deltaTime) {
@@ -130,7 +142,6 @@ int main(void) {
 			settingsWindow.clearScreen();
 
 			checkInput(mainWindow, settingsWindow, body, running, deltaTime);
-
 			drawPartsOnScreen(mainWindow, settingsWindow, body);
 
 			if (mainWindow.makeCurrent()) {
