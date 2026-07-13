@@ -54,30 +54,19 @@ public:
 	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void resetAnimation(Shader& shader, Matrix& matrix);
 	
+	void computeRotationAngle(bool& forward, float& angle);
 	void incrementAngle(float& angle, bool& forward);
 	void decrementAngle(float& angle, bool& forward);
 
 	float roundTo2Decimals(float& angle);
 	
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void applyRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot);
 	bool checkIfWalkingFinished();
-	void runAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 
 	void jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void incrementHeight();
 	bool checkIfJumpFinished();
-
-	void leftArmUpRotation();
-	void leftArmLowRotation();
-
-	void rightArmUpRotation();
-	void rightArmLowRotation();
-	
-	void leftLegUpRotation();
-	void leftLegLowRotation();
-
-	void rightLegUpRotation();
-	void rightLegLowRotation();
 
 	bool isAnimationFinished();
 	void startAnimation(AnimationTypes whichAnimation);

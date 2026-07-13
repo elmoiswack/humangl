@@ -1,84 +1,95 @@
 #include "../../includes/Animation.hpp"
 
+void Animation::incrementAngle(float& angle, bool& forward) {
+	float speed = this->rotationSpeed;
+	if (this->currentAnimation == AnimationTypes::RUN)
+		speed = this->rotationSpeed * 1.5;
+
+    if (angle + speed >= .90f) {
+        angle = 0.90f;
+		forward = !forward;
+    } else {
+        angle += speed;
+    }
+}
+
+void Animation::decrementAngle(float& angle, bool& forward) {
+	float speed = this->currentAnimation != AnimationTypes::RUN ? this->rotationSpeed : this->rotationSpeed * 1.5;
+
+	if (angle - speed <= -.90f) {
+		angle = -0.90f;
+		forward = !forward;
+    } else {
+		angle -= speed;
+    }
+}
+
+void Animation::computeRotationAngle(bool& forward, float& angle) {
+	if (forward)
+		this->incrementAngle(angle, forward);
+	else
+		this->decrementAngle(angle, forward);
+}
+
+void Animation::applyRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot) {
+	this->computeRotationAngle(forward, angle);
+	matrix.setRotationYMatrix(angle);
+	matrix.setPivotMatrix(pivot.x, pivot.y, pivot.z);
+	shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+	matrix.setPivotMatrix(-pivot.x, -pivot.y, -pivot.z);
+	shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+}
+
 void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	auto& pivotLeftUpArm = body.getLeftUpArmPivot();
-	auto& pivotRightUpArm = body.getRightUpArmPivot();
-	auto& pivotLeftUpLeg = body.getLeftUpLegPivot();
-	auto& pivotRightUpLeg = body.getRightUpLegPivot();
-
-
 	switch (i)
 	{
 	case BodyPartsIndex::LEFTUPARM:
-		this->leftArmUpRotation();
-		matrix.setRotationYMatrix(this->leftArmUpRotationAngle);
-		matrix.setPivotMatrix(pivotLeftUpArm.x, pivotLeftUpArm.y, pivotLeftUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftUpArm.x, -pivotLeftUpArm.y, -pivotLeftUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->leftArmUpRotationForward, this->leftArmUpRotationAngle,
+			body.getLeftUpArmPivot());
 		break;
 
 	case BodyPartsIndex::LEFTLOWARM:
-		this->leftArmLowRotation();
-		matrix.setRotationYMatrix(this->leftArmLowRotationAngle);
-		matrix.setPivotMatrix(pivotLeftUpArm.x, pivotLeftUpArm.y, pivotLeftUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftUpArm.x, -pivotLeftUpArm.y, -pivotLeftUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->leftArmLowRotationForward, this->leftArmLowRotationAngle,
+			body.getLeftUpArmPivot());
+
 		break;
 	
 	case BodyPartsIndex::RIGHTUPARM:
-		this->rightArmUpRotation();
-		matrix.setRotationYMatrix(this->rightArmUpRotationAngle);
-		matrix.setPivotMatrix(pivotRightUpArm.x, pivotRightUpArm.y, pivotRightUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightUpArm.x, -pivotRightUpArm.y, -pivotRightUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->rightArmUpRotationForward, this->rightArmUpRotationAngle,
+			body.getRightUpArmPivot());
 		break; 
 
 	case BodyPartsIndex::RIGHTLOWARM:
-		this->rightArmLowRotation();
-		matrix.setRotationYMatrix(this->rightArmLowRotationAngle);
-		matrix.setPivotMatrix(pivotRightUpArm.x, pivotRightUpArm.y, pivotRightUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightUpArm.x, -pivotRightUpArm.y, -pivotRightUpArm.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->rightArmLowRotationForward, this->rightArmLowRotationAngle,
+			body.getRightUpArmPivot());
 		break; 
 	
 	case BodyPartsIndex::LEFTUPLEG:
-		this->leftLegUpRotation();
-		matrix.setRotationYMatrix(this->leftLegUpRotationAngle);
-		matrix.setPivotMatrix(pivotLeftUpLeg.x, pivotLeftUpLeg.y, pivotLeftUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftUpLeg.x, -pivotLeftUpLeg.y, -pivotLeftUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->leftLegUpRotationForward, this->leftLegUpRotationAngle,
+			body.getLeftUpLegPivot());
 		break;
 
 	case BodyPartsIndex::LEFTLOWLEG:
-		this->leftLegLowRotation();
-		matrix.setRotationYMatrix(this->leftLegLowRotationAngle);
-		matrix.setPivotMatrix(pivotLeftUpLeg.x, pivotLeftUpLeg.y, pivotLeftUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotLeftUpLeg.x, -pivotLeftUpLeg.y, -pivotLeftUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->leftLegLowRotationForward, this->leftLegLowRotationAngle,
+			body.getLeftUpLegPivot());
 		break;
 	
 	case BodyPartsIndex::RIGHTUPLEG:
-		this->rightLegUpRotation();
-		matrix.setRotationYMatrix(this->rightLegUpRotationAngle);
-		matrix.setPivotMatrix(pivotRightUpLeg.x, pivotRightUpLeg.y, pivotRightUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightUpLeg.x, -pivotRightUpLeg.y, -pivotRightUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->rightLegUpRotationForward, this->rightLegUpRotationAngle,
+			body.getRightUpLegPivot());
 		break; 
 
 	case BodyPartsIndex::RIGHTLOWLEG:
-		this->rightLegLowRotation();
-		matrix.setRotationYMatrix(this->rightLegLowRotationAngle);
-		matrix.setPivotMatrix(pivotRightUpLeg.x, pivotRightUpLeg.y, pivotRightUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-		matrix.setPivotMatrix(-pivotRightUpLeg.x, -pivotRightUpLeg.y, -pivotRightUpLeg.z);
-		shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+		this->applyRotation(shader, matrix,
+			this->rightLegLowRotationForward, this->rightLegLowRotationAngle,
+			body.getRightUpLegPivot());
 		break;
 
 	default:
@@ -88,12 +99,17 @@ void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body
 		break;
 	}
 	
-	
 	if ((i != BodyPartsIndex::HEAD) && (i != BodyPartsIndex::TORSO) && (this->checkIfWalkingFinished())) {
 		this->resetAnimation(shader, matrix);
 		return ;
 	}
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
+}
+
+float Animation::roundTo2Decimals(float& angle) {
+	float var = angle;
+	float value = (int)(var * 100 + .5);
+    return (float)value / 100;	
 }
 
 bool Animation::checkIfWalkingFinished() {
