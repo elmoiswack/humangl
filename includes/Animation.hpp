@@ -59,24 +59,24 @@ public:
 	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void resetAnimation(Shader& shader, Matrix& matrix);
 	
-	void computeRotationAngle(bool& forward, float& angle);
-	void incrementAngle(float& angle, bool& forward);
-	void decrementAngle(float& angle, bool& forward);
+	bool isAnimationFinished();
+	void startAnimation(AnimationTypes whichAnimation);
+	AnimationTypes getCurrentAnimation();
 
 	void moveTowards(float& value, float target, float speed);
 	float roundTo2Decimals(float& angle);
+	void setPivotPoint(SingleVertex3D& pivot, Shader& shader, Matrix& matrix);
 	
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void computeAngleWalking(bool& forward, float& angle);
+	void incrementAngle(float& angle, bool& forward);
+	void decrementAngle(float& angle, bool& forward);
 	void applyWalkingRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot);
 	bool checkIfWalkingFinished();
 
 	void jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void incrementHeight();
 	bool checkIfJumpFinished();
-
-	bool isAnimationFinished();
-	void startAnimation(AnimationTypes whichAnimation);
-	AnimationTypes getCurrentAnimation();
 
 	void tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left);

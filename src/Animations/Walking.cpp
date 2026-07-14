@@ -22,7 +22,7 @@ void Animation::decrementAngle(float& angle, bool& forward) {
     }
 }
 
-void Animation::computeRotationAngle(bool& forward, float& angle) {
+void Animation::computeAngleWalking(bool& forward, float& angle) {
 	if (forward)
 		this->incrementAngle(angle, forward);
 	else
@@ -30,12 +30,9 @@ void Animation::computeRotationAngle(bool& forward, float& angle) {
 }
 
 void Animation::applyWalkingRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot) {
-	this->computeRotationAngle(forward, angle);
+	this->computeAngleWalking(forward, angle);
 	matrix.setRotationXMatrix(angle);
-	matrix.setPivotMatrix(pivot.x, pivot.y, pivot.z);
-	shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-	matrix.setPivotMatrix(-pivot.x, -pivot.y, -pivot.z);
-	shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+	this->setPivotPoint(pivot, shader, matrix);
 }
 
 void Animation::walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {

@@ -96,6 +96,14 @@ AnimationTypes Animation::getCurrentAnimation() {
 	return this->currentAnimation;
 }
 
+void Animation::setPivotPoint(SingleVertex3D& pivot, Shader& shader, Matrix& matrix) {
+	matrix.setPivotMatrix(pivot.x, pivot.y, pivot.z);
+	shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+	matrix.setPivotMatrix(-pivot.x, -pivot.y, -pivot.z);
+	shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+}
+
+
 void Animation::moveTowards(float& value, float target, float speed) {
     if (value < target)
         value = std::min(value + speed, target);

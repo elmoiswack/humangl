@@ -9,10 +9,7 @@ void Animation::computeAngleTpose(float& angle, bool decrease, bool left) {
 void Animation::applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left) {
 	computeAngleTpose(angle, this->tposeDecreaseAngle, left);
 	matrix.setRotationZMatrix(angle);
-	matrix.setPivotMatrix(pivot.x, pivot.y, pivot.z);
-	shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
-	matrix.setPivotMatrix(-pivot.x, -pivot.y, -pivot.z);
-	shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+	this->setPivotPoint(pivot, shader, matrix);
 }
 
 void Animation::tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
