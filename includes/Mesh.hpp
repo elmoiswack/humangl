@@ -9,9 +9,10 @@ class Mesh
 private:
 	GLuint VBO;
 	GLuint VAO;
+	GLuint SSBO;
+
 	std::size_t vertexCount;
 	float meshColor[3] = {0.0f, 0.0f, 0.0f};
-
 public:
 	Mesh();
 	Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor);
@@ -23,6 +24,7 @@ public:
 	float* getColor();
 	void updateColor(float* newColor);
 	void updateVBO(std::vector<SingleVertex3D>& bodyPart);
+	float* fetchSSBOData();
 
 	void deleteMesh();
 };

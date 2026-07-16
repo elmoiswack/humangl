@@ -33,6 +33,8 @@ public:
 	void setRotationZMatrix(float& angle);
 
 	void setPivotMatrix(float x, float y, float z);
+
+	void testCalculation(float& matrix1, float& matrix2, float& result);
 };
 
 #endif

@@ -2,9 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-
-
-void computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& uppperarm) { 
+void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& uppperarm) { 
 	float minY = std::min_element(
 		uppperarm.begin(),
 		uppperarm.end(),

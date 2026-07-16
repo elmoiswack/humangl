@@ -20,6 +20,15 @@ Mesh::Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor)
 	glGenVertexArrays(1, &this->VAO);
 	glGenBuffers(1, &this->VBO);
 
+	glGenBuffers(1, &this->SSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, this->SSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER,
+				vertexCount * (4 * sizeof(float)),
+				nullptr,
+				GL_DYNAMIC_COPY);
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, this->SSBO);
+
 	glBindVertexArray(this->VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
@@ -85,4 +94,8 @@ void Mesh::updateVBO(std::vector<SingleVertex3D>& bodyPart) {
 void Mesh::deleteMesh() {
 	glDeleteVertexArrays(1, &this->VAO);
 	glDeleteBuffers(1, &this->VBO);
+}
+
+float* Mesh::fetchSSBOData() {
+	return (float*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
 }

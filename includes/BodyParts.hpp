@@ -66,6 +66,9 @@ public:
 	SingleVertex3D& getRightUpLegPivot();	
 	SingleVertex3D& getRightLowLegPivot();
 
+	void computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& uppperarm);
+
+
 };
 
 #endif

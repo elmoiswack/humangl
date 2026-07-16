@@ -142,3 +142,16 @@ void Matrix::setPivotMatrix(float x, float y, float z) {
     this->pivot[13] = y;
     this->pivot[14] = z;
 }
+
+// void Matrix::testCalculation(float& matrix1, float& matrix2, float& result) {
+
+    
+    
+// }
+
+// The MathThe resulting 1 × 4 vector \
+// ([R_1, R_2, R_3, R_4]) is calculated as follows:
+// R₁ = (v₁ × m₁₁) + (v₂ × m₂₁) + (v₃ × m₃₁) + (v₄ × m₄₁)
+// R₂ = (v₁ × m₁₂) + (v₂ × m₂₂) + (v₃ × m₃₂) + (v₄ × m₄₂)
+// R₃ = (v₁ × m₁₃) + (v₂ × m₂₃) + (v₃ × m₃₃) + (v₄ × m₄₃)
+// R₄ = (v₁ × m₁₄) + (v₂ × m₂₄) + (v₃ × m₃₄) + (v₄ × m₄₄)
