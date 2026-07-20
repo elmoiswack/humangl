@@ -4,6 +4,7 @@
 #include "Shader.hpp"
 #include "Matrix.hpp"
 #include "BodyParts.hpp"
+#include "Mesh.hpp"
 
 enum AnimationTypes {
 	IDLE,
@@ -52,11 +53,18 @@ private:
 	bool tposeDecreaseAngle;
 	bool flexDecreaseAngle;
 
+	SingleVertex3D tmpPivot = {0.0f, 0.0f, 0.0f};
+
+	float leftUpArmComposedTransform[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};;
+	float rightUpArmComposedTransform[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};;
+	SingleVertex3D leftUpArmPivotUsed;
+	SingleVertex3D rightUpArmPivotUsed;
+
 public:
 	Animation();
 	~Animation();
 
-	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i);
 	void resetAnimation(Shader& shader, Matrix& matrix);
 	
 	bool isAnimationFinished();
@@ -66,6 +74,7 @@ public:
 	void moveTowards(float& value, float target, float speed);
 	float roundTo2Decimals(float& angle);
 	void setPivotPoint(SingleVertex3D& pivot, Shader& shader, Matrix& matrix);
+	void setPivotPointFlex(SingleVertex3D& pivot, Shader& shader, Matrix& matrix, float* outPositivePivot, float* outNegativePivot);
 	
 	void walkingAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void computeAngleWalking(bool& forward, float& angle);
@@ -84,8 +93,8 @@ public:
 	void decreaseAngleTpose();
 	bool checkIfTposeFinished();
 
-	void flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
-	void applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower);
+	void flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i);
+	void applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* outLocalComposite);
 	void computeAngleFlex(float& angle, bool decrease, bool left, bool lower);
 	void decreaseAngleFlex();
 	bool checkIfFlexFinished();	

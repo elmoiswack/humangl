@@ -12,29 +12,20 @@ Mesh::Mesh() {
 
 Mesh::Mesh(std::vector<SingleVertex3D>& bodyPart, float* bodyColor)
 {
-	this->meshColor[0] = bodyColor[0];
-	this->meshColor[1] = bodyColor[1];
-	this->meshColor[2] = bodyColor[2];
-	this->vertexCount = bodyPart.size();
-	
-	glGenVertexArrays(1, &this->VAO);
-	glGenBuffers(1, &this->VBO);
+    this->meshColor[0] = bodyColor[0];
+    this->meshColor[1] = bodyColor[1];
+    this->meshColor[2] = bodyColor[2];
+    this->vertexCount = bodyPart.size();
 
-	glGenBuffers(1, &this->SSBO);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, this->SSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER,
-				vertexCount * (4 * sizeof(float)),
-				nullptr,
-				GL_DYNAMIC_COPY);
+    glGenVertexArrays(1, &this->VAO);
+    glGenBuffers(1, &this->VBO);
 
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, this->SSBO);
+    glBindVertexArray(this->VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-	glBindVertexArray(this->VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-
-	glBufferData(GL_ARRAY_BUFFER, bodyPart.size() * sizeof(SingleVertex3D), bodyPart.data(), GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)0);
+    glBufferData(GL_ARRAY_BUFFER, bodyPart.size() * sizeof(SingleVertex3D), bodyPart.data(), GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SingleVertex3D), (void*)0);
 }
 
 Mesh::Mesh(std::vector<SingleVertex3D>& button)
@@ -94,8 +85,4 @@ void Mesh::updateVBO(std::vector<SingleVertex3D>& bodyPart) {
 void Mesh::deleteMesh() {
 	glDeleteVertexArrays(1, &this->VAO);
 	glDeleteBuffers(1, &this->VBO);
-}
-
-float* Mesh::fetchSSBOData() {
-	return (float*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
 }

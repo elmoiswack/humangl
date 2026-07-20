@@ -1,4 +1,6 @@
 #include "../includes/Animation.hpp"
+#include <string.h>
+
 
 Animation::Animation()
 {
@@ -40,7 +42,7 @@ Animation::Animation()
 
 Animation::~Animation() {}
 
-void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
+void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i) {
 	switch (this->currentAnimation)
 	{
 	case AnimationTypes::IDLE:
@@ -58,7 +60,7 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 		this->tposeAnimation(shader, matrix, body, i);
 		return ;
 	case AnimationTypes::FLEX:
-		this->flexAnimation(shader, matrix, body, i);
+		this->flexAnimation(shader, matrix, body, meshes, i);
 		return ;
 	default:
 		return ;
@@ -103,6 +105,15 @@ void Animation::setPivotPoint(SingleVertex3D& pivot, Shader& shader, Matrix& mat
 	shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
 }
 
+void Animation::setPivotPointFlex(SingleVertex3D& pivot, Shader& shader, Matrix& matrix,float* outPositivePivot, float* outNegativePivot) {
+    matrix.setPivotMatrix(pivot.x, pivot.y, pivot.z);
+    memcpy(outPositivePivot, matrix.getPivot(), 16 * sizeof(float));
+    shader.setUniformMatrix4x4(matrix.getPivot(), "positivePivotMatrix");
+
+    matrix.setPivotMatrix(-pivot.x, -pivot.y, -pivot.z);
+    memcpy(outNegativePivot, matrix.getPivot(), 16 * sizeof(float));
+    shader.setUniformMatrix4x4(matrix.getPivot(), "negativePivotMatrix");
+}
 
 void Animation::moveTowards(float& value, float target, float speed) {
     if (value < target)

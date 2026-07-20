@@ -143,15 +143,13 @@ void Matrix::setPivotMatrix(float x, float y, float z) {
     this->pivot[14] = z;
 }
 
-// void Matrix::testCalculation(float& matrix1, float& matrix2, float& result) {
-
-    
-    
-// }
-
-// The MathThe resulting 1 × 4 vector \
-// ([R_1, R_2, R_3, R_4]) is calculated as follows:
-// R₁ = (v₁ × m₁₁) + (v₂ × m₂₁) + (v₃ × m₃₁) + (v₄ × m₄₁)
-// R₂ = (v₁ × m₁₂) + (v₂ × m₂₂) + (v₃ × m₃₂) + (v₄ × m₄₂)
-// R₃ = (v₁ × m₁₃) + (v₂ × m₂₃) + (v₃ × m₃₃) + (v₄ × m₄₃)
-// R₄ = (v₁ × m₁₄) + (v₂ × m₂₄) + (v₃ × m₃₄) + (v₄ × m₄₄)
+void Matrix::multiplyInto(float* out, const float* a, const float* b) {
+    for (int col = 0; col < 4; col++) {
+        for (int row = 0; row < 4; row++) {
+            float sum = 0.0f;
+            for (int k = 0; k < 4; k++)
+                sum += a[k * 4 + row] * b[col * 4 + k];
+            out[col * 4 + row] = sum;
+        }
+    }
+}

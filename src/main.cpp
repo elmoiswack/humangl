@@ -98,24 +98,7 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 	auto& mainWindowMeshes = mainWindow.getMeshes();
 	auto& mainWindowAnimations = mainWindow.getAnimations();
 	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
-		mainWindowAnimations.checkAnimation(mainWindow.getShader(), mainWindow.getMatrix(), body, i);
-		if (i == BodyPartsIndex::LEFTUPARM) {
-			auto data = mainWindowMeshes[i].fetchSSBOData();
-			if (data)
-			{
-				for (int i = 0; i < 36; i++)
-				{
-					printf("Vertex %d: (%f, %f, %f, %f)\n",
-						i,
-						data[i * 4 + 0],
-						data[i * 4 + 1],
-						data[i * 4 + 2],
-						data[i * 4 + 3]);
-				}
-
-				glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-			}
-		}
+		mainWindowAnimations.checkAnimation(mainWindow.getShader(), mainWindow.getMatrix(), body, mainWindowMeshes, i);
 		mainWindow.drawMeshOnWindow(mainWindowMeshes[i]);
 	}
 
