@@ -27,6 +27,8 @@ void Animation::applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward,
 }
 
 void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i) {
+	float unusedComposite[16];
+	
 	switch (i)
 	{
 	case BodyPartsIndex::LEFTUPARM:
@@ -46,7 +48,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 		if (this->leftArmLowRotationAngle == 1.56f)
 			shader.setUniformMatrix4x4(this->leftUpArmComposedTransform, "parentTransform");
 
-		float unusedComposite[16];
 		this->applyFlexRotation(shader, matrix,
 			this->leftArmLowRotationForward, this->leftArmLowRotationAngle,
 			body.getLeftUpArmPivot(), true, true,
@@ -71,7 +72,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 		if (this->rightArmLowRotationAngle == 1.56f)
 			shader.setUniformMatrix4x4(this->rightUpArmComposedTransform, "parentTransform");
 
-		float unusedComposite[16];
 		this->applyFlexRotation(shader, matrix,
 			this->rightArmLowRotationForward, this->rightArmLowRotationAngle,
 			body.getRightUpArmPivot(), false, true,

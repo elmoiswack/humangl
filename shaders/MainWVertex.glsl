@@ -19,7 +19,11 @@ void main()
     const int tposeAnimation = 4;
     const int flexAnimation = 5;
 
-    if (animation == walkingAnimation || animation == runAnimation || animation == tposeAnimation || animation == flexAnimation)
+    if (animation == walkingAnimation || animation == runAnimation || animation == tposeAnimation)
+    {
+        gl_Position = perspective * view * positivePivotMatrix * model * negativePivotMatrix * vec4(aPos, 1.0);
+    }
+    else if (animation == flexAnimation)
     {
         gl_Position = perspective * view * parentTransform * positivePivotMatrix * model * negativePivotMatrix * vec4(aPos, 1.0);
     }
