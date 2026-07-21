@@ -143,13 +143,13 @@ void Matrix::setPivotMatrix(float x, float y, float z) {
     this->pivot[14] = z;
 }
 
-void Matrix::multiplyInto(float* out, const float* a, const float* b) {
+void Matrix::multiplyInto(float* result, const float* a, const float* b) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             float sum = 0.0f;
-            for (int k = 0; k < 4; k++)
-                sum += a[k * 4 + row] * b[col * 4 + k];
-            out[col * 4 + row] = sum;
+            for (int index = 0; index < 4; index++)
+                sum += a[index * 4 + row] * b[col * 4 + index];
+            result[col * 4 + row] = sum;
         }
     }
 }

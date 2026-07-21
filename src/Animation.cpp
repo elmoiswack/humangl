@@ -6,6 +6,9 @@ Animation::Animation()
 	this->currentAnimation = AnimationTypes::IDLE;
 	this->rotationSpeed = 0.05f;
 
+	this->headRotationAngle = 0.0f;
+	this->torsoRotationAngle = 0.0f;
+
 	this->leftArmUpRotationAngle = 0.0f;
 	this->leftArmUpRotationForward = true;
 
@@ -37,6 +40,7 @@ Animation::Animation()
 
 	this->tposeDecreaseAngle = false;
 	this->flexDecreaseAngle = false;
+	this->crouchDecreaseAngle = false;
 }
 
 Animation::~Animation() {}
@@ -61,6 +65,9 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 	case AnimationTypes::FLEX:
 		this->flexAnimation(shader, matrix, body, meshes, i);
 		return ;
+	case AnimationTypes::CROUCH:
+		this->crouchAnimation(shader, matrix, body, i);
+		return ;
 	default:
 		return ;
 	}
@@ -68,6 +75,9 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 
 void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 	this->currentAnimation = AnimationTypes::IDLE;
+	this->headRotationAngle = 0.0f;
+
+	this->torsoRotationAngle = 0.0f;
 	this->leftArmUpRotationAngle = 0.0f;
 	this->leftArmLowRotationAngle = 0.0f;
 	this->rightArmUpRotationAngle = 0.0f;
@@ -79,6 +89,7 @@ void Animation::resetAnimation(Shader& shader, Matrix& matrix) {
 	this->currentJumpHeight = 0.0f;
 	this->tposeDecreaseAngle = false;
 	this->flexDecreaseAngle = false;
+	this->crouchDecreaseAngle = false;
 	matrix.setModelToIdentity();
 	shader.setUniformMatrix4x4(matrix.getModel(), "model");
 	shader.setUniform1f(0.0f, "jumpHeight");

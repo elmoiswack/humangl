@@ -25,7 +25,6 @@ void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 		if (mainWindow.makeCurrent()) {
 			mainWindow.getShader().setUniform1i(AnimationTypes::JUMP, "animation");
 			animations.startAnimation(AnimationTypes::JUMP);
-			return ;
 		}
 	}
 	if ((state[SDL_SCANCODE_W] && (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT])) && \
@@ -61,6 +60,16 @@ void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 	}
 	if ((!state[SDL_SCANCODE_F]) && animations.getCurrentAnimation() == AnimationTypes::FLEX) {
 		animations.decreaseAngleFlex();
+	}
+	if ((state[SDL_SCANCODE_LCTRL]) && \
+		animations.isAnimationFinished()) {
+		if (mainWindow.makeCurrent()) {
+			mainWindow.getShader().setUniform1i(AnimationTypes::CROUCH, "animation");
+			animations.startAnimation(AnimationTypes::CROUCH);
+		}
+	}
+	if ((!state[SDL_SCANCODE_LCTRL]) && animations.getCurrentAnimation() == AnimationTypes::CROUCH) {
+		animations.decreaseAngleCrouch();
 	}
 }
 

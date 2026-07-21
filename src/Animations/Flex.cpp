@@ -1,20 +1,20 @@
 #include "../../includes/Animation.hpp"
 
-void Animation::computeAngleFlex(float& angle, bool decrease, bool left, bool lower) {
+void Animation::computeAngleFlex(float& angle, bool left, bool lower) {
 	float target = 0.0f;
 
 	if (lower) {
 		float maxAngleLower = 2.2f;
-    	target = decrease ? 0.0f : (left ? maxAngleLower : -maxAngleLower);
+    	target =  this->flexDecreaseAngle ? 0.0f : (left ? maxAngleLower : -maxAngleLower);
 	} else {
 		float maxAngleUpper = 1.56f;
-		target = decrease ? 0.0f : (left ? maxAngleUpper : -maxAngleUpper);
+		target =  this->flexDecreaseAngle ? 0.0f : (left ? maxAngleUpper : -maxAngleUpper);
 	}
     this->moveTowards(angle, target, this->rotationSpeed);
 }
 
-void Animation::applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* outLocalComposite) {
-    this->computeAngleFlex(angle, this->flexDecreaseAngle, left, lower);
+void Animation::applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* composedTransform) {
+    this->computeAngleFlex(angle, left, lower);
     matrix.setRotationZMatrix(angle);
 
     float positivePivot[16];
@@ -23,7 +23,7 @@ void Animation::applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward,
 
     float temp[16];
     matrix.multiplyInto(temp, positivePivot, matrix.getModel());
-    matrix.multiplyInto(outLocalComposite, temp, negativePivot);
+    matrix.multiplyInto(composedTransform, temp, negativePivot);
 }
 
 void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i) {
@@ -39,7 +39,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 			this->leftUpArmComposedTransform);
 		break;
 
-
 	case BodyPartsIndex::LEFTLOWARM:
 		shader.setUniformMatrix4x4(this->leftUpArmComposedTransform, "parentTransform");
 		this->applyFlexRotation(shader, matrix,
@@ -47,7 +46,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 			body.getLeftLowArmPivot(), true, true,
 			unusedComposite);
 		break;
-
 	
 	case BodyPartsIndex::RIGHTUPARM:
 		shader.setUniformMatrix4x4(matrix.getIdentity(), "parentTransform");
@@ -57,7 +55,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 			this->rightUpArmComposedTransform);
 		break;
 
-
 	case BodyPartsIndex::RIGHTLOWARM:
 		shader.setUniformMatrix4x4(this->rightUpArmComposedTransform, "parentTransform");
 		this->applyFlexRotation(shader, matrix,
@@ -65,7 +62,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 			body.getRightLowArmPivot(), false, true,
 			unusedComposite);
 		break;
-
 
 	default:
 		matrix.setModelToIdentity();

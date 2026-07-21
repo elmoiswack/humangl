@@ -18,6 +18,7 @@ void main()
     const int runAnimation = 3;
     const int tposeAnimation = 4;
     const int flexAnimation = 5;
+    const int crouchAnimation = 6;
 
     if (animation == walkingAnimation || animation == runAnimation || animation == tposeAnimation)
     {

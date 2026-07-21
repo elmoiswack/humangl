@@ -34,7 +34,7 @@ public:
 
 	void setPivotMatrix(float x, float y, float z);
 
-	void multiplyInto(float* out, const float* a, const float* b);
+	void multiplyInto(float* result, const float* a, const float* b);
 
 };
 

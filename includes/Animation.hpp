@@ -13,6 +13,7 @@ enum AnimationTypes {
 	RUN,
 	TPOSE,
 	FLEX,
+	CROUCH,
 };
 
 class Animation
@@ -20,6 +21,9 @@ class Animation
 private:
 	AnimationTypes currentAnimation;
 	float rotationSpeed;
+
+	float headRotationAngle;
+	float torsoRotationAngle;
 
 	float leftArmUpRotationAngle;
 	bool leftArmUpRotationForward;
@@ -52,6 +56,7 @@ private:
 
 	bool tposeDecreaseAngle;
 	bool flexDecreaseAngle;
+	bool crouchDecreaseAngle;
 
 	SingleVertex3D tmpPivot = {0.0f, 0.0f, 0.0f};
 
@@ -94,10 +99,16 @@ public:
 	bool checkIfTposeFinished();
 
 	void flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i);
-	void applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* outLocalComposite);
-	void computeAngleFlex(float& angle, bool decrease, bool left, bool lower);
-	void decreaseAngleFlex();
+	void applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* composedTransform);
+	void computeAngleFlex(float& angle, bool left, bool lower);
 	bool checkIfFlexFinished();	
+	void decreaseAngleFlex();
+
+	void crouchAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void applyCrouchRotation(Shader& shader, Matrix& matrix, float& angle);
+	bool checkIfCrouchFinished();
+	void decreaseAngleCrouch();
+	void crouchForward(float& angle);
 };
 
 #endif
