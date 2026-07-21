@@ -32,8 +32,6 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 	switch (i)
 	{
 	case BodyPartsIndex::LEFTUPARM:
-	
-		std::cout << "UPLEFT" << std::endl;
 		shader.setUniformMatrix4x4(matrix.getIdentity(), "parentTransform");
 		this->applyFlexRotation(shader, matrix,
 			this->leftArmUpRotationForward, this->leftArmUpRotationAngle,
@@ -43,21 +41,15 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 
 
 	case BodyPartsIndex::LEFTLOWARM:
-	
-		std::cout << "LOWLEFT" << std::endl;
-		if (this->leftArmLowRotationAngle == 1.56f)
-			shader.setUniformMatrix4x4(this->leftUpArmComposedTransform, "parentTransform");
-
+		shader.setUniformMatrix4x4(this->leftUpArmComposedTransform, "parentTransform");
 		this->applyFlexRotation(shader, matrix,
 			this->leftArmLowRotationForward, this->leftArmLowRotationAngle,
-			body.getLeftUpArmPivot(), true, true,
+			body.getLeftLowArmPivot(), true, true,
 			unusedComposite);
 		break;
 
 	
 	case BodyPartsIndex::RIGHTUPARM:
-	
-		std::cout << "RIGHTUP" << std::endl;
 		shader.setUniformMatrix4x4(matrix.getIdentity(), "parentTransform");
 		this->applyFlexRotation(shader, matrix,
 			this->rightArmUpRotationForward, this->rightArmUpRotationAngle,
@@ -67,16 +59,12 @@ void Animation::flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, s
 
 
 	case BodyPartsIndex::RIGHTLOWARM:
-	
-		std::cout << "RIGHTLOW" << std::endl;
-		if (this->rightArmLowRotationAngle == 1.56f)
-			shader.setUniformMatrix4x4(this->rightUpArmComposedTransform, "parentTransform");
-
+		shader.setUniformMatrix4x4(this->rightUpArmComposedTransform, "parentTransform");
 		this->applyFlexRotation(shader, matrix,
 			this->rightArmLowRotationForward, this->rightArmLowRotationAngle,
-			body.getRightUpArmPivot(), false, true,
+			body.getRightLowArmPivot(), false, true,
 			unusedComposite);
-		break; 
+		break;
 
 
 	default:

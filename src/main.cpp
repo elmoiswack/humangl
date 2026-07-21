@@ -132,6 +132,7 @@ void printControls() {
 	std::cout << "Running: SHIFT + W" << std::endl;
 	std::cout << "Jump: SPACE" << std::endl;
 	std::cout << "TPose: T" << std::endl;
+	std::cout << "Flex: F" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 }
 

@@ -1,7 +1,6 @@
 #include "../includes/Animation.hpp"
 #include <string.h>
 
-
 Animation::Animation()
 {
 	this->currentAnimation = AnimationTypes::IDLE;

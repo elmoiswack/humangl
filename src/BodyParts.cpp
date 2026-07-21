@@ -2,47 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& uppperarm) { 
-	float minY = std::min_element(
-		uppperarm.begin(),
-		uppperarm.end(),
-		[](const SingleVertex3D& a, const SingleVertex3D& b) {
-			return a.y < b.y;
-		}
-	)->y;
 
-	const float epsilon = 1e-6f;
-	std::vector<SingleVertex3D> topVerts;
-	for (const auto& v : uppperarm) {
-		if (std::fabs(v.y - minY) < epsilon)
-			topVerts.push_back(v);
-	}
-
-	float bestX = topVerts.front().x;
-	float bestAbsX = std::fabs(bestX);
-	for (const auto& v : topVerts) {
-		float absX = std::fabs(v.x);
-		if (absX > bestAbsX) {
-			bestAbsX = absX;
-			bestX = v.x;
-		}
-	}
-
-	float sumX = 0.0f;
-	float sumZ = 0.0f;
-	int count = 0;
-	for (const auto& v : topVerts) {
-		if (std::fabs(v.x - bestX) < epsilon) {
-			sumX += v.x;
-			sumZ += v.z;
-			count++;
-		}
-	}
-
-	point.x = sumX / count;
-	point.y = minY;
-	point.z = sumZ / count;
-}
 
 BodyParts::BodyParts()
 {
@@ -82,11 +42,10 @@ BodyParts::BodyParts()
 
 	this->computeBody(); 
 	for (std::size_t i = 0; i < this->body.size(); i++) {
-		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO && i != BodyPartsIndex::LEFTLOWARM)
+		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO && i != BodyPartsIndex::LEFTLOWARM && i != BodyPartsIndex::RIGHTLOWARM)
 			this->computePivotPoint(this->pivotPoints[i], this->body[i]);
-		if (i == BodyPartsIndex::LEFTLOWARM) {
-			computePivotLowerArm(this->pivotPoints[i], this->body[i - 1]);
-		}
+		else if (i == BodyPartsIndex::LEFTLOWARM || i == BodyPartsIndex::RIGHTLOWARM)
+			this->computePivotLowerArm(this->pivotPoints[i], this->body[i - 1]);
 	}
 }
 
@@ -138,9 +97,7 @@ void BodyParts::computeSizeToRectVertex(float width, float height, float depth, 
 }
 
 void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& bodypart) {
-	float maxY = std::max_element(
-		bodypart.begin(),
-		bodypart.end(),
+	float maxY = std::max_element(bodypart.begin(), bodypart.end(),
 		[](const SingleVertex3D& a, const SingleVertex3D& b) {
 			return a.y < b.y;
 		}
@@ -180,6 +137,31 @@ void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVerte
 	point.z = sumZ / count;
 }
 
+void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& upperarm) {
+	float minY = std::min_element(upperarm.begin(), upperarm.end(),
+		[](const SingleVertex3D& a, const SingleVertex3D& b) {
+			return a.y < b.y;
+		}
+	)->y;
+
+	const float epsilon = 1e-6f;
+	float sumX = 0.0f;
+	float sumZ = 0.0f;
+	int count = 0;
+
+	for (const auto& v : upperarm) {
+		if (std::fabs(v.y - minY) < epsilon) {
+			sumX += v.x;
+			sumZ += v.z;
+			count++;
+		}
+	}
+
+	point.x = sumX / count;
+	point.y = minY;
+	point.z = sumZ / count;
+}
+
 void BodyParts::computeBody() {
 	float armOffset = 0.04f;
 
@@ -216,10 +198,14 @@ void BodyParts::recomputeBody(float width, float height, float depth, BodyPartsI
 	for (std::size_t i = 0; i < this->body.size(); i++) {
   		this->computeSizeToRectVertex(this->bodySizes[i].width, this->bodySizes[i].height, this->bodySizes[i].depth, this->body[i]);
 	}
+
 	this->computeBody();
+
 	for (std::size_t i = 0; i < this->body.size(); i++) {
-		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO)
+		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO && i != BodyPartsIndex::LEFTLOWARM && i != BodyPartsIndex::RIGHTLOWARM)
 			this->computePivotPoint(this->pivotPoints[i], this->body[i]);
+		else if (i == BodyPartsIndex::LEFTLOWARM || i == BodyPartsIndex::RIGHTLOWARM)
+			this->computePivotLowerArm(this->pivotPoints[i], this->body[i - 1]);
 	}
 }
 
