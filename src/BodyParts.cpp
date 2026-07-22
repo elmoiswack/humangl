@@ -2,8 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-
-
 BodyParts::BodyParts()
 {
 	this->body.resize(10);
@@ -40,13 +38,8 @@ BodyParts::BodyParts()
     this->bodySizes[BodyPartsIndex::RIGHTLOWLEG] = {.025f, .07f, .025f};
 	this->computeSizeToRectVertex(.025f, .07f, .025f, this->body[BodyPartsIndex::RIGHTLOWLEG]);
 
-	this->computeBody(); 
-	for (std::size_t i = 0; i < this->body.size(); i++) {
-		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO && i != BodyPartsIndex::LEFTLOWARM && i != BodyPartsIndex::RIGHTLOWARM)
-			this->computePivotPoint(this->pivotPoints[i], this->body[i]);
-		else if (i == BodyPartsIndex::LEFTLOWARM || i == BodyPartsIndex::RIGHTLOWARM)
-			this->computePivotLowerArm(this->pivotPoints[i], this->body[i - 1]);
-	}
+	this->computeBody();
+	this->computePivotPoints();
 }
 
 BodyParts::~BodyParts() {}
@@ -96,7 +89,7 @@ void BodyParts::computeSizeToRectVertex(float width, float height, float depth, 
     }
 }
 
-void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVertex3D>& bodypart) {
+void BodyParts::computePivotUpper(SingleVertex3D& point, std::vector<SingleVertex3D>& bodypart) {
 	float maxY = std::max_element(bodypart.begin(), bodypart.end(),
 		[](const SingleVertex3D& a, const SingleVertex3D& b) {
 			return a.y < b.y;
@@ -137,8 +130,8 @@ void BodyParts::computePivotPoint(SingleVertex3D& point, std::vector<SingleVerte
 	point.z = sumZ / count;
 }
 
-void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& upperarm) {
-	float minY = std::min_element(upperarm.begin(), upperarm.end(),
+void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVertex3D>& upperArm) {
+	float minY = std::min_element(upperArm.begin(), upperArm.end(),
 		[](const SingleVertex3D& a, const SingleVertex3D& b) {
 			return a.y < b.y;
 		}
@@ -149,7 +142,7 @@ void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVe
 	float sumZ = 0.0f;
 	int count = 0;
 
-	for (const auto& v : upperarm) {
+	for (const auto& v : upperArm) {
 		if (std::fabs(v.y - minY) < epsilon) {
 			sumX += v.x;
 			sumZ += v.z;
@@ -160,6 +153,31 @@ void BodyParts::computePivotLowerArm(SingleVertex3D& point, std::vector<SingleVe
 	point.x = sumX / count;
 	point.y = minY;
 	point.z = sumZ / count;
+}
+
+void BodyParts::computePivotLowerLeg(SingleVertex3D& point, std::vector<SingleVertex3D>& upperLeg) {
+	float minZ = std::min_element(upperLeg.begin(), upperLeg.end(),
+		[](const SingleVertex3D& a, const SingleVertex3D& b) {
+			return a.z < b.z;
+		}
+	)->z;
+
+	const float epsilon = 1e-6f;
+	float sumX = 0.0f;
+	float sumY = 0.0f;
+	int count = 0;
+
+	for (const auto& v : upperLeg) {
+		if (std::fabs(v.z - minZ) < epsilon) {
+			sumX += v.x;
+			sumY += v.y;
+			count++;
+		}
+	}
+
+	point.x = sumX / count;
+	point.y = sumY / count;
+	point.z = minZ;
 }
 
 void BodyParts::computeBody() {
@@ -194,19 +212,25 @@ void BodyParts::computeBody() {
     }
 }
 
+void BodyParts::computePivotPoints() {
+	for (std::size_t i = 0; i < this->body.size(); i++) {
+		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO && i != BodyPartsIndex::LEFTLOWARM && i != BodyPartsIndex::RIGHTLOWARM)
+			this->computePivotUpper(this->pivotPoints[i], this->body[i]);
+		else if (i == BodyPartsIndex::LEFTLOWARM || i == BodyPartsIndex::RIGHTLOWARM)
+			this->computePivotLowerArm(this->pivotPoints[i], this->body[i - 1]);
+		else if (i == BodyPartsIndex::LEFTLOWLEG || i == BodyPartsIndex::RIGHTLOWLEG) 
+			this->computePivotLowerLeg(this->pivotPoints[i], this->body[i - 1]);
+	}
+}
+
+
 void BodyParts::recomputeBody(float width, float height, float depth, BodyPartsIndex part) {
 	for (std::size_t i = 0; i < this->body.size(); i++) {
   		this->computeSizeToRectVertex(this->bodySizes[i].width, this->bodySizes[i].height, this->bodySizes[i].depth, this->body[i]);
 	}
 
 	this->computeBody();
-
-	for (std::size_t i = 0; i < this->body.size(); i++) {
-		if (i != BodyPartsIndex::HEAD && i != BodyPartsIndex::TORSO && i != BodyPartsIndex::LEFTLOWARM && i != BodyPartsIndex::RIGHTLOWARM)
-			this->computePivotPoint(this->pivotPoints[i], this->body[i]);
-		else if (i == BodyPartsIndex::LEFTLOWARM || i == BodyPartsIndex::RIGHTLOWARM)
-			this->computePivotLowerArm(this->pivotPoints[i], this->body[i - 1]);
-	}
+	this->computePivotPoints();
 }
 
 void BodyParts::updateWidth(BodyPartsIndex part, float value) {

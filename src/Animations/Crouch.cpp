@@ -1,17 +1,13 @@
 #include "../../includes/Animation.hpp"
-#include <string.h>
-
-void Animation::applyCrouchRotation(Shader& shader, Matrix& matrix, float& angle) {
-
-}
-
 
 void Animation::crouchForward(float& angle) {
-    float target = this->crouchDecreaseAngle ? 0.0f : .3f;
+    float target = this->crouchDecreaseAngle ? 0.0f : .25f;
 	this->moveTowards(angle, target, this->rotationSpeed);
 }
 
 void Animation::crouchAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
+	float unusedComposite[16];
+
 	switch (i)
 	{
 	case BodyPartsIndex::HEAD:
@@ -51,22 +47,18 @@ void Animation::crouchAnimation(Shader& shader, Matrix& matrix, BodyParts& body,
 	
 	case BodyPartsIndex::LEFTUPLEG:
 		matrix.setModelToIdentity();
-
 		break;
 
 	case BodyPartsIndex::LEFTLOWLEG:
 		matrix.setModelToIdentity();
-	
 		break;
 	
 	case BodyPartsIndex::RIGHTUPLEG:
 		matrix.setModelToIdentity();
-		
 		break; 
 
 	case BodyPartsIndex::RIGHTLOWLEG:
 		matrix.setModelToIdentity();
-		
 		break;
 
 	default:
@@ -89,11 +81,7 @@ bool Animation::checkIfCrouchFinished() {
 		(this->roundTo2Decimals(this->leftArmUpRotationAngle) != 0.00) || \
 		(this->roundTo2Decimals(this->leftArmLowRotationAngle) != 0.00) || \
 		(this->roundTo2Decimals(this->rightArmUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightArmLowRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->leftLegUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->leftLegLowRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightLegUpRotationAngle) != 0.00) || \
-		(this->roundTo2Decimals(this->rightLegLowRotationAngle) != 0.00) \
+		(this->roundTo2Decimals(this->rightArmLowRotationAngle) != 0.00) \
 	) {
 		return false;
 	}

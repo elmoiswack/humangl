@@ -105,10 +105,10 @@ public:
 	void decreaseAngleFlex();
 
 	void crouchAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
-	void applyCrouchRotation(Shader& shader, Matrix& matrix, float& angle);
 	bool checkIfCrouchFinished();
 	void decreaseAngleCrouch();
 	void crouchForward(float& angle);
+
 };
 
 #endif

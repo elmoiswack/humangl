@@ -142,6 +142,7 @@ void printControls() {
 	std::cout << "Jump: SPACE" << std::endl;
 	std::cout << "TPose: T" << std::endl;
 	std::cout << "Flex: F" << std::endl;
+	std::cout << "Crouch: Left CTRL" << std::endl;
 	std::cout << "----------------------------" << std::endl;
 }
 
