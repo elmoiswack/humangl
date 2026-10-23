@@ -45,7 +45,7 @@ Animation::Animation()
 
 Animation::~Animation() {}
 
-void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i) {
+void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
 	switch (this->currentAnimation)
 	{
 	case AnimationTypes::IDLE:
@@ -54,7 +54,7 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 		this->walkingAnimation(shader, matrix, body, i);
 		return ;
 	case AnimationTypes::JUMP:
-		this->jumpAnimation(shader, matrix, body, i);
+		this->jumpAnimation(shader, matrix, i);
 		return ;
 	case AnimationTypes::RUN:
 		this->walkingAnimation(shader, matrix, body, i);
@@ -63,10 +63,10 @@ void Animation::checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 		this->tposeAnimation(shader, matrix, body, i);
 		return ;
 	case AnimationTypes::FLEX:
-		this->flexAnimation(shader, matrix, body, meshes, i);
+		this->flexAnimation(shader, matrix, body, i);
 		return ;
 	case AnimationTypes::CROUCH:
-		this->crouchAnimation(shader, matrix, body, i);
+		this->crouchAnimation(shader, matrix, i);
 		return ;
 	default:
 		return ;

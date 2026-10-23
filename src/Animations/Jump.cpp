@@ -21,7 +21,7 @@ void Animation::incrementHeight() {
 	}
 }
 
-void Animation::jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
+void Animation::jumpAnimation(Shader& shader, Matrix& matrix, std::size_t i) {
 	if (i == 0) {
 		this->incrementHeight();
 		shader.setUniform1f(this->currentJumpHeight, "jumpHeight");

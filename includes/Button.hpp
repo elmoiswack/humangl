@@ -7,8 +7,6 @@
 #include "glad/glad.h"
 #include "Mesh.hpp"
 #include "BodyParts.hpp"
-#define GLT_IMPLEMENTATION
-#include "gltext.h"
 
 enum ButtonType {
 	PLUS,

@@ -6,7 +6,7 @@ void Animation::computeAngleTpose(float& angle, bool decrease, bool left) {
     this->moveTowards(angle, target, this->rotationSpeed);
 }
 
-void Animation::applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left) {
+void Animation::applyTposeRotation(Shader& shader, Matrix& matrix, float& angle, SingleVertex3D& pivot, bool left) {
 	computeAngleTpose(angle, this->tposeDecreaseAngle, left);
 	matrix.setRotationZMatrix(angle);
 	this->setPivotPoint(pivot, shader, matrix);
@@ -17,25 +17,25 @@ void Animation::tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, 
 	{
 	case BodyPartsIndex::LEFTUPARM:
 		this->applyTposeRotation(shader, matrix,
-			this->leftArmUpRotationForward, this->leftArmUpRotationAngle,
+			this->leftArmUpRotationAngle,
 			body.getLeftUpArmPivot(), true);
 		break;
 
 	case BodyPartsIndex::LEFTLOWARM:
 		this->applyTposeRotation(shader, matrix,
-			this->leftArmLowRotationForward, this->leftArmLowRotationAngle,
+			this->leftArmLowRotationAngle,
 			body.getLeftUpArmPivot(), true);
 		break;
 	
 	case BodyPartsIndex::RIGHTUPARM:
 		this->applyTposeRotation(shader, matrix,
-			this->rightArmUpRotationForward, this->rightArmUpRotationAngle,
+			this->rightArmUpRotationAngle,
 			body.getRightUpArmPivot(), false);
 		break; 
 
 	case BodyPartsIndex::RIGHTLOWARM:
 		this->applyTposeRotation(shader, matrix,
-			this->rightArmLowRotationForward, this->rightArmLowRotationAngle,
+			this->rightArmLowRotationAngle,
 			body.getRightUpArmPivot(), false);
 		break; 
 

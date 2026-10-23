@@ -76,7 +76,6 @@ void handleInput(const bool* state, Window& mainWindow, float deltaTime) {
 void checkInput(Window& mainWindow, Window& settingsWindow, BodyParts& body, bool& running, float deltaTime) {
 	SDL_Event event;
 	const bool* state = SDL_GetKeyboardState(nullptr);
-	auto& buttons = settingsWindow.getButtons();
 
 	handleInput(state, mainWindow, deltaTime);
 
@@ -107,7 +106,7 @@ void drawPartsOnScreen(Window& mainWindow, Window& settingsWindow, BodyParts& bo
 	auto& mainWindowMeshes = mainWindow.getMeshes();
 	auto& mainWindowAnimations = mainWindow.getAnimations();
 	for (std::size_t i = 0; i < mainWindowMeshes.size(); i++) {
-		mainWindowAnimations.checkAnimation(mainWindow.getShader(), mainWindow.getMatrix(), body, mainWindowMeshes, i);
+		mainWindowAnimations.checkAnimation(mainWindow.getShader(), mainWindow.getMatrix(), body, i);
 		mainWindow.drawMeshOnWindow(mainWindowMeshes[i]);
 	}
 

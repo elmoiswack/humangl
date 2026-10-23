@@ -2,8 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-BodyParts::BodyParts()
-{
+BodyParts::BodyParts() {
 	this->body.resize(10);
     this->bodySizes.resize(10);
     this->pivotPoints.resize(10);
@@ -182,8 +181,9 @@ void BodyParts::computePivotLowerLeg(SingleVertex3D& point, std::vector<SingleVe
 
 void BodyParts::computeBody() {
 	float armOffset = 0.04f;
+	std::size_t amountBodyParts = static_cast<std::size_t>(this->bodyPartSize);
 
-    for (std::size_t i = 0; i < this->bodyPartSize; i++) {
+    for (std::size_t i = 0; i < amountBodyParts; i++) {
         this->body[BodyPartsIndex::HEAD][i].y += this->bodySizes[BodyPartsIndex::TORSO].height + this->bodySizes[BodyPartsIndex::HEAD].height;
 
         this->body[BodyPartsIndex::LEFTUPARM][i].x -= (this->bodySizes[BodyPartsIndex::TORSO].width + this->bodySizes[BodyPartsIndex::LEFTUPARM].width);
@@ -224,7 +224,7 @@ void BodyParts::computePivotPoints() {
 }
 
 
-void BodyParts::recomputeBody(float width, float height, float depth, BodyPartsIndex part) {
+void BodyParts::recomputeBody() {
 	for (std::size_t i = 0; i < this->body.size(); i++) {
   		this->computeSizeToRectVertex(this->bodySizes[i].width, this->bodySizes[i].height, this->bodySizes[i].depth, this->body[i]);
 	}
@@ -242,7 +242,7 @@ void BodyParts::updateWidth(BodyPartsIndex part, float value) {
         this->bodySizes[part].width = 1.0f;
     }
 
-    this->recomputeBody(this->bodySizes[part].width, this->bodySizes[part].height, this->bodySizes[part].depth, part);
+    this->recomputeBody();
 }
 
 void BodyParts::updateHeight(BodyPartsIndex part, float value) {
@@ -253,7 +253,7 @@ void BodyParts::updateHeight(BodyPartsIndex part, float value) {
     } else if (this->bodySizes[part].height > 1.0f) {
         this->bodySizes[part].height = 1.0f;
     }
-    this->recomputeBody(this->bodySizes[part].width, this->bodySizes[part].height, this->bodySizes[part].depth, part);
+    this->recomputeBody();
 }
 
 void BodyParts::updateDepth(BodyPartsIndex part, float value) {
@@ -265,7 +265,7 @@ void BodyParts::updateDepth(BodyPartsIndex part, float value) {
         this->bodySizes[part].depth = 1.0f;
     }
 
-    this->recomputeBody(this->bodySizes[part].width, this->bodySizes[part].height, this->bodySizes[part].depth, part);
+    this->recomputeBody();
 }
 
 std::vector<std::vector<SingleVertex3D>>& BodyParts::getBody() {

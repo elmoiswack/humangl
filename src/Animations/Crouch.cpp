@@ -5,9 +5,7 @@ void Animation::crouchForward(float& angle) {
 	this->moveTowards(angle, target, this->rotationSpeed);
 }
 
-void Animation::crouchAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i) {
-	float unusedComposite[16];
-
+void Animation::crouchAnimation(Shader& shader, Matrix& matrix, std::size_t i) {
 	switch (i)
 	{
 	case BodyPartsIndex::HEAD:

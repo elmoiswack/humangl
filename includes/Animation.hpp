@@ -69,7 +69,7 @@ public:
 	Animation();
 	~Animation();
 
-	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i);
+	void checkAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
 	void resetAnimation(Shader& shader, Matrix& matrix);
 	
 	bool isAnimationFinished();
@@ -88,23 +88,23 @@ public:
 	void applyWalkingRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot);
 	bool checkIfWalkingFinished();
 
-	void jumpAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void jumpAnimation(Shader& shader, Matrix& matrix, std::size_t i);
 	void incrementHeight();
 	bool checkIfJumpFinished();
 
 	void tposeAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
-	void applyTposeRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left);
+	void applyTposeRotation(Shader& shader, Matrix& matrix, float& angle, SingleVertex3D& pivot, bool left);
 	void computeAngleTpose(float& angle, bool decrease, bool left);
 	void decreaseAngleTpose();
 	bool checkIfTposeFinished();
 
-	void flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::vector<Mesh>& meshes, std::size_t i);
-	void applyFlexRotation(Shader& shader, Matrix& matrix, bool& forward, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* composedTransform);
+	void flexAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void applyFlexRotation(Shader& shader, Matrix& matrix, float& angle, SingleVertex3D& pivot, bool left, bool lower, float* composedTransform);
 	void computeAngleFlex(float& angle, bool left, bool lower);
 	bool checkIfFlexFinished();	
 	void decreaseAngleFlex();
 
-	void crouchAnimation(Shader& shader, Matrix& matrix, BodyParts& body, std::size_t i);
+	void crouchAnimation(Shader& shader, Matrix& matrix, std::size_t i);
 	bool checkIfCrouchFinished();
 	void decreaseAngleCrouch();
 	void crouchForward(float& angle);

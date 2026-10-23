@@ -18,6 +18,9 @@
 #include "BodyParts.hpp"
 #include "Button.hpp"
 
+#define GLT_IMPORTS
+#include "gltext.h"
+
 enum ButtonOrder {
 	TITLE,
 	BODY,

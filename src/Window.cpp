@@ -52,8 +52,7 @@ Window::Window(const char* name, int width, int height, const char* pathVertexSh
 	this->shader = Shader(pathVertexShader, pathFragmentShader);
 }
 
-Window::~Window()
-{
+Window::~Window() {
 	SDL_GL_DestroyContext(this->openGLContext);
 	SDL_DestroyWindow(this->window);
 	for (auto& mesh: this->meshes) {
